@@ -119,6 +119,7 @@ public class VariableScope<T>
 		return def.getVariableTypeDef().getVariableClass();
 	}
 
+	@Override
 	public String toString()
 	{
 		if (parent == null)

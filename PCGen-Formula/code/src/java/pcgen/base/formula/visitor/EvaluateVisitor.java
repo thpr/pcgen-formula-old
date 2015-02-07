@@ -62,6 +62,7 @@ import pcgen.base.formula.variable.VariableStore;
  * has been called and successfully processed to ensure that evaluation will run
  * without an Exception.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class EvaluateVisitor implements FormulaParserVisitor
 {
 
@@ -213,8 +214,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 			Number n = (Number) node.jjtGetChild(i).jjtAccept(this, null);
 			n2 = Double.valueOf(n2.doubleValue() * n.doubleValue());
 		}
-		return Math.pow(((Number) n1).doubleValue(),
-			((Number) n2).doubleValue());
+		return Math.pow(n1.doubleValue(), n2.doubleValue());
 	}
 
 	/**

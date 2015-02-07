@@ -111,6 +111,7 @@ public class VariableTypeDefinition<T>
 		return false;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return variableTypeName + " [" + variableFormat.getSimpleName() + "]";

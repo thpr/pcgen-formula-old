@@ -305,7 +305,8 @@ public class VariableLibrary
 	}
 
 	private <T> VariableID<T> getVarIDMessaged(VariableScope<T> scope,
-			String varName, VariableScope<T> messagescope) {
+		String varName, VariableScope<T> messagescope)
+	{
 		if (scope == null)
 		{
 			throw new IllegalArgumentException("Cannot get VariableID "

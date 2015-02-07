@@ -68,9 +68,11 @@ public class NumberDivide implements OperatorAction
 		if (l instanceof Integer && r instanceof Integer)
 		{
 			//Special case, we can maintain Integer
-			if (((Integer) l % (Integer) r) == 0)
+			Integer left = (Integer) l;
+			Integer right = (Integer) r;
+			if ((left % right) == 0)
 			{
-				return (Integer) l / (Integer) r;
+				return left / right;
 			}
 		}
 		return ((Number) l).doubleValue() / ((Number) r).doubleValue();

@@ -37,6 +37,9 @@ import pcgen.base.formula.visitor.ReconstructionVisitor;
  * 
  * The tree within a ComplexNEPFormula is designed to visited in order to
  * evaluate or otherwise process a ComplexNEPFormula.
+ * 
+ * @param <T>
+ *            The Type of object returned by this ComplexNEPFormula
  */
 public class ComplexNEPFormula<T> implements NEPFormula<T>
 {
@@ -110,6 +113,8 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * @throws IllegalArgumentException
 	 *             if the given ScopeInformation is null.
 	 */
+	@Override
+	@SuppressWarnings("unchecked")
 	public T resolve(ScopeInformation si)
 	{
 		if (si == null)
@@ -141,6 +146,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * @throws IllegalArgumentException
 	 *             if the given ScopeInformation is null
 	 */
+	@Override
 	public void getDependencies(ScopeInformation si,
 		FormulaDependencyManager fdm)
 	{
@@ -179,6 +185,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * 
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString()
 	{
 		ReconstructionVisitor rv = new ReconstructionVisitor();

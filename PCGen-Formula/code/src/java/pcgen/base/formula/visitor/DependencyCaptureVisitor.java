@@ -47,6 +47,7 @@ import pcgen.base.formula.variable.VariableScope;
  * user-defined Functions may define additional dependencies if they are
  * supported by the FormulaDependencyManager.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class DependencyCaptureVisitor implements FormulaParserVisitor
 {
 

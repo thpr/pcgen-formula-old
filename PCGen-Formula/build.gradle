@@ -21,9 +21,22 @@ repositories {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs 'code/src/java'
+        }
+    }
+    test {
+        java {
+            srcDirs 'code/src/test'
+        }
+    }
+}
+
 dependencies {
 	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    compile group: 'PCGenBaseLibrary', name: 'PCGenBaseLibrary', version:'1.0'
+    compile group: 'PCGen-base', name: 'PCGen-base', version:'1.0'
     compile group: 'javacc', name: 'javacc'
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }

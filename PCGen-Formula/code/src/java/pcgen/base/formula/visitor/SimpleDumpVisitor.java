@@ -42,6 +42,7 @@ import pcgen.base.formula.parse.SimpleNode;
  * SimpleDumpVisitor is a FormulaParserVisitor that dumps the formula to
  * standard error.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class SimpleDumpVisitor implements FormulaParserVisitor
 {
 
