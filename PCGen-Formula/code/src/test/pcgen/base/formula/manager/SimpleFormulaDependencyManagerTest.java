@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class SimpleFormulaDependencyManagerTest extends TestCase
 {
-	protected SimpleFormulaDependencyManager manager;
+	private SimpleFormulaDependencyManager manager;
 
 	@Override
 	protected void setUp() throws Exception

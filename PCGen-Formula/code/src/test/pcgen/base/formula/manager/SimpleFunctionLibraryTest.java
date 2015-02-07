@@ -32,7 +32,7 @@ import pcgen.base.formula.visitor.ValidVisitor;
 
 public class SimpleFunctionLibraryTest extends TestCase
 {
-	protected SimpleFunctionLibrary library;
+	private SimpleFunctionLibrary library;
 
 	@Override
 	protected void setUp() throws Exception
