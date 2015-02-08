@@ -26,6 +26,9 @@ import pcgen.base.formula.variable.ScopeTypeDefinition;
 /**
  * A NEPFormula is a formula that is part of the "Native Equation Parser" for
  * PCGen.
+ * 
+ * @param <T>
+ *            The Type of object returned by this NEPFormula
  */
 public interface NEPFormula<T>
 {

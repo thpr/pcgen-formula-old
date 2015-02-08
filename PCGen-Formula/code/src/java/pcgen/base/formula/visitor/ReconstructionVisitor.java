@@ -78,6 +78,7 @@ import pcgen.base.formula.parse.SimpleNode;
  * not a valid formula, ReconstructionVisitor will still happily produce a
  * String which if read, will not parse without an error.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class ReconstructionVisitor implements FormulaParserVisitor
 {
 

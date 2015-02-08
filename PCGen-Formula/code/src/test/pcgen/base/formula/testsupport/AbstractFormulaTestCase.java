@@ -44,17 +44,17 @@ import pcgen.base.formula.visitor.ValidVisitor;
 public abstract class AbstractFormulaTestCase extends TestCase
 {
 
-	protected ValidVisitor valid;
+	private ValidVisitor valid;
 	protected FunctionLibrary library;
 	protected OperatorLibrary opLibrary;
-	protected StaticVisitor staticVisitor;
-	protected EvaluateVisitor eval;
+	private StaticVisitor staticVisitor;
+	private EvaluateVisitor eval;
 	protected DependencyCaptureVisitor varCapture;
 	protected SimpleVariableStore store;
 	protected VariableScope<?> globalScope;
 	private ScopeTypeDefLibrary stDefLib;
 	private VariableLibrary varLibrary;
-	protected ScopeTypeDefinition<?> globalScopeDef;
+	private ScopeTypeDefinition<?> globalScopeDef;
 
 	@Override
 	protected void setUp() throws Exception

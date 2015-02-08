@@ -1,7 +1,7 @@
 <project name="PCGenFormulaParser" default="ncompile" basedir=".">
-    <property name="lib.dir" value="lib" />
+	<property name="lib.dir" value="lib" />
     <target name="jjTreeCompile" description="Compile JavaCC Tree sources">
-        <jjtree target="code/src/java/pcgen/base/formula/parse/formula.jjt"
+        <jjtree target="${basedir}/code/src/java/pcgen/base/formula/parse/formula.jjt"
                 javacchome="${lib.dir}"
                 outputdirectory="${basedir}/code/src/java/pcgen/base/formula/parse/" />
     </target>

@@ -23,6 +23,19 @@ repositories {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDirs 'code/src/java'
+        }
+    }
+    test {
+        java {
+            srcDirs 'code/src/test'
+        }
+    }
+}
+
 dependencies {
 	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     compile group: 'net.sourceforge.pcgen', name: 'PCGen-base', version:'1.0.10'

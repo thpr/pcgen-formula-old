@@ -66,6 +66,7 @@ public class ScopeTypeDefLibrary
 	 *             Type Name of the given VariableTypeDefinition, but does not
 	 *             match the given VariableTypeDefinition
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> ScopeTypeDefinition<T> defineGlobalScopeDefinition(
 		VariableTypeDefinition<T> vtd)
 	{
@@ -153,6 +154,7 @@ public class ScopeTypeDefLibrary
 	 *             if either argument is null or if the given scope definition
 	 *             name is empty
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> ScopeTypeDefinition<T> getScopeDefinition(
 		ScopeTypeDefinition<T> parentDef, String scopeName)
 	{

@@ -155,6 +155,7 @@ public class ScopeTypeDefinition<T>
 		return varTypeDef;
 	}
 
+	@Override
 	public String toString()
 	{
 		return scopeName + " " + varTypeDef;

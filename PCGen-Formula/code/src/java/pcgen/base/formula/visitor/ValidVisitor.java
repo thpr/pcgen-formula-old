@@ -73,6 +73,7 @@ import pcgen.base.formula.variable.ScopeTypeDefinition;
  * Rather, a "fast fail" implementation will return a FormulaSemantics with
  * isValid() indicating FALSE as soon as such an invalid situation is detected.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class ValidVisitor implements FormulaParserVisitor
 {
 	/*

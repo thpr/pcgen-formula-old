@@ -28,7 +28,7 @@ import pcgen.base.formula.parse.Operator;
 
 public class SimpleOperatorLibraryTest extends TestCase
 {
-	protected SimpleOperatorLibrary library;
+	private SimpleOperatorLibrary library;
 
 	@Override
 	protected void setUp() throws Exception

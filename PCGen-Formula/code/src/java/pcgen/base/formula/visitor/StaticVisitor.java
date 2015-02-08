@@ -67,6 +67,7 @@ import pcgen.base.formula.parse.SimpleNode;
  * Rather, a "fast fail" implementation will return FALSE as soon as it is
  * detected.
  */
+@SuppressWarnings("PMD.TooManyMethods")
 public class StaticVisitor implements FormulaParserVisitor
 {
 

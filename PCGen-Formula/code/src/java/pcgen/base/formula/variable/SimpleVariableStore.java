@@ -50,6 +50,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 	 * 
 	 * @see pcgen.base.formula.variable.VariableStore#get(pcgen.base.formula.variable.VariableID)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T get(VariableID<T> id)
 	{
@@ -78,6 +79,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 	 * @see pcgen.base.formula.variable.WriteableVariableStore#put(pcgen.base.formula.variable.VariableID,
 	 *      java.lang.Object)
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> T put(VariableID<T> id, T value)
 	{
 		if (id == null)
