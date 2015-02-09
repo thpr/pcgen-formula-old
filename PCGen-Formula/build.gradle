@@ -1,24 +1,39 @@
+/*
+ * PCGen formula component build using the Gradle tool. This file specifies the
+ * core build tasks and refers to other files in the code/gradle directory for
+ * additional tasks for specific output.
+ *
+ * Developer build: gradle
+ * Incremental dev build: gradle build 
+ * Full build: gradle all 
+ */
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: "jacoco"
+apply plugin: 'ivy-publish'
 
 ant.importBuild 'build.xml'
 
-sourceCompatibility = 1.6
-version = '1.0'
+description = """PCGen formula library"""
 
-jar {
-    manifest {
-        attributes 'Implementation-Title': 'PCGenFormulaParser', 'Implementation-Version': 1.0
-    }
+defaultTasks 'clean', 'build'
+
+sourceCompatibility = 1.7
+
+ext {
+    majorVersion = 1
+    minorVersion = 0
 }
-
-def repositoryPath = 'lib'
 
 repositories {
     mavenCentral()
-    flatDir {
-       dirs repositoryPath
-    }
+}
+
+dependencies {
+	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    compile group: 'PCGen-base', name: 'PCGen-base', version:'1.0'
+    compile group: 'javacc', name: 'javacc'
+    testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
 sourceSets {
@@ -34,15 +49,11 @@ sourceSets {
     }
 }
 
-dependencies {
-	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    compile group: 'PCGen-base', name: 'PCGen-base', version:'1.0'
-    compile group: 'javacc', name: 'javacc'
-    testCompile group: 'junit', name: 'junit', version: '4.+'
-}
-
 test {
     systemProperties 'property': 'value'
+    jacoco {
+    	excludes = ['*testsupport.*', '*.Abstract*TestCase', '*Test']
+    }
 }
 
 uploadArchives {
@@ -55,4 +66,62 @@ uploadArchives {
 
 compileJava.dependsOn javaccCompile
 
+// Calculate the version number - runs in the parse phase
+allprojects {
+    ext.buildTimestamp = new Date().format('yyyy-MM-dd HH:mm:ss Z')
+    if (System.env.BUILD_NUMBER) {
+        project.version = "$majorVersion.$minorVersion.$System.env.BUILD_NUMBER"
+    }
+    else {
+        project.version = "$majorVersion.$minorVersion"
+    }
+}
 
+task echoVer() << {
+    println "${project.name} Version: ${project.version} (${buildTimestamp})"
+}
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'PCGenFormulaLibrary', 'Implementation-Version': project.version, 
+            'Built-On': buildTimestamp 
+    }
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.java
+    classifier "source"
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// Rules for how we publish our artifacts in ivy compliant format
+publishing {
+    repositories {
+        ivy {
+            name "fileRepo"
+            url '/home/pcgen1/www/librepo'
+            //url 'D:/Projects/pcgen-base/librepo'
+        }
+    }
+    publications {
+        ivy(IvyPublication) {
+            from components.java
+            artifact(sourceJar) {
+                type "source"
+                conf "runtime"
+            }
+            artifact(javadocJar) {
+                type "javadoc"
+            }
+            descriptor.withXml {
+                asNode().info[0].appendNode('description', description)
+            }
+        }
+    }
+}
+
+apply from: 'gradle/reporting.gradle'
