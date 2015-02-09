@@ -52,7 +52,7 @@ sourceSets {
 test {
     systemProperties 'property': 'value'
     jacoco {
-    	excludes = ['*testsupport.*', '*.Abstract*TestCase', '*Test']
+    	excludes = ['*testsupport.*', '*.Abstract*TestCase', '*Test', 'pcgen.base.formula.parse.FormulaParser*', 'pcgen.base.formula.parse.AST*', 'pcgen.base.formula.parse.JJT*', 'pcgen.base.formula.parse.Node', 'pcgen.base.formula.parse.ParseException', 'pcgen.base.formula.parse.SimpleCharStream', 'pcgen.base.formula.parse.Token']
     }
 }
 
