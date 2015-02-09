@@ -58,6 +58,7 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * 
 	 * @see pcgen.base.formula.manager.FunctionLibrary#addFunction(pcgen.base.formula.function.Function)
 	 */
+	@Override
 	public void addFunction(Function f)
 	{
 		if (f == null)
@@ -88,6 +89,7 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * 
 	 * @see pcgen.base.formula.manager.FunctionLibrary#getFunction(java.lang.String)
 	 */
+	@Override
 	public Function getFunction(String fname)
 	{
 		return parenmap.get(fname);
@@ -106,6 +108,7 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * 
 	 * @see pcgen.base.formula.manager.FunctionLibrary#addBracketFunction(pcgen.base.formula.function.Function)
 	 */
+	@Override
 	public void addBracketFunction(Function f)
 	{
 		if (f == null)
@@ -137,6 +140,7 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * 
 	 * @see pcgen.base.formula.manager.FunctionLibrary#getBracketFunction(java.lang.String)
 	 */
+	@Override
 	public Function getBracketFunction(String fname)
 	{
 		return bracketmap.get(fname);

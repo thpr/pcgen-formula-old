@@ -22,10 +22,10 @@ package pcgen.base.formula.parse;
 
 public class SimpleNode implements Node
 {
-	protected Node parent;
-	protected Node[] children;
-	protected int id;
-	protected FormulaParser parser;
+	private Node parent;
+	private Node[] children;
+	private int id;
+	private FormulaParser parser;
 
 	public SimpleNode(int i)
 	{
@@ -64,7 +64,7 @@ public class SimpleNode implements Node
 		}
 		else if (i >= children.length)
 		{
-			Node c[] = new Node[i + 1];
+			Node[] c = new Node[i + 1];
 			System.arraycopy(children, 0, c, 0, children.length);
 			children = c;
 		}
