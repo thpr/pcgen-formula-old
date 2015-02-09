@@ -7,12 +7,13 @@
  * Incremental dev build: gradle build 
  * Full build: gradle all 
  */
+plugins {
+  id "ca.coglinc.javacc" version "2.0.4"
+}
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: "jacoco"
 apply plugin: 'ivy-publish'
-
-ant.importBuild 'build.xml'
 
 description = """PCGen formula library"""
 
@@ -27,17 +28,16 @@ ext {
 
 repositories {
     mavenCentral()
+    jcenter()
     ivy {
         name "fileRepo"
         url 'http://www.pcgen.org/librepo'
-        //url 'D:/Projects/pcgen-base/librepo'
     }
 }
 
 dependencies {
 	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     compile group: 'net.sourceforge.pcgen', name: 'PCGen-base', version:'1.0.10'
-    compile group: 'javacc', name: 'javacc'
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 
@@ -69,7 +69,15 @@ uploadArchives {
     }
 }
 
-compileJava.dependsOn javaccCompile
+compileJjtree {
+    inputDirectory = file('code/src/java/pcgen/base/formula/parse/formula.jjt')
+    outputDirectory = file('code/src/java/pcgen/base/formula/parse/')
+}
+
+compileJavacc {
+    inputDirectory = file('code/src/java/pcgen/base/formula/parse/formula.jj')
+    outputDirectory = file('code/src/java/pcgen/base/formula/parse/')
+}
 
 // Calculate the version number - runs in the parse phase
 allprojects {
