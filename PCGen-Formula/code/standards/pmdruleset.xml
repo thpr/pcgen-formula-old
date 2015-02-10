@@ -15,16 +15,16 @@
   <description>
   PMD rules customised for PCGen's code. 
   </description>
-  
+
+   <exclude-pattern>.*/test/.*</exclude-pattern>
+   <exclude-pattern>.*/formula/parse/.*</exclude-pattern>
+   <include-pattern>.*/formula/parse/Operator.java</include-pattern>
+   <include-pattern>.*/formula/parse/SimpleNode.java</include-pattern>
+
     <rule ref="rulesets/java/logging-java.xml" />
     <rule ref="rulesets/java/basic.xml" />
     <rule ref="rulesets/java/braces.xml" />
-    <rule ref="rulesets/java/codesize.xml" >
-     <!-- 
-        <exclude name="TooManyFields" />
-        <exclude name="TooManyMethods" />
-       -->
-    </rule>
+    <rule ref="rulesets/java/codesize.xml" />
     
   <rule ref="rulesets/java/unnecessary.xml">
     <exclude name="UselessParentheses"/>

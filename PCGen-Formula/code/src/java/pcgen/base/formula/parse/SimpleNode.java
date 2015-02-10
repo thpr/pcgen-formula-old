@@ -152,7 +152,8 @@ public class SimpleNode implements Node
 	 * 
 	 * @return The ID of this node.
 	 */
-	public int getID()
+	@Override
+	public int getId()
 	{
 		return id;
 	}

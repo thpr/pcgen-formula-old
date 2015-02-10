@@ -166,7 +166,7 @@ public class FullDumpVisitor implements FormulaParserVisitor
 	private Object dump(SimpleNode node, Object data)
 	{
 		System.err.print(data);
-		System.err.print(FormulaParserTreeConstants.jjtNodeName[node.getID()]);
+		System.err.print(FormulaParserTreeConstants.jjtNodeName[node.getId()]);
 		Operator operator = node.getOperator();
 		if (operator != null)
 		{

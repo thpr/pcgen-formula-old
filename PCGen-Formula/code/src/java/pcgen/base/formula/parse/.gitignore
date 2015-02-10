@@ -24,3 +24,5 @@
 /ParseException.java
 /SimpleCharStream.java
 /Token.java
+/FormulaParserDefaultVisitor.java
+/TokenMgrError.java
