@@ -304,16 +304,19 @@ public class VariableLibrary
 		return getVarIDMessaged(scope, varName, scope);
 	}
 
+	/**
+	 * Returns a VariableID for the given name that is valid in the given scope
+	 * (or any parent scope - recursively)
+	 */
 	private <T> VariableID<T> getVarIDMessaged(VariableScope<T> scope,
-		String varName, VariableScope<T> messagescope)
+		String varName, VariableScope<T> messageScope)
 	{
 		if (scope == null)
 		{
 			throw new IllegalArgumentException("Cannot get VariableID "
-				+ varName + " for " + messagescope + " scope");
+				+ varName + " for " + messageScope + " scope");
 		}
 		checkLegalVarName(varName);
-//System.err.println(variableDefs);
 		if (variableDefs.containsInList(varName, scope.getScopeDefinition()))
 		{
 			return new VariableID<T>(scope, varName);

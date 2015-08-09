@@ -39,17 +39,22 @@ public class InvalidMissingOperator implements FormulaSemantics
 	 * The class of Operator object (Arithmetic, etc.) that did not have an
 	 * operator.
 	 */
-	private final Class<?> cl;
+	private final Class<?> operatorClass;
 
 	/**
 	 * Constructs a new InvalidMissingOperator for the given class of Operator.
 	 * 
-	 * @param c
+	 * @param operatorClass
 	 *            The Class of Operator that did contain an actual operator.
 	 */
-	public InvalidMissingOperator(Class<?> c)
+	public InvalidMissingOperator(Class<?> operatorClass)
 	{
-		cl = c;
+		if (operatorClass == null)
+		{
+			throw new IllegalArgumentException(
+				"Missing Operator Class may not be null");
+		}
+		this.operatorClass = operatorClass;
 	}
 
 	/**
@@ -73,7 +78,7 @@ public class InvalidMissingOperator implements FormulaSemantics
 	@Override
 	public String getReport()
 	{
-		return "Parse Error: Object of type " + cl.getClass()
+		return "Parse Error: Object of type " + operatorClass.getClass()
 			+ " expected to have an operator, none was found";
 	}
 

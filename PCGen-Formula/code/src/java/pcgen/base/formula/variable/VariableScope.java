@@ -52,32 +52,36 @@ public class VariableScope<T>
 	/**
 	 * The ScopeTypeDefinition that underlies this VariableScope.
 	 */
-	private final ScopeTypeDefinition<T> def;
+	private final ScopeTypeDefinition<T> stDef;
 
 	/**
 	 * Constructs a new VariableScope with the given ScopeTypeDefinition and
 	 * parent.
 	 * 
-	 * @param definition
+	 * @param stDef
 	 *            The ScopeTypeDefinition that underlies this VariableScope
-	 * @param parent
-	 *            The VariableScope that is a parent of this VariableScope
+	 * @param parentScope
+	 *            The VariableScope that is a parent of this VariableScope. May
+	 *            be null to represent global if the given ScopeTypeDefintion
+	 *            has no parent (is global)
 	 * @throws IllegalArgumentException
-	 *             if any parameter is null
+	 *             if the given ScopeTypeDefinition is null or the parentScope
+	 *             is null when the given ScopeTypeDefinition has a non-null
+	 *             parent
 	 */
-	VariableScope(ScopeTypeDefinition<T> definition, VariableScope<T> parent)
+	VariableScope(ScopeTypeDefinition<T> stDef, VariableScope<T> parentScope)
 	{
-		if (definition == null)
+		if (stDef == null)
 		{
 			throw new IllegalArgumentException("Definition cannot be null");
 		}
-		if ((parent == null) && (definition.getParent() != null))
+		if ((parentScope == null) && (stDef.getParent() != null))
 		{
 			throw new IllegalArgumentException(
 				"Cannot create Scope with null parent unless definition has no parent");
 		}
-		def = definition;
-		this.parent = parent;
+		this.stDef = stDef;
+		this.parent = parentScope;
 	}
 
 	/**
@@ -105,7 +109,7 @@ public class VariableScope<T>
 	 */
 	public ScopeTypeDefinition<T> getScopeDefinition()
 	{
-		return def;
+		return stDef;
 	}
 
 	/**
@@ -116,7 +120,7 @@ public class VariableScope<T>
 	 */
 	public Class<T> getVariableFormat()
 	{
-		return def.getVariableTypeDef().getVariableClass();
+		return stDef.getNamespaceDefinition().getVariableClass();
 	}
 
 	@Override
@@ -124,11 +128,11 @@ public class VariableScope<T>
 	{
 		if (parent == null)
 		{
-			return "Global (" + def + ")";
+			return "Global (" + stDef + ")";
 		}
 		else
 		{
-			return parent + " (" + def + ")";
+			return parent + " (" + stDef + ")";
 		}
 	}
 }

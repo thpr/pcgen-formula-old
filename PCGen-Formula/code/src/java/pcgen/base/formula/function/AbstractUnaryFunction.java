@@ -119,11 +119,11 @@ public abstract class AbstractUnaryFunction implements Function
 	 * The contract for the AbstractUnaryFunction interface guarantees that the
 	 * provided value will not be null, and the returned value may not be null.
 	 * 
-	 * @param d
+	 * @param n
 	 *            The input value for the AbstractUnaryFunction
 	 * @return The value calculated from the input value after applying the
 	 *         AbstractUnaryFunction
 	 */
-	protected abstract Number evaluate(Number d);
+	protected abstract Number evaluate(Number n);
 
 }

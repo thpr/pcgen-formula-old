@@ -38,7 +38,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 	/**
 	 * The underlying map serving as the storage for this SimpleVariableStore.
 	 */
-	private final Map<VariableID<?>, Object> map =
+	private final Map<VariableID<?>, Object> resultsMap =
 			new HashMap<VariableID<?>, Object>();
 
 	/**
@@ -54,7 +54,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 	@Override
 	public <T> T get(VariableID<T> id)
 	{
-		return (T) map.get(id);
+		return (T) resultsMap.get(id);
 	}
 
 	/**
@@ -69,7 +69,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 	@Override
 	public boolean containsKey(VariableID<?> id)
 	{
-		return map.containsKey(id);
+		return resultsMap.containsKey(id);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 					+ varFormat.getSimpleName() + " but got "
 					+ value.getClass().getSimpleName());
 		}
-		return (T) map.put(id, value);
+		return (T) resultsMap.put(id, value);
 	}
 
 }

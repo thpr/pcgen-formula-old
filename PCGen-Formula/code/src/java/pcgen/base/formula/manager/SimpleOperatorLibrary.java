@@ -82,14 +82,14 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 	 *      java.lang.Class, java.lang.Class)
 	 */
 	@Override
-	public Class<?> processAbstract(Operator op, Class<?> c1, Class<?> c2)
+	public Class<?> processAbstract(Operator op, Class<?> format1, Class<?> format2)
 	{
 		List<OperatorAction> list = actionMTL.getListFor(op);
 		if (list != null)
 		{
 			for (OperatorAction action : list)
 			{
-				Class<?> result = action.abstractEvaluate(c1, c2);
+				Class<?> result = action.abstractEvaluate(format1, format2);
 				/*
 				 * null indicates the OperatorAction can't evaluate these, but
 				 * try another (don't unconditionally return result because

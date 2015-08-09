@@ -207,15 +207,16 @@ public class DependencyCaptureVisitor implements FormulaParserVisitor
 	@Override
 	public Object visit(ASTPCGenLookup node, Object data)
 	{
-		Function pcgf = VisitorUtilities.getFunction(fm.getLibrary(), node);
+		Function function = VisitorUtilities.getFunction(fm.getLibrary(), node);
 		//TODO Is this an exception or does it add to FDM in some way... ??
-		if (pcgf == null)
+		if (function == null)
 		{
-			throw new IllegalStateException(node.getText() + " is not a valid function name");
+			throw new IllegalStateException(node.getText()
+				+ " is not a valid function name");
 		}
 		Node[] args = VisitorUtilities.accumulateArguments(node.jjtGetChild(1));
 		FormulaDependencyManager fdm = (FormulaDependencyManager) data;
-		pcgf.getDependencies(this, fdm, args);
+		function.getDependencies(this, fdm, args);
 		return fdm;
 	}
 
@@ -228,11 +229,10 @@ public class DependencyCaptureVisitor implements FormulaParserVisitor
 	public Object visit(ASTPCGenSingleWord node, Object data)
 	{
 		FormulaDependencyManager fdm = (FormulaDependencyManager) data;
-		VariableID<?> var =
-				fm.getFactory().getVariableID(scope, node.getText());
-		if (var != null)
+		VariableID<?> id = fm.getFactory().getVariableID(scope, node.getText());
+		if (id != null)
 		{
-			fdm.addVariable(var);
+			fdm.addVariable(id);
 		}
 		return fdm;
 	}
@@ -299,8 +299,8 @@ public class DependencyCaptureVisitor implements FormulaParserVisitor
 	 */
 	private Object checkAllChildren(SimpleNode node, Object data)
 	{
-		int ccount = node.jjtGetNumChildren();
-		for (int i = 0; i < ccount; i++)
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++)
 		{
 			node.jjtGetChild(i).jjtAccept(this, data);
 		}

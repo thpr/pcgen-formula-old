@@ -33,7 +33,8 @@ public class SimpleFormulaDependencyManager implements FormulaDependencyManager
 	 * The internal list of VariableIDs upon which the formula this
 	 * SimpleFormulaDependencyManager represents is dependent.
 	 */
-	private final List<VariableID<?>> list = new ArrayList<VariableID<?>>();
+	private final List<VariableID<?>> dependentVars =
+			new ArrayList<VariableID<?>>();
 
 	/**
 	 * Adds a Variable (identified by the VariableID) to the list of
@@ -52,7 +53,7 @@ public class SimpleFormulaDependencyManager implements FormulaDependencyManager
 		{
 			throw new IllegalArgumentException("VariableID may not be null");
 		}
-		list.add(vid);
+		dependentVars.add(vid);
 	}
 
 	/**
@@ -72,7 +73,7 @@ public class SimpleFormulaDependencyManager implements FormulaDependencyManager
 	@Override
 	public List<VariableID<?>> getVariables()
 	{
-		return new ArrayList<VariableID<?>>(list);
+		return new ArrayList<VariableID<?>>(dependentVars);
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class SimpleFormulaDependencyManager implements FormulaDependencyManager
 	@Override
 	public boolean isEmpty()
 	{
-		return list.isEmpty();
+		return dependentVars.isEmpty();
 	}
 
 }

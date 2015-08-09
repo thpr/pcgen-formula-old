@@ -63,22 +63,22 @@ public class IfFunction implements Function
 	@Override
 	public FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
 	{
-		int acount = args.length;
-		if (acount != 3)
+		int argCount = args.length;
+		if (argCount != 3)
 		{
 			return new InvalidIncorrectArgumentCount(getFunctionName(), 3, args);
 		}
 		//Boolean conditional node
-		Node bNode = args[0];
+		Node conditionalNode = args[0];
 		FormulaSemantics result =
-				(FormulaSemantics) bNode.jjtAccept(visitor, null);
+				(FormulaSemantics) conditionalNode.jjtAccept(visitor, null);
 		if (!result.isValid())
 		{
 			return result;
 		}
 		if (!result.getSemanticState().equals(Boolean.class))
 		{
-			return new InvalidSemantics(bNode, Boolean.class,
+			return new InvalidSemantics(conditionalNode, Boolean.class,
 				result.getSemanticState());
 		}
 
@@ -105,8 +105,8 @@ public class IfFunction implements Function
 		//Check for Mismatch in types between True and False results
 		if (!tResult.getSemanticState().equals(fResult.getSemanticState()))
 		{
-			return new InvalidSemantics(bNode, tResult.getSemanticState(),
-				fResult.getSemanticState());
+			return new InvalidSemantics(conditionalNode,
+				tResult.getSemanticState(), fResult.getSemanticState());
 		}
 
 		return tResult;

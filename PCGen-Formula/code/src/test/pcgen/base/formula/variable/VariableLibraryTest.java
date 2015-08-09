@@ -40,8 +40,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testAssertVariableFail()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		try
 		{
@@ -105,8 +105,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testAssertVariable()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		//Dupe is safe
@@ -149,8 +149,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testIsLegalVIDFail()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		try
@@ -175,8 +175,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testIsLegalVID()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
@@ -214,8 +214,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testKnownVarScopeFail()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		try
@@ -259,8 +259,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testKnownVarScope()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
@@ -314,8 +314,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testInstantiateScopeFail()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
@@ -376,8 +376,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testInstantiateScope()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
@@ -407,8 +407,8 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testGetVIDFail()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
@@ -499,10 +499,10 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testGetVID()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
-		VariableTypeDefinition flag =
-				new VariableTypeDefinition(Boolean.class, "FLAG");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
+		NamespaceDefinition flag =
+				new NamespaceDefinition(Boolean.class, "FLAG");
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition gfDef = stDefLib.defineGlobalScopeDefinition(flag);
 		ScopeTypeDefinition eqMove =
@@ -564,12 +564,12 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testProveReuse()
 	{
-		VariableTypeDefinition var =
-				new VariableTypeDefinition(Number.class, "VAR");
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
-		VariableTypeDefinition flag =
-				new VariableTypeDefinition(Boolean.class, "FLAG");
+		NamespaceDefinition var =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
+		NamespaceDefinition flag =
+				new NamespaceDefinition(Boolean.class, "FLAG");
 		ScopeTypeDefinition gvDef = stDefLib.defineGlobalScopeDefinition(var);
 		assertNotNull(gvDef);
 		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);

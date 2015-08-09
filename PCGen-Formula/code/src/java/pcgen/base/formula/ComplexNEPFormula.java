@@ -63,7 +63,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * the tree of objects representing the calculation to be performed by the
 	 * ComplexNEPFormula, and loads the root of that tree into the root field.
 	 * 
-	 * @param s
+	 * @param expression
 	 *            The String representation of the formula used to construct the
 	 *            ComplexNEPFormula.
 	 * @throws IllegalArgumentException
@@ -71,16 +71,16 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 *             Formula. (For example, if parenthesis are not matched, an
 	 *             exception will be thrown)
 	 */
-	public ComplexNEPFormula(String s)
+	public ComplexNEPFormula(String expression)
 	{
-		if (s == null)
+		if (expression == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot make formula from null String");
 		}
 		try
 		{
-			root = new FormulaParser(new StringReader(s)).query();
+			root = new FormulaParser(new StringReader(expression)).query();
 		}
 		catch (ParseException e)
 		{

@@ -47,10 +47,10 @@ public class BooleanNotEqual implements OperatorAction
 	 *      java.lang.Class)
 	 */
 	@Override
-	public Class<?> abstractEvaluate(Class<?> c1, Class<?> c2)
+	public Class<?> abstractEvaluate(Class<?> format1, Class<?> format2)
 	{
-		if (BOOLEAN_CLASS.isAssignableFrom(c1)
-			&& BOOLEAN_CLASS.isAssignableFrom(c2))
+		if (BOOLEAN_CLASS.isAssignableFrom(format1)
+			&& BOOLEAN_CLASS.isAssignableFrom(format2))
 		{
 			return BOOLEAN_CLASS;
 		}

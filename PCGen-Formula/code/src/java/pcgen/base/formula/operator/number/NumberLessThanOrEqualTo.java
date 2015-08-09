@@ -49,10 +49,10 @@ public class NumberLessThanOrEqualTo implements OperatorAction
 	 *      java.lang.Class)
 	 */
 	@Override
-	public Class<?> abstractEvaluate(Class<?> c1, Class<?> c2)
+	public Class<?> abstractEvaluate(Class<?> format1, Class<?> format2)
 	{
-		if (NUMBER_CLASS.isAssignableFrom(c1)
-			&& NUMBER_CLASS.isAssignableFrom(c2))
+		if (NUMBER_CLASS.isAssignableFrom(format1)
+			&& NUMBER_CLASS.isAssignableFrom(format2))
 		{
 			return Boolean.class;
 		}

@@ -204,17 +204,17 @@ public class EvaluateVisitor implements FormulaParserVisitor
 		 * Note we only support exponent (^) for Number.class. This was enforced
 		 * by ValidVisitor.
 		 */
-		int ccount = node.jjtGetNumChildren();
+		int childCount = node.jjtGetNumChildren();
 
-		Number n1 = (Number) node.jjtGetChild(0).jjtAccept(this, null);
-		Number n2 = (Number) node.jjtGetChild(1).jjtAccept(this, null);
+		Number base = (Number) node.jjtGetChild(0).jjtAccept(this, null);
+		Number exponent = (Number) node.jjtGetChild(1).jjtAccept(this, null);
 		//"Cheat" to reduce calls to EXP in that X^Y^Z == X^(Y*Z)
-		for (int i = 2; i < ccount; i++)
+		for (int i = 2; i < childCount; i++)
 		{
 			Number n = (Number) node.jjtGetChild(i).jjtAccept(this, null);
-			n2 = Double.valueOf(n2.doubleValue() * n.doubleValue());
+			exponent = Double.valueOf(exponent.doubleValue() * n.doubleValue());
 		}
-		return Math.pow(n1.doubleValue(), n2.doubleValue());
+		return Math.pow(base.doubleValue(), exponent.doubleValue());
 	}
 
 	/**
@@ -256,10 +256,10 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	@Override
 	public Object visit(ASTPCGenLookup node, Object data)
 	{
-		Function pcgf = VisitorUtilities.getFunction(fm.getLibrary(), node);
+		Function function = VisitorUtilities.getFunction(fm.getLibrary(), node);
 		Node[] args = VisitorUtilities.accumulateArguments(node.jjtGetChild(1));
 		//evaluate the function
-		return pcgf.evaluate(this, args);
+		return function.evaluate(this, args);
 	}
 
 	/**
@@ -351,15 +351,15 @@ public class EvaluateVisitor implements FormulaParserVisitor
 			throw new IllegalStateException(getClass().getSimpleName()
 				+ " must have an operator");
 		}
-		int ccount = node.jjtGetNumChildren();
-		if (ccount != 2)
+		int childCount = node.jjtGetNumChildren();
+		if (childCount != 2)
 		{
 			throw new IllegalStateException(getClass().getSimpleName()
-				+ " must only have 2 children, was: " + ccount);
+				+ " must only have 2 children, was: " + childCount);
 		}
-		Object o1 = node.jjtGetChild(0).jjtAccept(this, null);
-		Object o2 = node.jjtGetChild(1).jjtAccept(this, null);
-		return fm.getOperatorLibrary().evaluate(op, o1, o2);
+		Object child1result = node.jjtGetChild(0).jjtAccept(this, null);
+		Object child2result = node.jjtGetChild(1).jjtAccept(this, null);
+		return fm.getOperatorLibrary().evaluate(op, child1result, child2result);
 	}
 
 	/**
@@ -373,11 +373,11 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	 */
 	private Object evaluateSingleNumericChild(Node node)
 	{
-		int ccount = node.jjtGetNumChildren();
-		if (ccount != 1)
+		int childCount = node.jjtGetNumChildren();
+		if (childCount != 1)
 		{
 			throw new IllegalStateException(getClass().getSimpleName()
-				+ " must only have 1 child, was: " + ccount);
+				+ " must only have 1 child, was: " + childCount);
 		}
 		Node child = node.jjtGetChild(0);
 		return child.jjtAccept(this, null);

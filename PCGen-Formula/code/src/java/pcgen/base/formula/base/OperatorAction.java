@@ -77,14 +77,17 @@ public interface OperatorAction
 	 * non-null value. If this method returns null, then evaluate should throw
 	 * an exception.
 	 * 
-	 * @param c1
-	 *            The class of the first argument to the abstract operation
-	 * @param c2
-	 *            The class of the second argument to the abstract operation
-	 * @return The class of the result of the operation if this OperatorAction
-	 *         can process objects of the given classes; null otherwise
+	 * @param format1
+	 *            The class (data format) of the first argument to the abstract
+	 *            operation
+	 * @param format2
+	 *            The class (data format) of the second argument to the abstract
+	 *            operation
+	 * @return The class (data format) of the result of the operation if this
+	 *         OperatorAction can process objects of the given classes; null
+	 *         otherwise
 	 */
-	public Class<?> abstractEvaluate(Class<?> c1, Class<?> c2);
+	public Class<?> abstractEvaluate(Class<?> format1, Class<?> format2);
 
 	/**
 	 * Perform an evaluation with the two given objects as arguments. and

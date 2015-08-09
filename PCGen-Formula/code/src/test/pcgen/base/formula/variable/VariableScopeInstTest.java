@@ -27,8 +27,8 @@ public class VariableScopeInstTest extends TestCase
 	@Test
 	public void testDoubleConstructor()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope parent = new VariableScope(global, null);
 		try
@@ -75,8 +75,8 @@ public class VariableScopeInstTest extends TestCase
 
 	public void testGlobal()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		assertEquals(null, scope.getParentScope());

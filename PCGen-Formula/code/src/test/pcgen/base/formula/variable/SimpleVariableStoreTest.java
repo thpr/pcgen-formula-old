@@ -25,8 +25,8 @@ public class SimpleVariableStoreTest extends TestCase
 	public void testNulls()
 	{
 		SimpleVariableStore svs = new SimpleVariableStore();
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableID vid = new VariableID(scope, "test");
@@ -59,8 +59,8 @@ public class SimpleVariableStoreTest extends TestCase
 	public void testGlobal()
 	{
 		SimpleVariableStore svs = new SimpleVariableStore();
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableID vid = new VariableID(scope, "test");
@@ -76,8 +76,8 @@ public class SimpleVariableStoreTest extends TestCase
 	public void testIndependence()
 	{
 		SimpleVariableStore svs = new SimpleVariableStore();
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableScope scope2 = new VariableScope(global, null);

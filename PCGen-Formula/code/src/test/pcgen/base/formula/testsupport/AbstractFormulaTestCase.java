@@ -35,7 +35,7 @@ import pcgen.base.formula.variable.SimpleVariableStore;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.variable.VariableLibrary;
 import pcgen.base.formula.variable.VariableScope;
-import pcgen.base.formula.variable.VariableTypeDefinition;
+import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.visitor.DependencyCaptureVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
@@ -62,8 +62,8 @@ public abstract class AbstractFormulaTestCase extends TestCase
 		super.setUp();
 		stDefLib = new ScopeTypeDefLibrary();
 		opLibrary = new SimpleOperatorLibrary();
-		VariableTypeDefinition<Number> vtd =
-				new VariableTypeDefinition<Number>(Number.class, "VAR");
+		NamespaceDefinition<Number> vtd =
+				new NamespaceDefinition<Number>(Number.class, "VAR");
 		stDefLib.defineGlobalScopeDefinition(vtd);
 		globalScopeDef = stDefLib.getGlobalScopeDefinition("VAR");
 		varLibrary = new VariableLibrary(stDefLib);
