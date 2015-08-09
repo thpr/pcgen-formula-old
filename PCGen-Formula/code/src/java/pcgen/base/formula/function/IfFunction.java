@@ -57,8 +57,7 @@ public class IfFunction implements Function
 	 * Three arguments are required, and each must be a valid formula value
 	 * (number, variable, another function, etc.)
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor
-	 *      .ValidVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.ValidVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
@@ -119,8 +118,7 @@ public class IfFunction implements Function
 	 * valid values. See evaluate on the Function interface for important
 	 * assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor
-	 *      .EvaluateVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Object evaluate(EvaluateVisitor visitor, Node[] args)
@@ -147,8 +145,7 @@ public class IfFunction implements Function
 	 * isStatic on the Function interface for important assumptions made when
 	 * this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor
-	 *      .StaticVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)

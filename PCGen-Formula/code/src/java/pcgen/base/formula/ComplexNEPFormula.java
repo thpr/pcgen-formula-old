@@ -166,7 +166,8 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	/**
 	 * Returns the FormulaSemantics for this NEPFormula.
 	 * 
-	 * @see pcgen.base.formula.NEPFormula#isValid(pcgen.base.formula.manager.FormulaManager)
+	 * @see pcgen.base.formula.NEPFormula#isValid(pcgen.base.formula.manager.FormulaManager,
+	 *      pcgen.base.formula.variable.ScopeTypeDefinition)
 	 */
 	@Override
 	public FormulaSemantics isValid(FormulaManager fm,

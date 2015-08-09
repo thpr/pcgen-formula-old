@@ -38,8 +38,7 @@ public abstract class AbstractUnaryFunction implements Function
 	 * Only one argument is allowed, and it must be a valid formula value
 	 * (number, variable, another function, etc.)
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor
-	 *      .ValidVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.ValidVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public final FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
@@ -61,8 +60,7 @@ public abstract class AbstractUnaryFunction implements Function
 	 * 
 	 * Actual processing is delegated to evaluate(Double)
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor
-	 *      .EvaluateVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public final Number evaluate(EvaluateVisitor visitor, Node[] args)
@@ -77,8 +75,7 @@ public abstract class AbstractUnaryFunction implements Function
 	 * valid value in a formula. See isStatic on the Function interface for
 	 * important assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor
-	 *      .StaticVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)
