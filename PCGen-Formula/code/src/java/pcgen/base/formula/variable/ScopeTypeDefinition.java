@@ -165,12 +165,18 @@ public class ScopeTypeDefinition<T>
 		return scopeName + " " + namespaceDef;
 	}
 
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
 		return scopeName.hashCode() * 37 + namespaceDef.hashCode();
 	}
 
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o)
 	{

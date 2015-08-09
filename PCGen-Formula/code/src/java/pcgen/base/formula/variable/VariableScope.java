@@ -123,6 +123,9 @@ public class VariableScope<T>
 		return stDef.getNamespaceDefinition().getVariableClass();
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{

@@ -30,6 +30,11 @@ import pcgen.base.util.GenericMapToList;
 public class VariableLibrary
 {
 
+	/**
+	 * The ScopeTypeDefLibrary that supports to be used to determine "child"
+	 * scopes from any ScopeTypeDefinition (in order to avoid variable name
+	 * conflicts between different but non disjoint scopes).
+	 */
 	private final ScopeTypeDefLibrary library;
 
 	/**
@@ -138,6 +143,10 @@ public class VariableLibrary
 		return !hasChildConflict;
 	}
 
+	/**
+	 * Returns true if there is a conflict the a child Scope for the given
+	 * variable name.
+	 */
 	private boolean hasChildConflict(String varName,
 		ScopeTypeDefinition<?> stDef)
 	{

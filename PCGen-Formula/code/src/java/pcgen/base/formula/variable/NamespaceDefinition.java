@@ -113,6 +113,9 @@ public class NamespaceDefinition<T>
 		return false;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
