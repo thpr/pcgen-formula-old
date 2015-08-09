@@ -71,7 +71,7 @@ public class BooleanAnd implements OperatorAction
 		 */
 		boolean left = ((Boolean) l).booleanValue();
 		boolean right = ((Boolean) r).booleanValue();
-		return left && right;
+		return Boolean.valueOf(left && right);
 	}
 
 }

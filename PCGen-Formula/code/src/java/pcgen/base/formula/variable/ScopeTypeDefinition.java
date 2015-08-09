@@ -155,9 +155,30 @@ public class ScopeTypeDefinition<T>
 		return varTypeDef;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return scopeName + " " + varTypeDef;
+	}
+	
+	@Override
+	public int hashCode()
+	{
+		return scopeName.hashCode() * 37 + varTypeDef.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof ScopeTypeDefinition)
+		{
+			ScopeTypeDefinition<?> other = (ScopeTypeDefinition<?>) o;
+			return scopeName.equals(other.scopeName)
+					&& varTypeDef.equals(other.varTypeDef);
+		}
+		return false;
 	}
 }

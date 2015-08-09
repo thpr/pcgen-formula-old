@@ -65,8 +65,10 @@ public class BooleanNotEqual implements OperatorAction
 	@Override
 	public Object evaluate(Object l, Object r)
 	{
-		//Force boolean values here to produce problems with nulls
-		return ((Boolean) l).booleanValue() != ((Boolean) r).booleanValue();
+		//Force boolean values (unboxing) here to produce problems with nulls
+		boolean left = ((Boolean) l).booleanValue();
+		boolean right = ((Boolean) r).booleanValue();
+		return Boolean.valueOf(left != right);
 	}
 
 }
