@@ -43,8 +43,7 @@ public class MinFunction extends AbstractNaryFunction
 	 * The same situations/boundary condition rules apply as those in
 	 * java.lang.Math.min(double, double)
 	 * 
-	 * @see pcgen.base.formula.function.AbstractNaryFunction#evaluate(double,
-	 *      double)
+	 * @see pcgen.base.formula.function.AbstractNaryFunction#evaluate(java.lang.Number, java.lang.Number)
 	 */
 	@Override
 	protected Number evaluate(Number n1, Number n2)

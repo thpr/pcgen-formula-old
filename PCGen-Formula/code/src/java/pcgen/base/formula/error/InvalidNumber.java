@@ -39,27 +39,27 @@ public class InvalidNumber implements FormulaSemantics
 	/**
 	 * Indicates the class of the Node that encountered an invalid number.
 	 */
-	private final Class<?> clz;
+	private final Class<?> nodeClass;
 
 	/**
 	 * Indicates the actual text that was supposed to represent a valid number.
 	 */
-	private final String numberText;
+	private final String text;
 
 	/**
 	 * Constructs a new InvalidNumber indicating the class and the invalid text
 	 * encountered in that class.
 	 * 
-	 * @param cl
+	 * @param nodeClass
 	 *            The class of the Node that encountered an invalid number
 	 * @param text
 	 *            The actual text that was supposed to represent a valid number
 	 * @throws IllegalArgumentException
 	 *             if either argument is null
 	 */
-	public InvalidNumber(Class<?> cl, String text)
+	public InvalidNumber(Class<?> nodeClass, String text)
 	{
-		if (cl == null)
+		if (nodeClass == null)
 		{
 			throw new IllegalArgumentException(
 				"Enclosing Node class may not be null");
@@ -69,8 +69,8 @@ public class InvalidNumber implements FormulaSemantics
 			throw new IllegalArgumentException(
 				"Invalid Number text may not be null");
 		}
-		clz = cl;
-		numberText = text;
+		this.nodeClass = nodeClass;
+		this.text = text;
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class InvalidNumber implements FormulaSemantics
 	@Override
 	public String getReport()
 	{
-		return clz.getClass() + " had invalid number: " + numberText;
+		return nodeClass.getClass() + " had invalid number: " + text;
 	}
 
 	/**

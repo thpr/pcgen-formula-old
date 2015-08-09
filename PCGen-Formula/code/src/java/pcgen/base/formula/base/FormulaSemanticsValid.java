@@ -27,24 +27,24 @@ public class FormulaSemanticsValid implements FormulaSemantics
 	/**
 	 * The class of object returned by the Formula
 	 */
-	private final Class<?> cl;
+	private final Class<?> formulaFormat;
 
 	/**
 	 * Constructs a new FormulaSemanticsValid indicating the return format of
 	 * the formula this FormulaSemanticsValid is reporting upon.
 	 * 
-	 * @param c
+	 * @param formulaFormat
 	 *            The class indicating the format of the formula this
 	 *            FormulaSemanticsValid is reporting upon.
 	 */
-	public FormulaSemanticsValid(Class<?> c)
+	public FormulaSemanticsValid(Class<?> formulaFormat)
 	{
-		if (c == null)
+		if (formulaFormat == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot initialize with null class");
+				"Cannot initialize valid formula semantics with null Format");
 		}
-		cl = c;
+		this.formulaFormat = formulaFormat;
 	}
 
 	/**
@@ -78,7 +78,7 @@ public class FormulaSemanticsValid implements FormulaSemantics
 	@Override
 	public Class<?> getSemanticState()
 	{
-		return cl;
+		return formulaFormat;
 	}
 
 }

@@ -302,13 +302,13 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 	 *            reconstruct the contents
 	 * @param data
 	 *            The StringBuilder in which the results are being written
-	 * @param s
+	 * @param separator
 	 *            The separator to be written in between the contents of each
 	 *            child node
 	 * @return The StringBuilder in which the results are being written
 	 */
 	private Object processChildrenWithSeparator(SimpleNode node, Object data,
-		String s)
+		String separator)
 	{
 		StringBuilder sb = (StringBuilder) data;
 		int numberOfChildren = node.jjtGetNumChildren();
@@ -316,7 +316,7 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 		{
 			if (i != 0)
 			{
-				sb.append(s);
+				sb.append(separator);
 			}
 			Node child = node.jjtGetChild(i);
 			child.jjtAccept(this, data);

@@ -48,19 +48,19 @@ public class InvalidNotOperable implements FormulaSemantics
 	/**
 	 * Constructs a new InvalidNotOperable for the given node.
 	 * 
-	 * @param n
+	 * @param node
 	 *            The (inoperable) node that was encountered by the visitor
 	 * @throws IllegalArgumentException
 	 *             if the argument is null
 	 */
-	public InvalidNotOperable(Object n)
+	public InvalidNotOperable(Object node)
 	{
-		if (n == null)
+		if (node == null)
 		{
 			throw new IllegalArgumentException(
 				"Inoperable Node may not be null");
 		}
-		node = n;
+		this.node = node;
 	}
 
 	/**

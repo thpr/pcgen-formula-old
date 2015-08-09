@@ -42,96 +42,103 @@ public class InvalidSemantics implements FormulaSemantics
 	 */
 	private final Object node;
 
-	private final Operator op;
+	/**
+	 * The Operator being processed, if any
+	 * 
+	 * null is a valid value
+	 */
+	private final Operator operator;
 
 	/**
 	 * The Class of object required, or if an Operator-based error, the first
 	 * class provided to the operator.
 	 */
-	private final Class<?> reqType;
+	private final Class<?> reqFormat;
 
 	/**
 	 * The Class of object found (which was not what was required), or if an
 	 * Operator-based error, the second class provided to the operator.
 	 */
-	private final Class<?> clType;
+	private final Class<?> foundFormat;
 
 	/**
 	 * Constructs a new InvalidSemantics occurring on the given Node and with
 	 * the given required and actual formats.
 	 * 
-	 * @param n
+	 * @param node
 	 *            The (non-numeric) node that was encountered by the visitor
-	 * @param required
+	 * @param reqFormat
 	 *            The required format of object in the formula
-	 * @param type
+	 * @param foundFormat
 	 *            The format found when a different format was expected
 	 * @throws IllegalArgumentException
 	 *             if any argument is null
 	 */
-	public InvalidSemantics(Object n, Class<?> required, Class<?> type)
+	public InvalidSemantics(Object node, Class<?> reqFormat,
+		Class<?> foundFormat)
 	{
-		if (n == null)
+		if (node == null)
 		{
 			throw new IllegalArgumentException(
 				"Inoperable Node may not be null");
 		}
-		if (required == null)
+		if (reqFormat == null)
 		{
 			throw new IllegalArgumentException(
-				"Inoperable Required Type may not be null");
+				"Inoperable Required Format may not be null");
 		}
-		if (type == null)
+		if (foundFormat == null)
 		{
 			throw new IllegalArgumentException(
-				"Inoperable Node Type may not be null");
+				"Inoperable Node Format may not be null");
 		}
-		node = n;
-		reqType = required;
-		clType = type;
-		op = null;
+		this.node = node;
+		this.reqFormat = reqFormat;
+		this.foundFormat = foundFormat;
+		operator = null;
 	}
 
 	/**
 	 * Constructs a new InvalidSemantics occurring on the given Node and with
 	 * the non-numeric Class type.
 	 * 
-	 * @param n
+	 * @param node
 	 *            The (non-numeric) node that was encountered by the visitor
-	 * @param o
+	 * @param operator
 	 *            The Operator performing a given calculation
-	 * @param c1
+	 * @param reqFormat
 	 *            The first format provided to the operator
-	 * @param c2
+	 * @param foundFormat
 	 *            The second format provided to the operator
 	 * @throws IllegalArgumentException
 	 *             if any argument is null
 	 */
-	public InvalidSemantics(Object n, Operator o, Class<?> c1, Class<?> c2)
+	public InvalidSemantics(Object node, Operator operator, Class<?> reqFormat,
+		Class<?> foundFormat)
 	{
-		if (n == null)
+		if (node == null)
 		{
 			throw new IllegalArgumentException(
 				"Inoperable Node may not be null");
 		}
-		if (o == null)
+		if (operator == null)
 		{
 			throw new IllegalArgumentException("Operator may not be null");
 		}
-		if (c1 == null)
+		if (reqFormat == null)
 		{
 			throw new IllegalArgumentException(
-				"Inoperable Required Type may not be null");
+				"Inoperable Required Format may not be null");
 		}
-		if (c2 == null)
+		if (foundFormat == null)
 		{
 			throw new IllegalArgumentException(
-				"Inoperable Node Type may not be null");
+				"Inoperable Node Format may not be null");
 		}
-		node = n;
-		op = o;
-		reqType = c1;
-		clType = c2;
+		this.node = node;
+		this.operator = operator;
+		this.reqFormat = reqFormat;
+		this.foundFormat = foundFormat;
 	}
 
 	/**
@@ -154,17 +161,18 @@ public class InvalidSemantics implements FormulaSemantics
 	@Override
 	public String getReport()
 	{
-		if (op == null)
+		if (operator == null)
 		{
-			return "Parse Error: Invalid Value Type: " + clType + " found in "
-				+ node.getClass().getName() + " found in location requiring a "
-				+ reqType.getSimpleName() + " (class cannot be evaluated)";
+			return "Parse Error: Invalid Value Format: " + foundFormat
+				+ " found in " + node.getClass().getName()
+				+ " found in location requiring a " + reqFormat.getSimpleName()
+				+ " (class cannot be evaluated)";
 		}
 		else
 		{
-			return "Parse Error: Operator " + op.getSymbol()
-				+ " cannot process children: " + clType.getSimpleName()
-				+ " and " + reqType.getSimpleName() + " found in "
+			return "Parse Error: Operator " + operator.getSymbol()
+				+ " cannot process children: " + foundFormat.getSimpleName()
+				+ " and " + reqFormat.getSimpleName() + " found in "
 				+ node.getClass().getName();
 		}
 	}

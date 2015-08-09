@@ -32,7 +32,7 @@ public class ScopeTypeDefLibrary
 {
 
 	/**
-	 * Holds the Global Scope Definition for each type (for this
+	 * Holds the Global Scope Definition for each namespace (for this
 	 * ScopeTypeDefLibrary).
 	 */
 	private Map<String, ScopeTypeDefinition<?>> globalScopes =
@@ -43,79 +43,80 @@ public class ScopeTypeDefLibrary
 	 * ScopeTypeDefinition objects. The child->parent relationship is held in
 	 * the ScopeTypeDefinition object itself.
 	 */
-	private HashMapToList<ScopeTypeDefinition<?>, ScopeTypeDefinition<?>> scopes =
+	private HashMapToList<ScopeTypeDefinition<?>, ScopeTypeDefinition<?>> scopeChildren =
 			new HashMapToList<ScopeTypeDefinition<?>, ScopeTypeDefinition<?>>();
 
 	/**
 	 * Asserts (and if valid, returns) the existence of a "Global"
-	 * ScopeTypeDefinition for the given VariableTypeDefinition.
+	 * ScopeTypeDefinition for the given NamespaceDefinition.
 	 * 
 	 * If an existing "Global" ScopeTypeDefinition exists for the Type Name of
 	 * the given VariableTypeDefintion, and it not based on the given
-	 * VariableTypeDefinition, then this method will throw an Exception. Note
-	 * that this means the method either returns a non-null value or throws an
+	 * NamespaceDefinition, then this method will throw an Exception. Note that
+	 * this means the method either returns a non-null value or throws an
 	 * Exception.
 	 * 
-	 * @param vtd
-	 *            The VariableTypeDefinition for which the existence of a
-	 *            "Global" ScopeTypeDefinition is being asserted.
+	 * @param nsDef
+	 *            The NamespaceDefinition for which the existence of a "Global"
+	 *            ScopeTypeDefinition is being asserted.
 	 * @return The "Global" ScopeTypeDefinition for the given
-	 *         VariableTypeDefinition
+	 *         NamespaceDefinition
 	 * @throws IllegalArgumentException
 	 *             if an existing "Global" ScopeTypeDefinition exists for the
-	 *             Type Name of the given VariableTypeDefinition, but does not
-	 *             match the given VariableTypeDefinition
+	 *             Type Name of the given NamespaceDefinition, but does not
+	 *             match the given NamespaceDefinition
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> ScopeTypeDefinition<T> defineGlobalScopeDefinition(
-		VariableTypeDefinition<T> vtd)
+		NamespaceDefinition<T> nsDef)
 	{
-		if (vtd == null)
+		if (nsDef == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot define Global scope definition for null Variable Type");
+				"Cannot define Global scope definition for null Namespace");
 		}
-		String varType = vtd.getVariableTypeName();
+		String nsName = nsDef.getVariableTypeName();
 		ScopeTypeDefinition<T> globalScope =
-				(ScopeTypeDefinition<T>) globalScopes.get(varType);
+				(ScopeTypeDefinition<T>) globalScopes.get(nsName);
 		if (globalScope == null)
 		{
-			globalScope = new ScopeTypeDefinition<T>(vtd);
-			globalScopes.put(varType, globalScope);
+			globalScope = new ScopeTypeDefinition<T>(nsDef);
+			globalScopes.put(nsName, globalScope);
 		}
 		else
 		{
-			if (!globalScope.getVariableTypeDef().equals(vtd))
+			if (!globalScope.getNamespaceDefinition().equals(nsDef))
 			{
 				String oldClass =
-						globalScope.getVariableTypeDef().getVariableClass()
+						globalScope.getNamespaceDefinition().getVariableClass()
 							.getSimpleName();
 				throw new IllegalArgumentException(
 					"Attempt to redefine Global Scope Definition for: "
-						+ varType + " from " + oldClass + " to "
-						+ vtd.getVariableClass().getSimpleName());
+						+ nsName + " from " + oldClass + " to "
+						+ nsDef.getVariableClass().getSimpleName());
 			}
 		}
 		return globalScope;
 	}
 
 	/**
-	 * Returns the Global ScopeTypeDefinition for the given variable type name
+	 * Returns the Global ScopeTypeDefinition for the given variable namespace
 	 * for this ScopeTypeDefLibrary.
 	 * 
-	 * @param varTypeName
-	 *            The name of the variable type for which the global
+	 * @param varNamespace
+	 *            The name of the variable namespace for which the global
 	 *            ScopeTypeDefinition is to be retrieved
-	 * @return The Global ScopeTypeDefinition for this ScopeTypeDefLibrary
+	 * @return The Global ScopeTypeDefinition in this ScopeTypeDefLibrary for
+	 *         the given variable namespace
 	 */
-	public ScopeTypeDefinition<?> getGlobalScopeDefinition(String varTypeName)
+	public ScopeTypeDefinition<?> getGlobalScopeDefinition(String varNamespace)
 	{
-		ScopeTypeDefinition<?> globalScope = globalScopes.get(varTypeName);
+		ScopeTypeDefinition<?> globalScope = globalScopes.get(varNamespace);
 		if (globalScope == null)
 		{
 			throw new IllegalArgumentException(
-				"Global Scope Type for Variable Type " + varTypeName
-					+ " is not defined");
+				"Global Scope Type Definition for Variable Namespace "
+					+ varNamespace + " is not defined");
 		}
 		return globalScope;
 	}
@@ -168,7 +169,8 @@ public class ScopeTypeDefLibrary
 		 * TODO Do we need a check that the given parentDef actually belongs to
 		 * this VariableLibrary?
 		 */
-		List<ScopeTypeDefinition<?>> subscopes = scopes.getListFor(parentDef);
+		List<ScopeTypeDefinition<?>> subscopes =
+				scopeChildren.getListFor(parentDef);
 		if (subscopes != null)
 		{
 			//Look for existing
@@ -183,7 +185,7 @@ public class ScopeTypeDefLibrary
 		//Is new
 		ScopeTypeDefinition<T> stDef =
 				new ScopeTypeDefinition<T>(parentDef, scopeName);
-		scopes.addToListFor(parentDef, stDef);
+		scopeChildren.addToListFor(parentDef, stDef);
 		return stDef;
 	}
 
@@ -206,7 +208,7 @@ public class ScopeTypeDefLibrary
 	public List<ScopeTypeDefinition<?>> getChildScopes(
 		ScopeTypeDefinition<?> stDef)
 	{
-		return scopes.getListFor(stDef);
+		return scopeChildren.getListFor(stDef);
 	}
 
 	/**

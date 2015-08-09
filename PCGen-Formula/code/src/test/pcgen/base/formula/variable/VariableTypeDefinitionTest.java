@@ -29,7 +29,7 @@ public class VariableTypeDefinitionTest extends TestCase
 	{
 		try
 		{
-			new VariableTypeDefinition(null, null);
+			new NamespaceDefinition(null, null);
 			fail("nulls must be rejected");
 		}
 		catch (NullPointerException e)
@@ -42,7 +42,7 @@ public class VariableTypeDefinitionTest extends TestCase
 		}
 		try
 		{
-			new VariableTypeDefinition(Number.class, null);
+			new NamespaceDefinition(Number.class, null);
 			fail("null name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -55,7 +55,7 @@ public class VariableTypeDefinitionTest extends TestCase
 		}
 		try
 		{
-			new VariableTypeDefinition(null, "VAR");
+			new NamespaceDefinition(null, "VAR");
 			fail("null class must be rejected");
 		}
 		catch (NullPointerException e)
@@ -68,7 +68,7 @@ public class VariableTypeDefinitionTest extends TestCase
 		}
 		try
 		{
-			new VariableTypeDefinition(Number.class, "");
+			new NamespaceDefinition(Number.class, "");
 			fail("empty name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -83,22 +83,22 @@ public class VariableTypeDefinitionTest extends TestCase
 
 	public void testGlobal()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		assertEquals("VAR", vtd.getVariableTypeName());
 		assertEquals(Number.class, vtd.getVariableClass());
 	}
 
 	public void testEquals()
 	{
-		VariableTypeDefinition vid1 =
-				new VariableTypeDefinition(Number.class, "VAR");
-		VariableTypeDefinition vid2 =
-				new VariableTypeDefinition(Number.class, "VAR");
-		VariableTypeDefinition vid3 =
-				new VariableTypeDefinition(Number.class, "MOVE");
-		VariableTypeDefinition vid4 =
-				new VariableTypeDefinition(Boolean.class, "VAR");
+		NamespaceDefinition vid1 =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vid2 =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vid3 =
+				new NamespaceDefinition(Number.class, "MOVE");
+		NamespaceDefinition vid4 =
+				new NamespaceDefinition(Boolean.class, "VAR");
 		assertFalse(vid1.equals(null));
 		assertFalse(vid1.equals(new Object()));
 		assertTrue(vid1.equals(vid1));
@@ -110,14 +110,14 @@ public class VariableTypeDefinitionTest extends TestCase
 
 	public void testHashCode()
 	{
-		VariableTypeDefinition vid1 =
-				new VariableTypeDefinition(Number.class, "VAR");
-		VariableTypeDefinition vid2 =
-				new VariableTypeDefinition(Number.class, "VAR");
-		VariableTypeDefinition vid3 =
-				new VariableTypeDefinition(Number.class, "MOVE");
-		VariableTypeDefinition vid4 =
-				new VariableTypeDefinition(Boolean.class, "VAR");
+		NamespaceDefinition vid1 =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vid2 =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vid3 =
+				new NamespaceDefinition(Number.class, "MOVE");
+		NamespaceDefinition vid4 =
+				new NamespaceDefinition(Boolean.class, "VAR");
 		int hc1 = vid1.hashCode();
 		int hc2 = vid2.hashCode();
 		int hc3 = vid3.hashCode();

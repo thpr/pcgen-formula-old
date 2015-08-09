@@ -54,23 +54,23 @@ public final class VisitorUtilities
 	{
 		ASTPCGenSingleWord fnode = (ASTPCGenSingleWord) node.jjtGetChild(0);
 		Node argNode = node.jjtGetChild(1);
-		String fname = fnode.getText();
-		Function pcgf;
+		String ftnName = fnode.getText();
+		Function function;
 		if (argNode instanceof ASTFParen)
 		{
-			pcgf = library.getFunction(fname);
+			function = library.getFunction(ftnName);
 		}
 		else if (argNode instanceof ASTPCGenBracket)
 		{
-			pcgf = library.getBracketFunction(fname);
+			function = library.getBracketFunction(ftnName);
 		}
 		else
 		{
 			throw new IllegalStateException(
-				"Processing called on invalid Formula (function " + fname
+				"Processing called on invalid Formula (function " + ftnName
 					+ " not recognized)");
 		}
-		return pcgf;
+		return function;
 	}
 
 	/**

@@ -107,8 +107,8 @@ public class ValidVisitor implements FormulaParserVisitor
 	private final ScopeTypeDefinition<?> stDef;
 
 	/**
-	 * Constructs a new ValidVisitor with the given FunctionLibrary,
-	 * VaribleIDFactory, and VariableScope.
+	 * Constructs a new ValidVisitor with the given FormulaManager and
+	 * ScopeTypeDefinition.
 	 * 
 	 * @param fm
 	 *            The FormulaManager used to get information about functions and
@@ -321,42 +321,42 @@ public class ValidVisitor implements FormulaParserVisitor
 		{
 			return new InvalidChildCount(node, 2);
 		}
-		Node child1 = node.jjtGetChild(0);
+		Node firstChild = node.jjtGetChild(0);
 
-		if (!(child1 instanceof ASTPCGenSingleWord))
+		if (!(firstChild instanceof ASTPCGenSingleWord))
 		{
 			return new InvalidBadParseStructure("Formula Name",
-				ASTPCGenSingleWord.class, child1);
+				ASTPCGenSingleWord.class, firstChild);
 		}
 
 		/*
 		 * Validate the function contents (remember it can have other complex
 		 * structures inside of it)
 		 */
-		ASTPCGenSingleWord fnode = (ASTPCGenSingleWord) child1;
-		String fname = fnode.getText();
+		ASTPCGenSingleWord ftnNode = (ASTPCGenSingleWord) firstChild;
+		String ftnName = ftnNode.getText();
 		Node argNode = node.jjtGetChild(1);
-		Function pcgf;
+		Function function;
 		String context;
 		FunctionLibrary library = fm.getLibrary();
 		if (argNode instanceof ASTFParen)
 		{
-			pcgf = library.getFunction(fname);
+			function = library.getFunction(ftnName);
 			context = "()";
 		}
 		else if (argNode instanceof ASTPCGenBracket)
 		{
-			pcgf = library.getBracketFunction(fname);
+			function = library.getBracketFunction(ftnName);
 			context = "[]";
 		}
 		else
 		{
 			return new InvalidBadParseStructure("Formula Arguments",
-				ASTFParen.class, child1);
+				ASTFParen.class, firstChild);
 		}
-		if (pcgf == null)
+		if (function == null)
 		{
-			return new InvalidFunctionNotFound(fname, fname + context);
+			return new InvalidFunctionNotFound(ftnName, ftnName + context);
 		}
 		//Extract arguments from the grouping to give them to the function
 		int argLength = argNode.jjtGetNumChildren();
@@ -365,7 +365,7 @@ public class ValidVisitor implements FormulaParserVisitor
 		{
 			args[i] = argNode.jjtGetChild(i);
 		}
-		return pcgf.allowArgs(this, args);
+		return function.allowArgs(this, args);
 	}
 
 	/**
@@ -437,9 +437,6 @@ public class ValidVisitor implements FormulaParserVisitor
 	 * @param node
 	 *            The node to be validated to ensure it has valid children and a
 	 *            non-null Operator
-	 * @param childSemantics
-	 *            The Class of object which the children of the given node must
-	 *            return for the operation to be valid
 	 * @return A FormulaSemantics object, which will indicate isValid() true if
 	 *         this operator has 2 valid children and a non-null Operator.
 	 *         Otherwise, the FormulaSemantics will indicate isValid() false
@@ -455,31 +452,32 @@ public class ValidVisitor implements FormulaParserVisitor
 		{
 			return new InvalidChildCount(node, 2);
 		}
-		Node child0 = node.jjtGetChild(0);
+		Node child1 = node.jjtGetChild(0);
 		FormulaSemantics result0 =
-				(FormulaSemantics) child0.jjtAccept(this, null);
+				(FormulaSemantics) child1.jjtAccept(this, null);
 		//Consistent with the "fail fast" behavior in the implementation note
 		if (!result0.isValid())
 		{
 			return result0;
 		}
-		Node child1 = node.jjtGetChild(1);
+		Node child2 = node.jjtGetChild(1);
 		FormulaSemantics result1 =
-				(FormulaSemantics) child1.jjtAccept(this, null);
+				(FormulaSemantics) child2.jjtAccept(this, null);
 		//Consistent with the "fail fast" behavior in the implementation note
 		if (!result1.isValid())
 		{
 			return result1;
 		}
-		Class<?> c1s = result0.getSemanticState();
-		Class<?> c2s = result1.getSemanticState();
-		Class<?> rc = fm.getOperatorLibrary().processAbstract(op, c1s, c2s);
+		Class<?> format1 = result0.getSemanticState();
+		Class<?> format2 = result1.getSemanticState();
+		Class<?> returnedFormat =
+				fm.getOperatorLibrary().processAbstract(op, format1, format2);
 		//null response means the library couldn't find an appropriate operator
-		if (rc == null)
+		if (returnedFormat == null)
 		{
-			return new InvalidSemantics(node, op, c1s, c2s);
+			return new InvalidSemantics(node, op, format1, format2);
 		}
-		return new FormulaSemanticsValid(rc);
+		return new FormulaSemanticsValid(returnedFormat);
 	}
 
 	/**

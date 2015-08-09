@@ -35,14 +35,18 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 
 	/**
 	 * Stores the "paren functions" in this FunctionLibrary.
+	 * 
+	 * These are () functions for world-wide clarity :D
 	 */
-	private final CaseInsensitiveMap<Function> parenmap =
+	private final CaseInsensitiveMap<Function> parenMap =
 			new CaseInsensitiveMap<Function>();
 
 	/**
 	 * Stores the "bracket functions" in this FunctionLibrary.
+	 * 
+	 * These are [] functions for world-wide clarity :D
 	 */
-	private final CaseInsensitiveMap<Function> bracketmap =
+	private final CaseInsensitiveMap<Function> bracketMap =
 			new CaseInsensitiveMap<Function>();
 
 	/**
@@ -71,12 +75,12 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 			throw new IllegalArgumentException(
 				"Cannot add Function with null name");
 		}
-		if (parenmap.containsKey(fName))
+		if (parenMap.containsKey(fName))
 		{
 			throw new IllegalArgumentException(
 				"Cannot load two functions of name: " + fName);
 		}
-		parenmap.put(fName, f);
+		parenMap.put(fName, f);
 	}
 
 	/**
@@ -92,7 +96,7 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	@Override
 	public Function getFunction(String fname)
 	{
-		return parenmap.get(fname);
+		return parenMap.get(fname);
 	}
 
 	/**
@@ -122,12 +126,12 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 			throw new IllegalArgumentException(
 				"Cannot add Bracket Function with null name");
 		}
-		if (bracketmap.containsKey(fName))
+		if (bracketMap.containsKey(fName))
 		{
 			throw new IllegalArgumentException(
 				"Cannot load two bracket functions of name: " + fName);
 		}
-		bracketmap.put(fName, f);
+		bracketMap.put(fName, f);
 	}
 
 	/**
@@ -143,7 +147,7 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	@Override
 	public Function getBracketFunction(String fname)
 	{
-		return bracketmap.get(fname);
+		return bracketMap.get(fname);
 	}
 
 }

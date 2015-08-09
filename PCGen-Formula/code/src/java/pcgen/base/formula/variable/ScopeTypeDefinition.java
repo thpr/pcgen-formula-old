@@ -47,7 +47,6 @@ package pcgen.base.formula.variable;
  */
 public class ScopeTypeDefinition<T>
 {
-
 	/**
 	 * Identifies the ScopeTypeDefinition that is the parent of this
 	 * ScopeTypeDefinition.
@@ -60,29 +59,29 @@ public class ScopeTypeDefinition<T>
 	private final String scopeName;
 
 	/**
-	 * Identifies the type of object covered by this ScopeTypeDefinition.
+	 * Identifies the Namespace of object covered by this ScopeTypeDefinition.
 	 */
-	private final VariableTypeDefinition<T> varTypeDef;
+	private final NamespaceDefinition<T> namespaceDef;
 
 	/**
 	 * Note: For use by Global Scope only. The Global Scope is represented by
 	 * the empty name ("").
 	 * 
-	 * @param type
-	 *            The type of object covered by this ScopeTypeDefinition
+	 * @param namespace
+	 *            The Namespace of object covered by this ScopeTypeDefinition
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null
 	 */
-	ScopeTypeDefinition(VariableTypeDefinition<T> type)
+	ScopeTypeDefinition(NamespaceDefinition<T> namespace)
 	{
-		if (type == null)
+		if (namespace == null)
 		{
 			throw new IllegalArgumentException(
-				"Variable Type for this ScopeTypeDefinition cannot be null");
+				"Namespace for this ScopeTypeDefinition cannot be null");
 		}
 		parentDef = null;
 		this.scopeName = "";
-		this.varTypeDef = type;
+		this.namespaceDef = namespace;
 	}
 
 	/**
@@ -118,7 +117,7 @@ public class ScopeTypeDefinition<T>
 		}
 		this.parentDef = parentDef;
 		this.scopeName = scopeName;
-		this.varTypeDef = parentDef.varTypeDef;
+		this.namespaceDef = parentDef.namespaceDef;
 	}
 
 	/**
@@ -146,18 +145,47 @@ public class ScopeTypeDefinition<T>
 	}
 
 	/**
-	 * Returns the type of object covered by this ScopeTypeDefinition.
+	 * Returns the NamespaceDefinition representing the namespace covered by
+	 * this ScopeTypeDefinition.
 	 * 
-	 * @return The type of object covered by this ScopeTypeDefinition
+	 * @return The NamespaceDefinition representing the namespace covered by
+	 *         this ScopeTypeDefinition
 	 */
-	public VariableTypeDefinition<T> getVariableTypeDef()
+	public NamespaceDefinition<T> getNamespaceDefinition()
 	{
-		return varTypeDef;
+		return namespaceDef;
 	}
 
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString()
 	{
-		return scopeName + " " + varTypeDef;
+		return scopeName + " " + namespaceDef;
+	}
+
+	/**
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode()
+	{
+		return scopeName.hashCode() * 37 + namespaceDef.hashCode();
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object o)
+	{
+		if (o instanceof ScopeTypeDefinition)
+		{
+			ScopeTypeDefinition<?> other = (ScopeTypeDefinition<?>) o;
+			return scopeName.equals(other.scopeName)
+				&& namespaceDef.equals(other.namespaceDef);
+		}
+		return false;
 	}
 }

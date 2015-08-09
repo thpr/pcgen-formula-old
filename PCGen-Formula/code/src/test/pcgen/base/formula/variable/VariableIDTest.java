@@ -40,8 +40,8 @@ public class VariableIDTest extends TestCase
 		{
 			//ok, too			
 		}
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		try
@@ -100,8 +100,8 @@ public class VariableIDTest extends TestCase
 
 	public void testGlobal()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableID vid = new VariableID(scope, "test");
@@ -112,8 +112,8 @@ public class VariableIDTest extends TestCase
 
 	public void testEquals()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableScope scope2 = new VariableScope(global, null);
@@ -132,8 +132,8 @@ public class VariableIDTest extends TestCase
 
 	public void testHashCode()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableScope scope2 = new VariableScope(global, null);

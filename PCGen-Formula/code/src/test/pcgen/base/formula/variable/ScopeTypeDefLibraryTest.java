@@ -58,26 +58,26 @@ public class ScopeTypeDefLibraryTest extends TestCase
 	@Test
 	public void testDefine()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		library.defineGlobalScopeDefinition(vtd);
 		//twice is legal
 		library.defineGlobalScopeDefinition(vtd);
 		//and so is .equals() VTD
-		VariableTypeDefinition matching =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition matching =
+				new NamespaceDefinition(Number.class, "VAR");
 		library.defineGlobalScopeDefinition(matching);
 
 		//Allow other types of same format
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		library.defineGlobalScopeDefinition(move);
 
 		try
 		{
 			//Different type same name (MOVE)
-			VariableTypeDefinition conflict =
-					new VariableTypeDefinition(Boolean.class, "MOVE");
+			NamespaceDefinition conflict =
+					new NamespaceDefinition(Boolean.class, "MOVE");
 			library.defineGlobalScopeDefinition(conflict);
 			fail("conflict must be rejected");
 		}
@@ -99,14 +99,14 @@ public class ScopeTypeDefLibraryTest extends TestCase
 		{
 			//ok
 		}
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition origDef = library.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition<?> stDef = library.getGlobalScopeDefinition("MOVE");
 		assertTrue(origDef == stDef);
 		assertEquals("", stDef.getName());
 		assertEquals(null, stDef.getParent());
-		assertEquals(move, stDef.getVariableTypeDef());
+		assertEquals(move, stDef.getNamespaceDefinition());
 	}
 
 	@Test
@@ -115,8 +115,8 @@ public class ScopeTypeDefLibraryTest extends TestCase
 		Collection<String> c = library.getGlobalScopeTypeNames();
 		assertNotNull(c);
 		assertEquals(0, c.size());
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		library.defineGlobalScopeDefinition(move);
 		//We reload because it's no guarantee we have a wrapped set
 		//No guarantee we don't though, so we don't test that either
@@ -129,8 +129,8 @@ public class ScopeTypeDefLibraryTest extends TestCase
 		c = library.getGlobalScopeTypeNames();
 		assertNotNull(c);
 		assertEquals(1, c.size());
-		VariableTypeDefinition flag =
-				new VariableTypeDefinition(Boolean.class, "FLAG");
+		NamespaceDefinition flag =
+				new NamespaceDefinition(Boolean.class, "FLAG");
 		library.defineGlobalScopeDefinition(flag);
 		//reload, same
 		c = library.getGlobalScopeTypeNames();
@@ -156,8 +156,8 @@ public class ScopeTypeDefLibraryTest extends TestCase
 	@Test
 	public void testGetDefFail()
 	{
-		VariableTypeDefinition conflict =
-				new VariableTypeDefinition(Boolean.class, "MOVE");
+		NamespaceDefinition conflict =
+				new NamespaceDefinition(Boolean.class, "MOVE");
 		ScopeTypeDefinition parentDef =
 				library.defineGlobalScopeDefinition(conflict);
 		try
@@ -210,15 +210,15 @@ public class ScopeTypeDefLibraryTest extends TestCase
 	@Test
 	public void testGetScopeDef()
 	{
-		VariableTypeDefinition move =
-				new VariableTypeDefinition(Number.class, "MOVE");
+		NamespaceDefinition move =
+				new NamespaceDefinition(Number.class, "MOVE");
 		ScopeTypeDefinition parentDef =
 				library.defineGlobalScopeDefinition(move);
 		ScopeTypeDefinition eqDef =
 				library.getScopeDefinition(parentDef, "EQUIPMENT");
 		assertEquals("EQUIPMENT", eqDef.getName());
 		assertEquals(parentDef, eqDef.getParent());
-		assertEquals(move, eqDef.getVariableTypeDef());
+		assertEquals(move, eqDef.getNamespaceDefinition());
 
 		ScopeTypeDefinition eqDef2 =
 				library.getScopeDefinition(parentDef, "EQUIPMENT");
@@ -228,7 +228,7 @@ public class ScopeTypeDefLibraryTest extends TestCase
 				library.getScopeDefinition(parentDef, "SPELL");
 		assertEquals("SPELL", spDef.getName());
 		assertEquals(parentDef, spDef.getParent());
-		assertEquals(move, spDef.getVariableTypeDef());
+		assertEquals(move, spDef.getNamespaceDefinition());
 
 	}
 }

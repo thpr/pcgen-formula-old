@@ -57,28 +57,27 @@ public class IfFunction implements Function
 	 * Three arguments are required, and each must be a valid formula value
 	 * (number, variable, another function, etc.)
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor
-	 *      .ValidVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.ValidVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
 	{
-		int acount = args.length;
-		if (acount != 3)
+		int argCount = args.length;
+		if (argCount != 3)
 		{
 			return new InvalidIncorrectArgumentCount(getFunctionName(), 3, args);
 		}
 		//Boolean conditional node
-		Node bNode = args[0];
+		Node conditionalNode = args[0];
 		FormulaSemantics result =
-				(FormulaSemantics) bNode.jjtAccept(visitor, null);
+				(FormulaSemantics) conditionalNode.jjtAccept(visitor, null);
 		if (!result.isValid())
 		{
 			return result;
 		}
 		if (!result.getSemanticState().equals(Boolean.class))
 		{
-			return new InvalidSemantics(bNode, Boolean.class,
+			return new InvalidSemantics(conditionalNode, Boolean.class,
 				result.getSemanticState());
 		}
 
@@ -105,8 +104,8 @@ public class IfFunction implements Function
 		//Check for Mismatch in types between True and False results
 		if (!tResult.getSemanticState().equals(fResult.getSemanticState()))
 		{
-			return new InvalidSemantics(bNode, tResult.getSemanticState(),
-				fResult.getSemanticState());
+			return new InvalidSemantics(conditionalNode,
+				tResult.getSemanticState(), fResult.getSemanticState());
 		}
 
 		return tResult;
@@ -119,8 +118,7 @@ public class IfFunction implements Function
 	 * valid values. See evaluate on the Function interface for important
 	 * assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor
-	 *      .EvaluateVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Object evaluate(EvaluateVisitor visitor, Node[] args)
@@ -147,8 +145,7 @@ public class IfFunction implements Function
 	 * isStatic on the Function interface for important assumptions made when
 	 * this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor
-	 *      .StaticVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)

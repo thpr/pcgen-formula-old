@@ -49,8 +49,7 @@ public abstract class AbstractNaryFunction implements Function
 	 * minimum of two arguments are required, and each must be a valid formula
 	 * value (number, variable, another function, etc.)
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor
-	 *      .ValidVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.ValidVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public final FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
@@ -88,8 +87,7 @@ public abstract class AbstractNaryFunction implements Function
 	 * Actual processing is delegated to (potentially repeated calls to)
 	 * evaluate(double, double)
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor
-	 *      .EvaluateVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public final Number evaluate(EvaluateVisitor visitor, Node[] args)
@@ -112,8 +110,7 @@ public abstract class AbstractNaryFunction implements Function
 	 * are valid values in a formula. See isStatic on the Function interface for
 	 * important assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor
-	 *      .StaticVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor, pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)

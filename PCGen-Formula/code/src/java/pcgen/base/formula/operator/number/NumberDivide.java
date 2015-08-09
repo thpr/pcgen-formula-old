@@ -47,10 +47,10 @@ public class NumberDivide implements OperatorAction
 	 *      java.lang.Class)
 	 */
 	@Override
-	public Class<?> abstractEvaluate(Class<?> c1, Class<?> c2)
+	public Class<?> abstractEvaluate(Class<?> format1, Class<?> format2)
 	{
-		if (NUMBER_CLASS.isAssignableFrom(c1)
-			&& NUMBER_CLASS.isAssignableFrom(c2))
+		if (NUMBER_CLASS.isAssignableFrom(format1)
+			&& NUMBER_CLASS.isAssignableFrom(format2))
 		{
 			return NUMBER_CLASS;
 		}
@@ -67,9 +67,8 @@ public class NumberDivide implements OperatorAction
 	{
 		if (l instanceof Integer && r instanceof Integer)
 		{
-			//Special case, we can maintain Integer
-			Integer left = (Integer) l;
-			Integer right = (Integer) r;
+			int left = ((Integer) l).intValue();
+			int right = ((Integer) r).intValue();
 			if ((left % right) == 0)
 			{
 				return left / right;

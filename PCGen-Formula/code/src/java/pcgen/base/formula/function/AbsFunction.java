@@ -40,7 +40,7 @@ public class AbsFunction extends AbstractUnaryFunction
 	 * Returns the absolute value of the given argument. The same
 	 * conditions/rules apply as those in Java.lang.Math.abs(double)
 	 * 
-	 * @see pcgen.base.formula.function.AbstractUnaryFunction#evaluate(java.lang.Double)
+	 * @see pcgen.base.formula.function.AbstractUnaryFunction#evaluate(java.lang.Number)
 	 */
 	@Override
 	protected Number evaluate(Number n)

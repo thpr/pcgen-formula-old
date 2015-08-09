@@ -58,8 +58,8 @@ public class ScopeTypeDefinitionTest extends TestCase
 		{
 			//ok, too			
 		}
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition parent = new ScopeTypeDefinition(vtd);
 		try
 		{
@@ -104,23 +104,23 @@ public class ScopeTypeDefinitionTest extends TestCase
 
 	public void testGlobal()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		assertNull(global.getParent());
 		assertEquals("", global.getName());
-		assertEquals(vtd, global.getVariableTypeDef());
+		assertEquals(vtd, global.getNamespaceDefinition());
 	}
 	
 	public void testChild()
 	{
-		VariableTypeDefinition vtd =
-				new VariableTypeDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd =
+				new NamespaceDefinition(Number.class, "VAR");
 		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
 		ScopeTypeDefinition child =
 				new ScopeTypeDefinition(global, "EQUIPMENT");
 		assertEquals(global, child.getParent());
 		assertEquals("EQUIPMENT", child.getName());
-		assertEquals(vtd, global.getVariableTypeDef());
+		assertEquals(vtd, global.getNamespaceDefinition());
 	}
 }

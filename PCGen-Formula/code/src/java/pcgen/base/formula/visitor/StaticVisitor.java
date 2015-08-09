@@ -235,9 +235,9 @@ public class StaticVisitor implements FormulaParserVisitor
 	@Override
 	public Object visit(ASTPCGenLookup node, Object data)
 	{
-		Function pcgf = VisitorUtilities.getFunction(library, node);
+		Function function = VisitorUtilities.getFunction(library, node);
 		Node[] args = VisitorUtilities.accumulateArguments(node.jjtGetChild(1));
-		return pcgf.isStatic(this, args);
+		return function.isStatic(this, args);
 	}
 
 	/**
@@ -305,8 +305,8 @@ public class StaticVisitor implements FormulaParserVisitor
 	 */
 	private Object checkAllChildren(Node node)
 	{
-		int ccount = node.jjtGetNumChildren();
-		for (int i = 0; i < ccount; i++)
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++)
 		{
 			Node child = node.jjtGetChild(i);
 			Boolean result = (Boolean) child.jjtAccept(this, null);

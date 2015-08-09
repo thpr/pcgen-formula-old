@@ -42,7 +42,7 @@ public class RoundFunction extends AbstractUnaryFunction
 	 * that is equally distant between two integers, the same rules apply as
 	 * those in java.lang.Math.round(double)
 	 * 
-	 * @see pcgen.base.formula.function.AbstractUnaryFunction#evaluate(java.lang.Double)
+	 * @see pcgen.base.formula.function.AbstractUnaryFunction#evaluate(java.lang.Number)
 	 */
 	@Override
 	protected Number evaluate(Number n)

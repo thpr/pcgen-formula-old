@@ -47,10 +47,10 @@ public class BooleanEquals implements OperatorAction
 	 *      java.lang.Class)
 	 */
 	@Override
-	public Class<?> abstractEvaluate(Class<?> c1, Class<?> c2)
+	public Class<?> abstractEvaluate(Class<?> format1, Class<?> format2)
 	{
-		if (BOOLEAN_CLASS.isAssignableFrom(c1)
-			&& BOOLEAN_CLASS.isAssignableFrom(c2))
+		if (BOOLEAN_CLASS.isAssignableFrom(format1)
+			&& BOOLEAN_CLASS.isAssignableFrom(format2))
 		{
 			return BOOLEAN_CLASS;
 		}
@@ -65,8 +65,10 @@ public class BooleanEquals implements OperatorAction
 	@Override
 	public Object evaluate(Object l, Object r)
 	{
-		//Force boolean values here to produce problems with nulls
-		return ((Boolean) l).booleanValue() == ((Boolean) r).booleanValue();
+		//Force boolean values (unboxing) here to produce problems with nulls
+		boolean left = ((Boolean) l).booleanValue();
+		boolean right = ((Boolean) r).booleanValue();
+		return Boolean.valueOf(left == right);
 	}
 
 }

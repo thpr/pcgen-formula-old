@@ -61,14 +61,14 @@ public class FormulaManager
 	 * The VariableLibrary used to get ScopeTypeDefinitions, VariableScopes, and
 	 * VariableIDs.
 	 */
-	private final VariableLibrary factory;
+	private final VariableLibrary varLibrary;
 
 	/**
 	 * The active VariableStore used to cache results of items processed through
 	 * this FormulaManager (thus serves as a storage location for variable
 	 * values).
 	 */
-	private final VariableStore resolver;
+	private final VariableStore results;
 
 	/**
 	 * Constructs a new FormulaManager from the provided FunctionLibrary,
@@ -83,14 +83,14 @@ public class FormulaManager
 	 * @param sl
 	 *            The VariableLibrary used to get ScopeTypeDefinitions,
 	 *            VariableScopes, and VariableIDs
-	 * @param vs
+	 * @param resultStore
 	 *            The VariableStore used to hold variables values for items
 	 *            processed through this FormulaManager
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
 	public FormulaManager(FunctionLibrary fl, OperatorLibrary ol,
-		VariableLibrary sl, VariableStore vs)
+		VariableLibrary sl, VariableStore resultStore)
 	{
 		if (fl == null)
 		{
@@ -107,15 +107,15 @@ public class FormulaManager
 			throw new IllegalArgumentException(
 				"Cannot build FormulaManager with null VariableIDFactory");
 		}
-		if (vs == null)
+		if (resultStore == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot build FormulaManager with null VariableStore");
 		}
 		this.ftnLibrary = fl;
 		this.opLibrary = ol;
-		this.factory = sl;
-		this.resolver = vs;
+		this.varLibrary = sl;
+		this.results = resultStore;
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class FormulaManager
 	 */
 	public VariableLibrary getFactory()
 	{
-		return factory;
+		return varLibrary;
 	}
 
 	/**
@@ -139,7 +139,7 @@ public class FormulaManager
 	 */
 	public VariableStore getResolver()
 	{
-		return resolver;
+		return results;
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class FormulaManager
 	 * @param root
 	 *            The starting node in a parsed tree of a formula, to be used
 	 *            for the semantics evaluation
-	 * @param def
+	 * @param stDef
 	 *            The ScopeTypeDefinition used to check for validity of
 	 *            variables used within the formula
 	 * @return The FormulaSemantics for the formula starting with with the given
@@ -181,21 +181,22 @@ public class FormulaManager
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
-	public FormulaSemantics isValid(SimpleNode root, ScopeTypeDefinition<?> def)
+	public FormulaSemantics isValid(SimpleNode root,
+		ScopeTypeDefinition<?> stDef)
 	{
 		if (root == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot determine validity with null root");
 		}
-		if (def == null)
+		if (stDef == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot determine validity with null ScopeTypeDefinition");
 		}
 		if (validVisitor == null)
 		{
-			validVisitor = new ValidVisitor(this, def);
+			validVisitor = new ValidVisitor(this, stDef);
 		}
 		FormulaSemantics fs = (FormulaSemantics) validVisitor.visit(root, null);
 		if (!fs.isValid())
@@ -203,9 +204,9 @@ public class FormulaManager
 			return fs;
 		}
 		if (!fs.getSemanticState().equals(
-			def.getVariableTypeDef().getVariableClass()))
+			stDef.getNamespaceDefinition().getVariableClass()))
 		{
-			return new InvalidSemantics(root, def.getVariableTypeDef()
+			return new InvalidSemantics(root, stDef.getNamespaceDefinition()
 				.getVariableClass(), fs.getSemanticState());
 		}
 		return fs;

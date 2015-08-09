@@ -78,14 +78,17 @@ public interface OperatorLibrary
 	 * 
 	 * @param op
 	 *            The Operator to be evaluated
-	 * @param c1
-	 *            The class of the first argument to the abstract operation
-	 * @param c2
-	 *            The class of the second argument to the abstract operation
-	 * @return The class of the result of the operation if this OperatorLibrary
-	 *         has an OperatorAction for the given Operator and arguments; null
-	 *         otherwise
+	 * @param format1
+	 *            The class (data format) of the first argument to the abstract
+	 *            operation
+	 * @param format2
+	 *            The class (data format) of the second argument to the abstract
+	 *            operation
+	 * @return The class (data format) of the result of the operation if this
+	 *         OperatorLibrary has an OperatorAction for the given Operator and
+	 *         arguments; null otherwise
 	 */
-	public Class<?> processAbstract(Operator op, Class<?> c1, Class<?> c2);
+	public Class<?> processAbstract(Operator op, Class<?> format1,
+		Class<?> format2);
 
 }
