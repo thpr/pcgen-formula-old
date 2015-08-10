@@ -31,38 +31,39 @@ public class VariableLibrary
 {
 
 	/**
-	 * The ScopeTypeDefLibrary that supports to be used to determine "child"
-	 * scopes from any ScopeTypeDefinition (in order to avoid variable name
-	 * conflicts between different but non disjoint scopes).
+	 * The ScopedNamespaceDefinitionLibrary that supports to be used to
+	 * determine "child" scopes from any ScopedNamespaceDefinition (in order to
+	 * avoid variable name conflicts between different but non disjoint scopes).
 	 */
-	private final ScopeTypeDefLibrary library;
+	private final ScopedNamespaceDefinitionLibrary library;
 
 	/**
 	 * Constructs a new VariableLibrary, which uses the given
-	 * ScopeTypeDefLibrary to ensure variables are legal within a given scope.
+	 * ScopedNamespaceDefinitionLibrary to ensure variables are legal within a
+	 * given scope.
 	 * 
-	 * @param lib
-	 *            The ScopeTypeDefLibrary used to to ensure variables are legal
-	 *            within a given scope
+	 * @param sndLibrary
+	 *            The ScopedNamespaceDefinitionLibrary used to to ensure
+	 *            variables are legal within a given scope
 	 * @throws IllegalArgumentException
 	 *             if the given library is null
 	 */
-	public VariableLibrary(ScopeTypeDefLibrary lib)
+	public VariableLibrary(ScopedNamespaceDefinitionLibrary sndLibrary)
 	{
-		if (lib == null)
+		if (sndLibrary == null)
 		{
 			throw new IllegalArgumentException(
 				"Scope Type Definition Library cannot be null");
 		}
-		library = lib;
+		library = sndLibrary;
 	}
 
 	/**
-	 * Holds a map from variable names to the ScopeTypeDefinition objects where
-	 * that variable name is legal.
+	 * Holds a map from variable names to the ScopedNamespaceDefinition objects
+	 * where that variable name is legal.
 	 */
 	/*
-	 * Is stored from String->ScopeTypeDefinition for 2 reasons:
+	 * Is stored from String->ScopedNamespaceDefinition for 2 reasons:
 	 * 
 	 * (1) Case Sensitivity is easier to avoid because we have
 	 * CaseInsensitiveMap rather than having to do case insensitivity as things
@@ -73,34 +74,37 @@ public class VariableLibrary
 	 * get null responses. Here, this MapToList is queried, provides a null
 	 * response and the validation process is complete.
 	 */
-	private GenericMapToList<String, ScopeTypeDefinition<?>> variableDefs =
+	private GenericMapToList<String, ScopedNamespaceDefinition<?>> variableDefs =
 			GenericMapToList.getMapToList(CaseInsensitiveMap.class);
 
 	/**
 	 * Asserts the given variable name is valid within the given
-	 * ScopeTypeDefinition.
+	 * ScopedNamespaceDefinition.
 	 * 
 	 * If no previous definition for the given variable name was encountered,
 	 * then the assertion automatically passes, and the given
-	 * ScopeTypeDefinition is stored as the definition for the given variable
-	 * name.
+	 * ScopedNamespaceDefinition is stored as the definition for the given
+	 * variable name.
 	 * 
-	 * If a previous ScopeTypeDefinition exists for the given variable name,
-	 * then this will return true if and only if the given ScopeTypeDefinition
-	 * is equal to the already stored ScopeTypeDefinition.
+	 * If a previous ScopedNamespaceDefinition exists for the given variable
+	 * name, then this will return true if and only if the given
+	 * ScopedNamespaceDefinition is equal to the already stored
+	 * ScopedNamespaceDefinition.
 	 * 
-	 * @param stDef
-	 *            The asserted ScopeTypeDefinition for the given variable name
+	 * @param snDef
+	 *            The asserted ScopedNamespaceDefinition for the given variable
+	 *            name
 	 * @param varName
-	 *            The variable name for which the given ScopeTypeDefinition is
-	 *            being asserted as valid
-	 * @return true if the assertion of this being a valid ScopeTypeDefinition
-	 *         for the given variable name passes; false otherwise
+	 *            The variable name for which the given
+	 *            ScopedNamespaceDefinition is being asserted as valid
+	 * @return true if the assertion of this being a valid
+	 *         ScopedNamespaceDefinition for the given variable name passes;
+	 *         false otherwise
 	 * @throws IllegalArgumentException
 	 *             if either argument is null of if the variable name is
 	 *             otherwise illegal (is empty or starts/ends with whitespace)
 	 */
-	public boolean assertVariableScope(ScopeTypeDefinition<?> stDef,
+	public boolean assertVariableScope(ScopedNamespaceDefinition<?> snDef,
 		String varName)
 	{
 		/*
@@ -108,24 +112,24 @@ public class VariableLibrary
 		 * VariableLibrary?
 		 */
 		checkLegalVarName(varName);
-		if (stDef == null)
+		if (snDef == null)
 		{
 			throw new IllegalArgumentException(
-				"ScopeTypeDefinition cannot be null");
+				"ScopedNamespaceDefinition cannot be null");
 		}
 		if (!variableDefs.containsListFor(varName))
 		{
 			//Can't be a conflict
-			variableDefs.addToListFor(varName, stDef);
+			variableDefs.addToListFor(varName, snDef);
 			return true;
 		}
-		if (variableDefs.containsInList(varName, stDef))
+		if (variableDefs.containsInList(varName, snDef))
 		{
 			//Asserted Scope Already there
 			return true;
 		}
 		//Now, need to check for conflicts
-		ScopeTypeDefinition<?> parent = stDef.getParent();
+		ScopedNamespaceDefinition<?> parent = snDef.getParent();
 		while (parent != null)
 		{
 			if (variableDefs.containsInList(varName, parent))
@@ -135,10 +139,10 @@ public class VariableLibrary
 			}
 			parent = parent.getParent();
 		}
-		boolean hasChildConflict = hasChildConflict(varName, stDef);
+		boolean hasChildConflict = hasChildConflict(varName, snDef);
 		if (!hasChildConflict)
 		{
-			variableDefs.addToListFor(varName, stDef);
+			variableDefs.addToListFor(varName, snDef);
 		}
 		return !hasChildConflict;
 	}
@@ -148,14 +152,15 @@ public class VariableLibrary
 	 * variable name.
 	 */
 	private boolean hasChildConflict(String varName,
-		ScopeTypeDefinition<?> stDef)
+		ScopedNamespaceDefinition<?> snDef)
 	{
-		List<ScopeTypeDefinition<?>> children = library.getChildScopes(stDef);
+		List<ScopedNamespaceDefinition<?>> children =
+				library.getChildScopes(snDef);
 		if (children == null)
 		{
 			return false;
 		}
-		for (ScopeTypeDefinition<?> childScope : children)
+		for (ScopedNamespaceDefinition<?> childScope : children)
 		{
 			if (variableDefs.containsInList(varName, childScope)
 				|| hasChildConflict(varName, childScope))
@@ -168,19 +173,20 @@ public class VariableLibrary
 
 	/**
 	 * Returns true if the given VariableScope and variable name are a legal
-	 * combination, knowing previous assertions of a ScopeTypeDefinition object
-	 * for the given variable name.
+	 * combination, knowing previous assertions of a ScopedNamespaceDefinition
+	 * object for the given variable name.
 	 * 
-	 * If no previous ScopeTypeDefinition was stored via assertVariableScope for
-	 * the given variable name, then this will unconditionally return false.
+	 * If no previous ScopedNamespaceDefinition was stored via
+	 * assertVariableScope for the given variable name, then this will
+	 * unconditionally return false.
 	 * 
-	 * If a ScopeTypeDefinition was stored via assertVariableScope for the given
-	 * variable name, then this will return true if the given VariableScope is
-	 * compatible with the stored ScopeTypeDefinition.
+	 * If a ScopedNamespaceDefinition was stored via assertVariableScope for the
+	 * given variable name, then this will return true if the given
+	 * VariableScope is compatible with the stored ScopedNamespaceDefinition.
 	 * 
-	 * @param stDef
-	 *            The ScopeTypeDefinition used to determine if the scope and
-	 *            name are a legal combination
+	 * @param snDef
+	 *            The ScopedNamespaceDefinition used to determine if the scope
+	 *            and name are a legal combination
 	 * @param varName
 	 *            The variable name used to determine if the scope and name are
 	 *            a legal combination
@@ -189,25 +195,25 @@ public class VariableLibrary
 	 * @throws IllegalArgumentException
 	 *             if the given scope type definition is null
 	 */
-	public boolean isLegalVariableID(ScopeTypeDefinition<?> stDef,
+	public boolean isLegalVariableID(ScopedNamespaceDefinition<?> snDef,
 		String varName)
 	{
-		if (stDef == null)
+		if (snDef == null)
 		{
 			throw new IllegalArgumentException(
 				"Scope Type Definition cannot be null");
 		}
-		if (variableDefs.containsInList(varName, stDef))
+		if (variableDefs.containsInList(varName, snDef))
 		{
 			return true;
 		}
-		ScopeTypeDefinition<?> parent = stDef.getParent();
+		ScopedNamespaceDefinition<?> parent = snDef.getParent();
 		return (parent != null) && isLegalVariableID(parent, varName);
 	}
 
 	/**
-	 * Returns a non-null list of known ScopeTypeDefinition objects for the
-	 * given variable name.
+	 * Returns a non-null list of known ScopedNamespaceDefinition objects for
+	 * the given variable name.
 	 * 
 	 * This is typically used for debugging (e.g. to list potential conflicts)
 	 * 
@@ -216,43 +222,44 @@ public class VariableLibrary
 	 * returned list will not alter the VariableLibrary.
 	 * 
 	 * @param varName
-	 *            The Variable name for which the relevant ScopeTypeDefinition
-	 *            objects should be returned
-	 * @return The List of ScopeTypeDefinition objects asserted for the given
-	 *         variable name
+	 *            The Variable name for which the relevant
+	 *            ScopedNamespaceDefinition objects should be returned
+	 * @return The List of ScopedNamespaceDefinition objects asserted for the
+	 *         given variable name
 	 * @throws IllegalArgumentException
 	 *             if the given variable name is null, empty, or has
 	 *             leading/trailing whitespace
 	 */
-	public List<ScopeTypeDefinition<?>> getKnownVariableScopes(String varName)
+	public List<ScopedNamespaceDefinition<?>> getKnownVariableScopes(
+		String varName)
 	{
 		checkLegalVarName(varName);
 		return variableDefs.getListFor(varName);
 	}
 
 	/**
-	 * Returns a VariableScope with the given ScopeTypeDefinition and parent
-	 * VariableScope.
+	 * Returns a VariableScope with the given ScopedNamespaceDefinition and
+	 * parent VariableScope.
 	 * 
 	 * @param <T>
 	 *            The type of object contained in the VariableScope to be
 	 *            instantiated
 	 * @param parentScope
 	 *            The VariableScope that is the parent of this VaribleScope
-	 * @param stDef
-	 *            The ScopeTypeDefinition that underlies the VariableScope to be
-	 *            returned
-	 * @return A VariableScope with the given ScopeTypeDefinition and parent
-	 *         VariableScope
+	 * @param snDef
+	 *            The ScopedNamespaceDefinition that underlies the VariableScope
+	 *            to be returned
+	 * @return A VariableScope with the given ScopedNamespaceDefinition and
+	 *         parent VariableScope
 	 * @throws IllegalArgumentException
-	 *             if the ScopeTypeDefinition of the given parent VariableScope
-	 *             is not the parent ScopeTypeDefinition of the given
-	 *             ScopeTypeDefinition
+	 *             if the ScopedNamespaceDefinition of the given parent
+	 *             VariableScope is not the parent ScopedNamespaceDefinition of
+	 *             the given ScopedNamespaceDefinition
 	 */
 	public <T> VariableScope<T> instantiateScope(VariableScope<T> parentScope,
-		ScopeTypeDefinition<T> stDef)
+		ScopedNamespaceDefinition<T> snDef)
 	{
-		if (stDef == null)
+		if (snDef == null)
 		{
 			throw new IllegalArgumentException("Definition cannot be null");
 		}
@@ -262,15 +269,15 @@ public class VariableLibrary
 		 */
 		if (parentScope == null)
 		{
-			if (stDef.getParent() != null)
+			if (snDef.getParent() != null)
 			{
 				throw new IllegalArgumentException(
 					"Cannot instantiate a scope with no parent unless it is a global scope");
 			}
 		}
-		else if (!parentScope.getScopeDefinition().equals(stDef.getParent()))
+		else if (!parentScope.getScopeDefinition().equals(snDef.getParent()))
 		{
-			if (stDef.getParent() == null)
+			if (snDef.getParent() == null)
 			{
 				throw new IllegalArgumentException(
 					"Cannot instantiate a global scope with a parent");
@@ -278,9 +285,9 @@ public class VariableLibrary
 			throw new IllegalArgumentException("Parent Scope Definition was: "
 				+ parentScope.getScopeDefinition().getName()
 				+ " but parent of requested definition is: "
-				+ stDef.getParent().getName());
+				+ snDef.getParent().getName());
 		}
-		return new VariableScope<T>(stDef, parentScope);
+		return new VariableScope<T>(snDef, parentScope);
 	}
 
 	/**

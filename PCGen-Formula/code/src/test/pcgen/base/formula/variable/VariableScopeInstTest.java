@@ -29,7 +29,7 @@ public class VariableScopeInstTest extends TestCase
 	{
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope parent = new VariableScope(global, null);
 		try
 		{
@@ -57,7 +57,7 @@ public class VariableScopeInstTest extends TestCase
 		{
 			//ok, too			
 		}
-		ScopeTypeDefinition sub = new ScopeTypeDefinition(global, "EQUIPMENT");
+		ScopedNamespaceDefinition sub = new ScopedNamespaceDefinition(global, "EQUIPMENT");
 		try
 		{
 			new VariableScope(sub, null);
@@ -77,11 +77,11 @@ public class VariableScopeInstTest extends TestCase
 	{
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		assertEquals(null, scope.getParentScope());
 		assertEquals(global, scope.getScopeDefinition());
-		ScopeTypeDefinition sub = new ScopeTypeDefinition(global, "EQUIPMENT");
+		ScopedNamespaceDefinition sub = new ScopedNamespaceDefinition(global, "EQUIPMENT");
 		VariableScope subscope = new VariableScope(sub, scope);
 		assertEquals(scope, subscope.getParentScope());
 		assertEquals(sub, subscope.getScopeDefinition());

@@ -72,7 +72,7 @@ public class NamespaceDefinition<T>
 	 * @return the Class representing the class (format) of object stored for
 	 *         variables of this type
 	 */
-	public Class<T> getVariableClass()
+	public Class<T> getVariableFormat()
 	{
 		return variableFormat;
 	}
@@ -82,7 +82,7 @@ public class NamespaceDefinition<T>
 	 * 
 	 * @return The Namespace name of this type of variable.
 	 */
-	public String getVariableTypeName()
+	public String getNamespaceName()
 	{
 		return namespaceName;
 	}

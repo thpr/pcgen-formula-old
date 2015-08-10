@@ -27,7 +27,7 @@ public class SimpleVariableStoreTest extends TestCase
 		SimpleVariableStore svs = new SimpleVariableStore();
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableID vid = new VariableID(scope, "test");
 		try
@@ -61,7 +61,7 @@ public class SimpleVariableStoreTest extends TestCase
 		SimpleVariableStore svs = new SimpleVariableStore();
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableID vid = new VariableID(scope, "test");
 		assertFalse(svs.containsKey(vid));
@@ -78,7 +78,7 @@ public class SimpleVariableStoreTest extends TestCase
 		SimpleVariableStore svs = new SimpleVariableStore();
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableScope scope2 = new VariableScope(global, null);
 		VariableID vid1 = new VariableID(scope, "test");

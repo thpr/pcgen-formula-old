@@ -29,8 +29,8 @@ import pcgen.base.formula.manager.SimpleFormulaDependencyManager;
 import pcgen.base.formula.manager.SimpleFunctionLibrary;
 import pcgen.base.formula.manager.SimpleOperatorLibrary;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.ScopeTypeDefLibrary;
-import pcgen.base.formula.variable.ScopeTypeDefinition;
+import pcgen.base.formula.variable.ScopedNamespaceDefinitionLibrary;
+import pcgen.base.formula.variable.ScopedNamespaceDefinition;
 import pcgen.base.formula.variable.SimpleVariableStore;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.variable.VariableLibrary;
@@ -52,15 +52,15 @@ public abstract class AbstractFormulaTestCase extends TestCase
 	protected DependencyCaptureVisitor varCapture;
 	protected SimpleVariableStore store;
 	protected VariableScope<?> globalScope;
-	private ScopeTypeDefLibrary stDefLib;
+	private ScopedNamespaceDefinitionLibrary stDefLib;
 	private VariableLibrary varLibrary;
-	private ScopeTypeDefinition<?> globalScopeDef;
+	private ScopedNamespaceDefinition<?> globalScopeDef;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		stDefLib = new ScopeTypeDefLibrary();
+		stDefLib = new ScopedNamespaceDefinitionLibrary();
 		opLibrary = new SimpleOperatorLibrary();
 		NamespaceDefinition<Number> vtd =
 				new NamespaceDefinition<Number>(Number.class, "VAR");
