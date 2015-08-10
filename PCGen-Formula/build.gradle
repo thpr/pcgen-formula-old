@@ -32,13 +32,13 @@ repositories {
     jcenter()
     ivy {
         name "Pcgen Repo"
-        url 'http://www.pcgen.org/librepo'
+        url 'http://librepo.pcgen.org'
     }
 }
 
 dependencies {
 	compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    compile group: 'net.sourceforge.pcgen', name: 'PCGen-base', version:'1.0.10'
+    compile group: 'net.sourceforge.pcgen', name: 'PCGen-base', version:'1.0.10+'
     testCompile group: 'junit', name: 'junit', version: '4.+'
 }
 

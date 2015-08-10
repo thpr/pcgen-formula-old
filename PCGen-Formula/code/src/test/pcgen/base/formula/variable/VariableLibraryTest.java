@@ -26,14 +26,14 @@ import org.junit.Test;
 public class VariableLibraryTest extends TestCase
 {
 
-	private ScopeTypeDefLibrary stDefLib;
+	private ScopedNamespaceDefinitionLibrary stDefLib;
 	private VariableLibrary library;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		stDefLib = new ScopeTypeDefLibrary();
+		stDefLib = new ScopedNamespaceDefinitionLibrary();
 		library = new VariableLibrary(stDefLib);
 	}
 
@@ -42,7 +42,7 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		try
 		{
 			library.assertVariableScope(gmDef, null);
@@ -107,15 +107,15 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		//Dupe is safe
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
-		ScopeTypeDefinition eqMove =
+		ScopedNamespaceDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopeTypeDefinition eqPartMove =
+		ScopedNamespaceDefinition eqPartMove =
 				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopeTypeDefinition spMove =
+		ScopedNamespaceDefinition spMove =
 				stDefLib.getScopeDefinition(gmDef, "SPELL");
 		//Check child
 		assertFalse(library.assertVariableScope(eqMove, "Walk"));
@@ -151,7 +151,7 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		try
 		{
@@ -177,12 +177,12 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition eqMove =
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopeTypeDefinition eqPartMove =
+		ScopedNamespaceDefinition eqPartMove =
 				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopeTypeDefinition spMove =
+		ScopedNamespaceDefinition spMove =
 				stDefLib.getScopeDefinition(gmDef, "SPELL");
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		assertTrue(library.isLegalVariableID(gmDef, "Walk"));
@@ -216,7 +216,7 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		try
 		{
@@ -261,18 +261,18 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition eqMove =
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopeTypeDefinition eqPartMove =
+		ScopedNamespaceDefinition eqPartMove =
 				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopeTypeDefinition spMove =
+		ScopedNamespaceDefinition spMove =
 				stDefLib.getScopeDefinition(gmDef, "SPELL");
 		assertTrue(library.assertVariableScope(gmDef, "Walk"));
 		assertTrue(library.assertVariableScope(eqMove, "Float"));
 		assertTrue(library.assertVariableScope(eqPartMove, "Hover"));
 		assertTrue(library.assertVariableScope(spMove, "Hover"));
-		List<ScopeTypeDefinition<?>> list =
+		List<ScopedNamespaceDefinition<?>> list =
 				library.getKnownVariableScopes("Walk");
 		assertNotNull(list);
 		assertEquals(1, list.size());
@@ -316,12 +316,12 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition eqMove =
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopeTypeDefinition eqPartMove =
+		ScopedNamespaceDefinition eqPartMove =
 				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopeTypeDefinition spMove =
+		ScopedNamespaceDefinition spMove =
 				stDefLib.getScopeDefinition(gmDef, "SPELL");
 
 		try
@@ -378,12 +378,12 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition eqMove =
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopeTypeDefinition eqPartMove =
+		ScopedNamespaceDefinition eqPartMove =
 				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopeTypeDefinition spMove =
+		ScopedNamespaceDefinition spMove =
 				stDefLib.getScopeDefinition(gmDef, "SPELL");
 		VariableScope globalScope = library.instantiateScope(null, gmDef);
 		assertNull(globalScope.getParentScope());
@@ -409,12 +409,12 @@ public class VariableLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition eqMove =
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopeTypeDefinition eqPartMove =
+		ScopedNamespaceDefinition eqPartMove =
 				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopeTypeDefinition spMove =
+		ScopedNamespaceDefinition spMove =
 				stDefLib.getScopeDefinition(gmDef, "SPELL");
 		VariableScope globalScope = library.instantiateScope(null, gmDef);
 		VariableScope eqScope = library.instantiateScope(globalScope, eqMove);
@@ -503,13 +503,13 @@ public class VariableLibraryTest extends TestCase
 				new NamespaceDefinition(Number.class, "MOVE");
 		NamespaceDefinition flag =
 				new NamespaceDefinition(Boolean.class, "FLAG");
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition gfDef = stDefLib.defineGlobalScopeDefinition(flag);
-		ScopeTypeDefinition eqMove =
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition gfDef = stDefLib.defineGlobalScopeDefinition(flag);
+		ScopedNamespaceDefinition eqMove =
 				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopeTypeDefinition eqPartMove =
+		ScopedNamespaceDefinition eqPartMove =
 				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopeTypeDefinition spFlag =
+		ScopedNamespaceDefinition spFlag =
 				stDefLib.getScopeDefinition(gfDef, "SPELL");
 		VariableScope globalScope = library.instantiateScope(null, gmDef);
 		VariableScope globalFlagScope = library.instantiateScope(null, gfDef);
@@ -570,11 +570,11 @@ public class VariableLibraryTest extends TestCase
 				new NamespaceDefinition(Number.class, "MOVE");
 		NamespaceDefinition flag =
 				new NamespaceDefinition(Boolean.class, "FLAG");
-		ScopeTypeDefinition gvDef = stDefLib.defineGlobalScopeDefinition(var);
+		ScopedNamespaceDefinition gvDef = stDefLib.defineGlobalScopeDefinition(var);
 		assertNotNull(gvDef);
-		ScopeTypeDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalScopeDefinition(move);
 		assertNotNull(gmDef);
-		ScopeTypeDefinition gfDef = stDefLib.defineGlobalScopeDefinition(flag);
+		ScopedNamespaceDefinition gfDef = stDefLib.defineGlobalScopeDefinition(flag);
 		assertNotNull(gfDef);
 
 		VariableScope globalVarScope = library.instantiateScope(null, gvDef);

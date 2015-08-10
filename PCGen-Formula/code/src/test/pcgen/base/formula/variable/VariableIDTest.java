@@ -42,7 +42,7 @@ public class VariableIDTest extends TestCase
 		}
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		try
 		{
@@ -102,7 +102,7 @@ public class VariableIDTest extends TestCase
 	{
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableID vid = new VariableID(scope, "test");
 		assertEquals("test", vid.getName());
@@ -114,7 +114,7 @@ public class VariableIDTest extends TestCase
 	{
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableScope scope2 = new VariableScope(global, null);
 		VariableID vid1 = new VariableID(scope, "test");
@@ -134,7 +134,7 @@ public class VariableIDTest extends TestCase
 	{
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
+		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
 		VariableScope scope = new VariableScope(global, null);
 		VariableScope scope2 = new VariableScope(global, null);
 		VariableID vid1 = new VariableID(scope, "test");

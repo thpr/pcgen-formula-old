@@ -21,33 +21,15 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class ScopeTypeDefinitionTest extends TestCase
+public class NamespaceDefinitionTest extends TestCase
 {
-
-	@Test
-	public void testSingleConstructor()
-	{
-		try
-		{
-			new ScopeTypeDefinition(null);
-			fail("null must be rejected");
-		}
-		catch (NullPointerException e)
-		{
-			//ok
-		}
-		catch (IllegalArgumentException e)
-		{
-			//ok, too			
-		}
-	}
 
 	@Test
 	public void testDoubleConstructor()
 	{
 		try
 		{
-			new ScopeTypeDefinition(null, null);
+			new NamespaceDefinition(null, null);
 			fail("nulls must be rejected");
 		}
 		catch (NullPointerException e)
@@ -58,12 +40,9 @@ public class ScopeTypeDefinitionTest extends TestCase
 		{
 			//ok, too			
 		}
-		NamespaceDefinition vtd =
-				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition parent = new ScopeTypeDefinition(vtd);
 		try
 		{
-			new ScopeTypeDefinition(parent, null);
+			new NamespaceDefinition(Number.class, null);
 			fail("null name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -76,8 +55,8 @@ public class ScopeTypeDefinitionTest extends TestCase
 		}
 		try
 		{
-			new ScopeTypeDefinition(null, "EQUIPMENT");
-			fail("null parent must be rejected");
+			new NamespaceDefinition(null, "VAR");
+			fail("null class must be rejected");
 		}
 		catch (NullPointerException e)
 		{
@@ -89,7 +68,7 @@ public class ScopeTypeDefinitionTest extends TestCase
 		}
 		try
 		{
-			new ScopeTypeDefinition(parent, "");
+			new NamespaceDefinition(Number.class, "");
 			fail("empty name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -106,21 +85,46 @@ public class ScopeTypeDefinitionTest extends TestCase
 	{
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
-		assertNull(global.getParent());
-		assertEquals("", global.getName());
-		assertEquals(vtd, global.getNamespaceDefinition());
+		assertEquals("VAR", vtd.getNamespaceName());
+		assertEquals(Number.class, vtd.getVariableFormat());
 	}
-	
-	public void testChild()
+
+	public void testEquals()
 	{
-		NamespaceDefinition vtd =
+		NamespaceDefinition vid1 =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopeTypeDefinition global = new ScopeTypeDefinition(vtd);
-		ScopeTypeDefinition child =
-				new ScopeTypeDefinition(global, "EQUIPMENT");
-		assertEquals(global, child.getParent());
-		assertEquals("EQUIPMENT", child.getName());
-		assertEquals(vtd, global.getNamespaceDefinition());
+		NamespaceDefinition vid2 =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vid3 =
+				new NamespaceDefinition(Number.class, "MOVE");
+		NamespaceDefinition vid4 =
+				new NamespaceDefinition(Boolean.class, "VAR");
+		assertFalse(vid1.equals(null));
+		assertFalse(vid1.equals(new Object()));
+		assertTrue(vid1.equals(vid1));
+		assertTrue(vid1.equals(vid2));
+		assertTrue(vid2.equals(vid1));
+		assertFalse(vid1.equals(vid3));
+		assertFalse(vid1.equals(vid4));
+	}
+
+	public void testHashCode()
+	{
+		NamespaceDefinition vid1 =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vid2 =
+				new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vid3 =
+				new NamespaceDefinition(Number.class, "MOVE");
+		NamespaceDefinition vid4 =
+				new NamespaceDefinition(Boolean.class, "VAR");
+		int hc1 = vid1.hashCode();
+		int hc2 = vid2.hashCode();
+		int hc3 = vid3.hashCode();
+		int hc4 = vid4.hashCode();
+		assertTrue(hc1 == hc2);
+		assertFalse(hc2 == hc3);
+		assertFalse(hc2 == hc4);
+		assertFalse(hc3 == hc4);
 	}
 }

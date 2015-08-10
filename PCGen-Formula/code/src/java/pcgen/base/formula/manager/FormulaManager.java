@@ -20,7 +20,7 @@ package pcgen.base.formula.manager;
 import pcgen.base.formula.base.FormulaSemantics;
 import pcgen.base.formula.error.InvalidSemantics;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.ScopeTypeDefinition;
+import pcgen.base.formula.variable.ScopedNamespaceDefinition;
 import pcgen.base.formula.variable.VariableLibrary;
 import pcgen.base.formula.variable.VariableStore;
 import pcgen.base.formula.visitor.ValidVisitor;
@@ -58,8 +58,8 @@ public class FormulaManager
 	private final OperatorLibrary opLibrary;
 
 	/**
-	 * The VariableLibrary used to get ScopeTypeDefinitions, VariableScopes, and
-	 * VariableIDs.
+	 * The VariableLibrary used to get ScopedNamespaceDefinitions,
+	 * VariableScopes, and VariableIDs.
 	 */
 	private final VariableLibrary varLibrary;
 
@@ -81,7 +81,7 @@ public class FormulaManager
 	 *            The OperatorLibrary used to store valid operators in this
 	 *            FormulaManager
 	 * @param sl
-	 *            The VariableLibrary used to get ScopeTypeDefinitions,
+	 *            The VariableLibrary used to get ScopedNamespaceDefinitions,
 	 *            VariableScopes, and VariableIDs
 	 * @param resultStore
 	 *            The VariableStore used to hold variables values for items
@@ -119,10 +119,10 @@ public class FormulaManager
 	}
 
 	/**
-	 * Returns the VariableLibrary used to get ScopeTypeDefinitions,
+	 * Returns the VariableLibrary used to get ScopedNamespaceDefinitions,
 	 * VariableScopes, and VariableIDs.
 	 * 
-	 * @return The VariableLibrary used to get ScopeTypeDefinitions,
+	 * @return The VariableLibrary used to get ScopedNamespaceDefinitions,
 	 *         VariableScopes, and VariableIDs
 	 */
 	public VariableLibrary getFactory()
@@ -173,8 +173,8 @@ public class FormulaManager
 	 * @param root
 	 *            The starting node in a parsed tree of a formula, to be used
 	 *            for the semantics evaluation
-	 * @param stDef
-	 *            The ScopeTypeDefinition used to check for validity of
+	 * @param snDef
+	 *            The ScopedNamespaceDefinition used to check for validity of
 	 *            variables used within the formula
 	 * @return The FormulaSemantics for the formula starting with with the given
 	 *         SimpleNode as the root of the parsed tree of the formula
@@ -182,21 +182,21 @@ public class FormulaManager
 	 *             if any parameter is null
 	 */
 	public FormulaSemantics isValid(SimpleNode root,
-		ScopeTypeDefinition<?> stDef)
+		ScopedNamespaceDefinition<?> snDef)
 	{
 		if (root == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot determine validity with null root");
 		}
-		if (stDef == null)
+		if (snDef == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot determine validity with null ScopeTypeDefinition");
+				"Cannot determine validity with null ScopedNamespaceDefinition");
 		}
 		if (validVisitor == null)
 		{
-			validVisitor = new ValidVisitor(this, stDef);
+			validVisitor = new ValidVisitor(this, snDef);
 		}
 		FormulaSemantics fs = (FormulaSemantics) validVisitor.visit(root, null);
 		if (!fs.isValid())
@@ -204,10 +204,10 @@ public class FormulaManager
 			return fs;
 		}
 		if (!fs.getSemanticState().equals(
-			stDef.getNamespaceDefinition().getVariableClass()))
+			snDef.getNamespaceDefinition().getVariableFormat()))
 		{
-			return new InvalidSemantics(root, stDef.getNamespaceDefinition()
-				.getVariableClass(), fs.getSemanticState());
+			return new InvalidSemantics(root, snDef.getNamespaceDefinition()
+				.getVariableFormat(), fs.getSemanticState());
 		}
 		return fs;
 	}

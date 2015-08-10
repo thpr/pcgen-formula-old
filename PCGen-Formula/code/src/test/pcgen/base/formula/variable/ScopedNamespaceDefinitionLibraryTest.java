@@ -25,16 +25,16 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class ScopeTypeDefLibraryTest extends TestCase
+public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 {
 
-	private ScopeTypeDefLibrary library;
+	private ScopedNamespaceDefinitionLibrary library;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		library = new ScopeTypeDefLibrary();
+		library = new ScopedNamespaceDefinitionLibrary();
 	}
 
 	@Test
@@ -101,8 +101,8 @@ public class ScopeTypeDefLibraryTest extends TestCase
 		}
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition origDef = library.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition<?> stDef = library.getGlobalScopeDefinition("MOVE");
+		ScopedNamespaceDefinition origDef = library.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition<?> stDef = library.getGlobalScopeDefinition("MOVE");
 		assertTrue(origDef == stDef);
 		assertEquals("", stDef.getName());
 		assertEquals(null, stDef.getParent());
@@ -158,7 +158,7 @@ public class ScopeTypeDefLibraryTest extends TestCase
 	{
 		NamespaceDefinition conflict =
 				new NamespaceDefinition(Boolean.class, "MOVE");
-		ScopeTypeDefinition parentDef =
+		ScopedNamespaceDefinition parentDef =
 				library.defineGlobalScopeDefinition(conflict);
 		try
 		{
@@ -212,19 +212,19 @@ public class ScopeTypeDefLibraryTest extends TestCase
 	{
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopeTypeDefinition parentDef =
+		ScopedNamespaceDefinition parentDef =
 				library.defineGlobalScopeDefinition(move);
-		ScopeTypeDefinition eqDef =
+		ScopedNamespaceDefinition eqDef =
 				library.getScopeDefinition(parentDef, "EQUIPMENT");
 		assertEquals("EQUIPMENT", eqDef.getName());
 		assertEquals(parentDef, eqDef.getParent());
 		assertEquals(move, eqDef.getNamespaceDefinition());
 
-		ScopeTypeDefinition eqDef2 =
+		ScopedNamespaceDefinition eqDef2 =
 				library.getScopeDefinition(parentDef, "EQUIPMENT");
 		assertTrue(eqDef == eqDef2);
 
-		ScopeTypeDefinition spDef =
+		ScopedNamespaceDefinition spDef =
 				library.getScopeDefinition(parentDef, "SPELL");
 		assertEquals("SPELL", spDef.getName());
 		assertEquals(parentDef, spDef.getParent());

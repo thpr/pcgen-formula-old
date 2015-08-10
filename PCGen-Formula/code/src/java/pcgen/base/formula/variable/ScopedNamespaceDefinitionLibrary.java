@@ -26,48 +26,49 @@ import java.util.Map;
 import pcgen.base.util.HashMapToList;
 
 /**
- * ScopeTypeDefLibrary performs the management of ScopeTypeDefinitions.
+ * ScopedNamespaceDefinitionLibrary performs the management of
+ * ScopedNamespaceDefinitions.
  */
-public class ScopeTypeDefLibrary
+public class ScopedNamespaceDefinitionLibrary
 {
 
 	/**
 	 * Holds the Global Scope Definition for each namespace (for this
-	 * ScopeTypeDefLibrary).
+	 * ScopedNamespaceDefinitionLibrary).
 	 */
-	private Map<String, ScopeTypeDefinition<?>> globalScopes =
-			new HashMap<String, ScopeTypeDefinition<?>>();
+	private Map<String, ScopedNamespaceDefinition<?>> globalScopes =
+			new HashMap<String, ScopedNamespaceDefinition<?>>();
 
 	/**
-	 * Stores a map of parent ScopeTypeDefinition objects to their child
-	 * ScopeTypeDefinition objects. The child->parent relationship is held in
-	 * the ScopeTypeDefinition object itself.
+	 * Stores a map of parent ScopedNamespaceDefinition objects to their child
+	 * ScopedNamespaceDefinition objects. The child->parent relationship is held
+	 * in the ScopedNamespaceDefinition object itself.
 	 */
-	private HashMapToList<ScopeTypeDefinition<?>, ScopeTypeDefinition<?>> scopeChildren =
-			new HashMapToList<ScopeTypeDefinition<?>, ScopeTypeDefinition<?>>();
+	private HashMapToList<ScopedNamespaceDefinition<?>, ScopedNamespaceDefinition<?>> scopeChildren =
+			new HashMapToList<ScopedNamespaceDefinition<?>, ScopedNamespaceDefinition<?>>();
 
 	/**
 	 * Asserts (and if valid, returns) the existence of a "Global"
-	 * ScopeTypeDefinition for the given NamespaceDefinition.
+	 * ScopedNamespaceDefinition for the given NamespaceDefinition.
 	 * 
-	 * If an existing "Global" ScopeTypeDefinition exists for the Type Name of
-	 * the given VariableTypeDefintion, and it not based on the given
+	 * If an existing "Global" ScopedNamespaceDefinition exists for the Type
+	 * Name of the given NamespaceDefintion, and it not based on the given
 	 * NamespaceDefinition, then this method will throw an Exception. Note that
 	 * this means the method either returns a non-null value or throws an
 	 * Exception.
 	 * 
 	 * @param nsDef
 	 *            The NamespaceDefinition for which the existence of a "Global"
-	 *            ScopeTypeDefinition is being asserted.
-	 * @return The "Global" ScopeTypeDefinition for the given
+	 *            ScopedNamespaceDefinition is being asserted.
+	 * @return The "Global" ScopedNamespaceDefinition for the given
 	 *         NamespaceDefinition
 	 * @throws IllegalArgumentException
-	 *             if an existing "Global" ScopeTypeDefinition exists for the
-	 *             Type Name of the given NamespaceDefinition, but does not
+	 *             if an existing "Global" ScopedNamespaceDefinition exists for
+	 *             the Type Name of the given NamespaceDefinition, but does not
 	 *             match the given NamespaceDefinition
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> ScopeTypeDefinition<T> defineGlobalScopeDefinition(
+	public <T> ScopedNamespaceDefinition<T> defineGlobalScopeDefinition(
 		NamespaceDefinition<T> nsDef)
 	{
 		if (nsDef == null)
@@ -75,12 +76,12 @@ public class ScopeTypeDefLibrary
 			throw new IllegalArgumentException(
 				"Cannot define Global scope definition for null Namespace");
 		}
-		String nsName = nsDef.getVariableTypeName();
-		ScopeTypeDefinition<T> globalScope =
-				(ScopeTypeDefinition<T>) globalScopes.get(nsName);
+		String nsName = nsDef.getNamespaceName();
+		ScopedNamespaceDefinition<T> globalScope =
+				(ScopedNamespaceDefinition<T>) globalScopes.get(nsName);
 		if (globalScope == null)
 		{
-			globalScope = new ScopeTypeDefinition<T>(nsDef);
+			globalScope = new ScopedNamespaceDefinition<T>(nsDef);
 			globalScopes.put(nsName, globalScope);
 		}
 		else
@@ -88,30 +89,32 @@ public class ScopeTypeDefLibrary
 			if (!globalScope.getNamespaceDefinition().equals(nsDef))
 			{
 				String oldClass =
-						globalScope.getNamespaceDefinition().getVariableClass()
-							.getSimpleName();
+						globalScope.getNamespaceDefinition()
+							.getVariableFormat().getSimpleName();
 				throw new IllegalArgumentException(
 					"Attempt to redefine Global Scope Definition for: "
 						+ nsName + " from " + oldClass + " to "
-						+ nsDef.getVariableClass().getSimpleName());
+						+ nsDef.getVariableFormat().getSimpleName());
 			}
 		}
 		return globalScope;
 	}
 
 	/**
-	 * Returns the Global ScopeTypeDefinition for the given variable namespace
-	 * for this ScopeTypeDefLibrary.
+	 * Returns the Global ScopedNamespaceDefinition for the given variable
+	 * namespace for this ScopedNamespaceDefinitionLibrary.
 	 * 
 	 * @param varNamespace
 	 *            The name of the variable namespace for which the global
-	 *            ScopeTypeDefinition is to be retrieved
-	 * @return The Global ScopeTypeDefinition in this ScopeTypeDefLibrary for
-	 *         the given variable namespace
+	 *            ScopedNamespaceDefinition is to be retrieved
+	 * @return The Global ScopedNamespaceDefinition in this
+	 *         ScopedNamespaceDefinitionLibrary for the given variable namespace
 	 */
-	public ScopeTypeDefinition<?> getGlobalScopeDefinition(String varNamespace)
+	public ScopedNamespaceDefinition<?> getGlobalScopeDefinition(
+		String varNamespace)
 	{
-		ScopeTypeDefinition<?> globalScope = globalScopes.get(varNamespace);
+		ScopedNamespaceDefinition<?> globalScope =
+				globalScopes.get(varNamespace);
 		if (globalScope == null)
 		{
 			throw new IllegalArgumentException(
@@ -123,10 +126,10 @@ public class ScopeTypeDefLibrary
 
 	/**
 	 * Returns a non-null Collection of the Type Names of all of the Global
-	 * Scope Types contained in this ScopeTypeDefLibrary.
+	 * Scope Types contained in this ScopedNamespaceDefinitionLibrary.
 	 * 
 	 * @return A Collection of the Type Names of all of the Global Scope Types
-	 *         contained in this ScopeTypeDefLibrary
+	 *         contained in this ScopedNamespaceDefinitionLibrary
 	 */
 	public Collection<String> getGlobalScopeTypeNames()
 	{
@@ -134,30 +137,31 @@ public class ScopeTypeDefLibrary
 	}
 
 	/**
-	 * Returns a ScopeTypeDefinition given the parent ScopeTypeDefinition and
-	 * the name of the ScopeTypeDefinition to be returned.
+	 * Returns a ScopedNamespaceDefinition given the parent
+	 * ScopedNamespaceDefinition and the name of the ScopedNamespaceDefinition
+	 * to be returned.
 	 * 
-	 * If a ScopeTypeDefinition that is a child of the given parent
-	 * ScopeTypeDefinition with a matching name already exists, it will be
-	 * returned. If not, a new ScopeTypeDefinition will be returned.
+	 * If a ScopedNamespaceDefinition that is a child of the given parent
+	 * ScopedNamespaceDefinition with a matching name already exists, it will be
+	 * returned. If not, a new ScopedNamespaceDefinition will be returned.
 	 * 
 	 * @param <T>
 	 *            The type of object contained in the VariableScopes defined by
-	 *            the ScopeTypeDefinition to be returned
+	 *            the ScopedNamespaceDefinition to be returned
 	 * @param parentDef
-	 *            The parent ScopeTypeDefinition for the ScopeTypeDefinition to
-	 *            be returned
+	 *            The parent ScopedNamespaceDefinition for the
+	 *            ScopedNamespaceDefinition to be returned
 	 * @param scopeName
-	 *            The scope name of the ScopeTypeDefinition to be returned
-	 * @return A ScopeTypeDefinition with the given parent ScopeTypeDefinition
-	 *         and name
+	 *            The scope name of the ScopedNamespaceDefinition to be returned
+	 * @return A ScopedNamespaceDefinition with the given parent
+	 *         ScopedNamespaceDefinition and name
 	 * @throws IllegalArgumentException
 	 *             if either argument is null or if the given scope definition
 	 *             name is empty
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> ScopeTypeDefinition<T> getScopeDefinition(
-		ScopeTypeDefinition<T> parentDef, String scopeName)
+	public <T> ScopedNamespaceDefinition<T> getScopeDefinition(
+		ScopedNamespaceDefinition<T> parentDef, String scopeName)
 	{
 		if (parentDef == null)
 		{
@@ -169,29 +173,30 @@ public class ScopeTypeDefLibrary
 		 * TODO Do we need a check that the given parentDef actually belongs to
 		 * this VariableLibrary?
 		 */
-		List<ScopeTypeDefinition<?>> subscopes =
+		List<ScopedNamespaceDefinition<?>> subscopes =
 				scopeChildren.getListFor(parentDef);
 		if (subscopes != null)
 		{
 			//Look for existing
-			for (ScopeTypeDefinition<?> subscope : subscopes)
+			for (ScopedNamespaceDefinition<?> subscope : subscopes)
 			{
 				if (subscope.getName().equalsIgnoreCase(scopeName))
 				{
-					return (ScopeTypeDefinition<T>) subscope;
+					return (ScopedNamespaceDefinition<T>) subscope;
 				}
 			}
 		}
 		//Is new
-		ScopeTypeDefinition<T> stDef =
-				new ScopeTypeDefinition<T>(parentDef, scopeName);
-		scopeChildren.addToListFor(parentDef, stDef);
-		return stDef;
+		ScopedNamespaceDefinition<T> snDef =
+				new ScopedNamespaceDefinition<T>(parentDef, scopeName);
+		scopeChildren.addToListFor(parentDef, snDef);
+		return snDef;
 	}
 
 	/**
-	 * Returns a list of the "children" of the given ScopeTypeDefinition. These
-	 * were created by calling getScopeDefinition on this ScopeTypeDefLibrary.
+	 * Returns a list of the "children" of the given ScopedNamespaceDefinition.
+	 * These were created by calling getScopeDefinition on this
+	 * ScopedNamespaceDefinitionLibrary.
 	 * 
 	 * This method is value-semantic in that no changes are made to the object
 	 * passed into the method and ownership of the returned List is transferred
@@ -199,16 +204,16 @@ public class ScopeTypeDefLibrary
 	 * the list to change, and changes to the list will not cause the internal
 	 * contents of this object to change.
 	 * 
-	 * @param stDef
-	 *            The ScopeTypeDefinition for which the children
-	 *            ScopeTypeDefinitions should be returned
-	 * @return A list of ScopeTypeDefinition objects which are "children" of the
-	 *         given ScopeTypeDefinition
+	 * @param snDef
+	 *            The ScopedNamespaceDefinition for which the children
+	 *            ScopedNamespaceDefinitions should be returned
+	 * @return A list of ScopedNamespaceDefinition objects which are "children"
+	 *         of the given ScopedNamespaceDefinition
 	 */
-	public List<ScopeTypeDefinition<?>> getChildScopes(
-		ScopeTypeDefinition<?> stDef)
+	public List<ScopedNamespaceDefinition<?>> getChildScopes(
+		ScopedNamespaceDefinition<?> snDef)
 	{
-		return scopeChildren.getListFor(stDef);
+		return scopeChildren.getListFor(snDef);
 	}
 
 	/**

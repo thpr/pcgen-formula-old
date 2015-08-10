@@ -26,7 +26,7 @@ import pcgen.base.formula.manager.ScopeInformation;
 import pcgen.base.formula.parse.FormulaParser;
 import pcgen.base.formula.parse.ParseException;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.ScopeTypeDefinition;
+import pcgen.base.formula.variable.ScopedNamespaceDefinition;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 
 /**
@@ -167,18 +167,18 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * Returns the FormulaSemantics for this NEPFormula.
 	 * 
 	 * @see pcgen.base.formula.NEPFormula#isValid(pcgen.base.formula.manager.FormulaManager,
-	 *      pcgen.base.formula.variable.ScopeTypeDefinition)
+	 *      pcgen.base.formula.variable.ScopedNamespaceDefinition)
 	 */
 	@Override
 	public FormulaSemantics isValid(FormulaManager fm,
-		ScopeTypeDefinition<T> stDef)
+		ScopedNamespaceDefinition<T> snDef)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot resolve formula with null FormulaManager");
 		}
-		return fm.isValid(root, stDef);
+		return fm.isValid(root, snDef);
 	}
 
 	/**

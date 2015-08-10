@@ -49,7 +49,7 @@ import pcgen.base.formula.parse.FormulaParserVisitor;
 import pcgen.base.formula.parse.Node;
 import pcgen.base.formula.parse.Operator;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.ScopeTypeDefinition;
+import pcgen.base.formula.variable.ScopedNamespaceDefinition;
 
 /**
  * ValidVisitor visits a formula in tree form to determine if the formula is
@@ -104,34 +104,34 @@ public class ValidVisitor implements FormulaParserVisitor
 	 * The scope type definition in which the formula resides, in order to
 	 * validate if variables used in the formula are legal.
 	 */
-	private final ScopeTypeDefinition<?> stDef;
+	private final ScopedNamespaceDefinition<?> snDef;
 
 	/**
 	 * Constructs a new ValidVisitor with the given FormulaManager and
-	 * ScopeTypeDefinition.
+	 * ScopedNamespaceDefinition.
 	 * 
 	 * @param fm
 	 *            The FormulaManager used to get information about functions and
 	 *            other key parameters of a Formula
-	 * @param stDef
+	 * @param snDef
 	 *            The scope definition in which the formula resides, in order to
 	 *            validate if variables used in the formula are valid
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null
 	 */
-	public ValidVisitor(FormulaManager fm, ScopeTypeDefinition<?> stDef)
+	public ValidVisitor(FormulaManager fm, ScopedNamespaceDefinition<?> snDef)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException("FormulaManager cannot be null");
 		}
-		if (stDef == null)
+		if (snDef == null)
 		{
 			throw new IllegalArgumentException(
 				"Scope Definition cannot be null");
 		}
 		this.fm = fm;
-		this.stDef = stDef;
+		this.snDef = snDef;
 	}
 
 	/**
@@ -381,7 +381,7 @@ public class ValidVisitor implements FormulaParserVisitor
 			return new InvalidChildCount(node, 0);
 		}
 		String varName = node.getText();
-		if (fm.getFactory().isLegalVariableID(stDef, varName))
+		if (fm.getFactory().isLegalVariableID(snDef, varName))
 		{
 			return new FormulaSemanticsValid(NUMBER_CLASS);
 		}

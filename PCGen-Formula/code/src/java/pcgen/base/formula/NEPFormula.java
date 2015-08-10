@@ -21,7 +21,7 @@ import pcgen.base.formula.base.FormulaDependencyManager;
 import pcgen.base.formula.base.FormulaSemantics;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.ScopeInformation;
-import pcgen.base.formula.variable.ScopeTypeDefinition;
+import pcgen.base.formula.variable.ScopedNamespaceDefinition;
 
 /**
  * A NEPFormula is a formula that is part of the "Native Equation Parser" for
@@ -65,18 +65,18 @@ public interface NEPFormula<T>
 	 * The given FormulaManager must contain information about variable values,
 	 * available functions, and other characteristics required for the formula
 	 * to establish the list of variables contained within the NEPFormula. These
-	 * must be valid within the context of the given ScopeTypeDefinition.
+	 * must be valid within the context of the given ScopedNamespaceDefinition.
 	 * 
 	 * @param fm
 	 *            The FormulaManager providing the context in which the
 	 *            NEPFormula is to be resolved
-	 * @param def
-	 *            The ScopeTypeDefinition in which the NEPFormula should be
-	 *            checked to ensure it is valid
+	 * @param snDef
+	 *            The ScopedNamespaceDefinition in which the NEPFormula should
+	 *            be checked to ensure it is valid
 	 * @return The FormulaSemantics for the NEPFormula
 	 */
 	public FormulaSemantics isValid(FormulaManager fm,
-		ScopeTypeDefinition<T> def);
+		ScopedNamespaceDefinition<T> snDef);
 
 	/**
 	 * Determines the dependencies for this formula, including the VariableID

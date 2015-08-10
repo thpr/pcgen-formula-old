@@ -18,7 +18,7 @@
 package pcgen.base.formula.variable;
 
 /**
- * A ScopeTypeDefinition is a generic definition defining how a series of
+ * A ScopedNamespaceDefinition is a generic definition defining how a series of
  * VariableScope objects can be instantiated.
  * 
  * Understanding why there is a Scope and a ScopeDefinition is perhaps best
@@ -30,36 +30,37 @@ package pcgen.base.formula.variable;
  * Local). If the scope is local, then it will have a specific context for that
  * locality based on where it was defined. In PCGen terms, that might be
  * "Equipment". There may also be a Sub-Scope such as "Equipment Part". (The
- * exact naming is up to the application, ScopeTypeDefinition does no
+ * exact naming is up to the application, ScopedNamespaceDefinition does no
  * relationship enforcement based on the name).
  * 
  * At Runtime, we then parse a formula to determine what variables it contains.
  * This formula will have with it a FormulaManager that contains a
- * VariableScope. This VariableScope is checked against the ScopeTypeDefinition
- * to see if it is legal. The particular thing to understand here is that we are
- * no longer operating within a generic "Equipment.class" definition. The scope
- * is more concrete than the definition, in that it is specific to a certain
- * *instance* of Equipment.class.
+ * VariableScope. This VariableScope is checked against the
+ * ScopedNamespaceDefinition to see if it is legal. The particular thing to
+ * understand here is that we are no longer operating within a generic
+ * "Equipment.class" definition. The scope is more concrete than the definition,
+ * in that it is specific to a certain *instance* of Equipment.class.
  * 
  * @param <T>
  *            The type of variable object to be contained in VariableScope
- *            objects defined by this ScopeTypeDefinition
+ *            objects defined by this ScopedNamespaceDefinition
  */
-public class ScopeTypeDefinition<T>
+public class ScopedNamespaceDefinition<T>
 {
 	/**
-	 * Identifies the ScopeTypeDefinition that is the parent of this
-	 * ScopeTypeDefinition.
+	 * Identifies the ScopedNamespaceDefinition that is the parent of this
+	 * ScopedNamespaceDefinition.
 	 */
-	private final ScopeTypeDefinition<T> parentDef;
+	private final ScopedNamespaceDefinition<T> parentDef;
 
 	/**
-	 * Identifies the name of this ScopeTypeDefinition.
+	 * Identifies the name of this ScopedNamespaceDefinition.
 	 */
 	private final String scopeName;
 
 	/**
-	 * Identifies the Namespace of object covered by this ScopeTypeDefinition.
+	 * Identifies the Namespace of object covered by this
+	 * ScopedNamespaceDefinition.
 	 */
 	private final NamespaceDefinition<T> namespaceDef;
 
@@ -68,16 +69,17 @@ public class ScopeTypeDefinition<T>
 	 * the empty name ("").
 	 * 
 	 * @param namespace
-	 *            The Namespace of object covered by this ScopeTypeDefinition
+	 *            The Namespace of object covered by this
+	 *            ScopedNamespaceDefinition
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null
 	 */
-	ScopeTypeDefinition(NamespaceDefinition<T> namespace)
+	ScopedNamespaceDefinition(NamespaceDefinition<T> namespace)
 	{
 		if (namespace == null)
 		{
 			throw new IllegalArgumentException(
-				"Namespace for this ScopeTypeDefinition cannot be null");
+				"Namespace for this ScopedNamespaceDefinition cannot be null");
 		}
 		parentDef = null;
 		this.scopeName = "";
@@ -85,25 +87,27 @@ public class ScopeTypeDefinition<T>
 	}
 
 	/**
-	 * Constructs a new ScopeTypeDefinition with the given parent and scope
-	 * definition name.
+	 * Constructs a new ScopedNamespaceDefinition with the given parent and
+	 * scope definition name.
 	 * 
 	 * Package protected in order to have ScopeLibrary be the exclusive source
-	 * of creation for a ScopeTypeDefinition.
+	 * of creation for a ScopedNamespaceDefinition.
 	 * 
-	 * The type of object covered by this ScopeTypeDefinition will match that of
-	 * the given parent definition.
+	 * The type of object covered by this ScopedNamespaceDefinition will match
+	 * that of the given parent definition.
 	 * 
 	 * @param parentDef
-	 *            The parent ScopeTypeDefinition for this ScopeTypeDefinition
+	 *            The parent ScopedNamespaceDefinition for this
+	 *            ScopedNamespaceDefinition
 	 * @param scopeName
-	 *            The name of this ScopeTypeDefinition. Must not be null or
-	 *            empty.
+	 *            The name of this ScopedNamespaceDefinition. Must not be null
+	 *            or empty.
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null or if the scopeName is zero
 	 *             length
 	 */
-	ScopeTypeDefinition(ScopeTypeDefinition<T> parentDef, String scopeName)
+	ScopedNamespaceDefinition(ScopedNamespaceDefinition<T> parentDef,
+		String scopeName)
 	{
 		if (parentDef == null)
 		{
@@ -121,10 +125,10 @@ public class ScopeTypeDefinition<T>
 	}
 
 	/**
-	 * Returns the (non-null) name of this ScopeTypeDefinition. This is an empty
-	 * string ("") for a Global ScopeTypeDefinition.
+	 * Returns the (non-null) name of this ScopedNamespaceDefinition. This is an
+	 * empty string ("") for a Global ScopedNamespaceDefinition.
 	 * 
-	 * @return The name of this ScopeTypeDefinition
+	 * @return The name of this ScopedNamespaceDefinition
 	 */
 	public String getName()
 	{
@@ -132,24 +136,26 @@ public class ScopeTypeDefinition<T>
 	}
 
 	/**
-	 * Returns the parent ScopeTypeDefinition of this ScopeTypeDefinition.
+	 * Returns the parent ScopedNamespaceDefinition of this
+	 * ScopedNamespaceDefinition.
 	 * 
 	 * Note that this can be null in the unique case of the Global Scope (this
 	 * limit is enforced by ScopeLibrary)
 	 * 
-	 * @return The parent ScopeTypeDefinition of this ScopeTypeDefinition
+	 * @return The parent ScopedNamespaceDefinition of this
+	 *         ScopedNamespaceDefinition
 	 */
-	public ScopeTypeDefinition<T> getParent()
+	public ScopedNamespaceDefinition<T> getParent()
 	{
 		return parentDef;
 	}
 
 	/**
 	 * Returns the NamespaceDefinition representing the namespace covered by
-	 * this ScopeTypeDefinition.
+	 * this ScopedNamespaceDefinition.
 	 * 
 	 * @return The NamespaceDefinition representing the namespace covered by
-	 *         this ScopeTypeDefinition
+	 *         this ScopedNamespaceDefinition
 	 */
 	public NamespaceDefinition<T> getNamespaceDefinition()
 	{
@@ -180,9 +186,10 @@ public class ScopeTypeDefinition<T>
 	@Override
 	public boolean equals(Object o)
 	{
-		if (o instanceof ScopeTypeDefinition)
+		if (o instanceof ScopedNamespaceDefinition)
 		{
-			ScopeTypeDefinition<?> other = (ScopeTypeDefinition<?>) o;
+			ScopedNamespaceDefinition<?> other =
+					(ScopedNamespaceDefinition<?>) o;
 			return scopeName.equals(other.scopeName)
 				&& namespaceDef.equals(other.namespaceDef);
 		}

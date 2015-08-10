@@ -50,37 +50,39 @@ public class VariableScope<T>
 	private final VariableScope<T> parent;
 
 	/**
-	 * The ScopeTypeDefinition that underlies this VariableScope.
+	 * The ScopedNamespaceDefinition that underlies this VariableScope.
 	 */
-	private final ScopeTypeDefinition<T> stDef;
+	private final ScopedNamespaceDefinition<T> snDef;
 
 	/**
-	 * Constructs a new VariableScope with the given ScopeTypeDefinition and
-	 * parent.
+	 * Constructs a new VariableScope with the given ScopedNamespaceDefinition
+	 * and parent.
 	 * 
-	 * @param stDef
-	 *            The ScopeTypeDefinition that underlies this VariableScope
+	 * @param snDef
+	 *            The ScopedNamespaceDefinition that underlies this
+	 *            VariableScope
 	 * @param parentScope
 	 *            The VariableScope that is a parent of this VariableScope. May
-	 *            be null to represent global if the given ScopeTypeDefintion
-	 *            has no parent (is global)
+	 *            be null to represent global if the given
+	 *            ScopedNamespaceDefinition has no parent (is global)
 	 * @throws IllegalArgumentException
-	 *             if the given ScopeTypeDefinition is null or the parentScope
-	 *             is null when the given ScopeTypeDefinition has a non-null
-	 *             parent
+	 *             if the given ScopedNamespaceDefinition is null or the
+	 *             parentScope is null when the given ScopedNamespaceDefinition
+	 *             has a non-null parent
 	 */
-	VariableScope(ScopeTypeDefinition<T> stDef, VariableScope<T> parentScope)
+	VariableScope(ScopedNamespaceDefinition<T> snDef,
+		VariableScope<T> parentScope)
 	{
-		if (stDef == null)
+		if (snDef == null)
 		{
 			throw new IllegalArgumentException("Definition cannot be null");
 		}
-		if ((parentScope == null) && (stDef.getParent() != null))
+		if ((parentScope == null) && (snDef.getParent() != null))
 		{
 			throw new IllegalArgumentException(
 				"Cannot create Scope with null parent unless definition has no parent");
 		}
-		this.stDef = stDef;
+		this.snDef = snDef;
 		this.parent = parentScope;
 	}
 
@@ -100,27 +102,27 @@ public class VariableScope<T>
 	}
 
 	/**
-	 * Returns the ScopeTypeDefinition for this VariableScope. This was used as
-	 * the framework for constructing this scope, and is necessary as the "key"
-	 * (in a java.util.Map sense of "key") to get the list of legal variables
-	 * from the ScopeLibrary.
+	 * Returns the ScopedNamespaceDefinition for this VariableScope. This was
+	 * used as the framework for constructing this scope, and is necessary as
+	 * the "key" (in a java.util.Map sense of "key") to get the list of legal
+	 * variables from the ScopeLibrary.
 	 * 
-	 * @return The ScopeTypeDefinition used to define this VariableScope
+	 * @return The ScopedNamespaceDefinition used to define this VariableScope
 	 */
-	public ScopeTypeDefinition<T> getScopeDefinition()
+	public ScopedNamespaceDefinition<T> getScopeDefinition()
 	{
-		return stDef;
+		return snDef;
 	}
 
 	/**
 	 * Returns the format (e.g. Number.class) of this VariableScope (as
-	 * controlled by the ScopeTypeDefinition).
+	 * controlled by the ScopedNamespaceDefinition).
 	 * 
 	 * @return The format (e.g. Number.class) of this VariableScope
 	 */
 	public Class<T> getVariableFormat()
 	{
-		return stDef.getNamespaceDefinition().getVariableClass();
+		return snDef.getNamespaceDefinition().getVariableFormat();
 	}
 
 	/**
@@ -131,11 +133,11 @@ public class VariableScope<T>
 	{
 		if (parent == null)
 		{
-			return "Global (" + stDef + ")";
+			return "Global (" + snDef + ")";
 		}
 		else
 		{
-			return parent + " (" + stDef + ")";
+			return parent + " (" + snDef + ")";
 		}
 	}
 }
