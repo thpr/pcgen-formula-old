@@ -42,7 +42,7 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 	{
 		try
 		{
-			library.defineGlobalScopeDefinition(null);
+			library.defineGlobalNamespaceDefinition(null);
 			fail("null must be rejected");
 		}
 		catch (NullPointerException e)
@@ -60,25 +60,25 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 	{
 		NamespaceDefinition vtd =
 				new NamespaceDefinition(Number.class, "VAR");
-		library.defineGlobalScopeDefinition(vtd);
+		library.defineGlobalNamespaceDefinition(vtd);
 		//twice is legal
-		library.defineGlobalScopeDefinition(vtd);
+		library.defineGlobalNamespaceDefinition(vtd);
 		//and so is .equals() VTD
 		NamespaceDefinition matching =
 				new NamespaceDefinition(Number.class, "VAR");
-		library.defineGlobalScopeDefinition(matching);
+		library.defineGlobalNamespaceDefinition(matching);
 
 		//Allow other types of same format
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		library.defineGlobalScopeDefinition(move);
+		library.defineGlobalNamespaceDefinition(move);
 
 		try
 		{
 			//Different type same name (MOVE)
 			NamespaceDefinition conflict =
 					new NamespaceDefinition(Boolean.class, "MOVE");
-			library.defineGlobalScopeDefinition(conflict);
+			library.defineGlobalNamespaceDefinition(conflict);
 			fail("conflict must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -101,7 +101,7 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 		}
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition origDef = library.defineGlobalScopeDefinition(move);
+		ScopedNamespaceDefinition origDef = library.defineGlobalNamespaceDefinition(move);
 		ScopedNamespaceDefinition<?> stDef = library.getGlobalScopeDefinition("MOVE");
 		assertTrue(origDef == stDef);
 		assertEquals("", stDef.getName());
@@ -117,21 +117,21 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 		assertEquals(0, c.size());
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
-		library.defineGlobalScopeDefinition(move);
+		library.defineGlobalNamespaceDefinition(move);
 		//We reload because it's no guarantee we have a wrapped set
 		//No guarantee we don't though, so we don't test that either
 		c = library.getGlobalScopeTypeNames();
 		assertNotNull(c);
 		assertEquals(1, c.size());
 		assertEquals("MOVE", c.iterator().next());
-		library.defineGlobalScopeDefinition(move);
+		library.defineGlobalNamespaceDefinition(move);
 		//make sure duplicates don't fool things
 		c = library.getGlobalScopeTypeNames();
 		assertNotNull(c);
 		assertEquals(1, c.size());
 		NamespaceDefinition flag =
 				new NamespaceDefinition(Boolean.class, "FLAG");
-		library.defineGlobalScopeDefinition(flag);
+		library.defineGlobalNamespaceDefinition(flag);
 		//reload, same
 		c = library.getGlobalScopeTypeNames();
 		assertNotNull(c);
@@ -159,7 +159,7 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 		NamespaceDefinition conflict =
 				new NamespaceDefinition(Boolean.class, "MOVE");
 		ScopedNamespaceDefinition parentDef =
-				library.defineGlobalScopeDefinition(conflict);
+				library.defineGlobalNamespaceDefinition(conflict);
 		try
 		{
 			library.getScopeDefinition(parentDef, null);
@@ -213,7 +213,7 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 		NamespaceDefinition move =
 				new NamespaceDefinition(Number.class, "MOVE");
 		ScopedNamespaceDefinition parentDef =
-				library.defineGlobalScopeDefinition(move);
+				library.defineGlobalNamespaceDefinition(move);
 		ScopedNamespaceDefinition eqDef =
 				library.getScopeDefinition(parentDef, "EQUIPMENT");
 		assertEquals("EQUIPMENT", eqDef.getName());

@@ -64,7 +64,7 @@ public abstract class AbstractFormulaTestCase extends TestCase
 		opLibrary = new SimpleOperatorLibrary();
 		NamespaceDefinition<Number> vtd =
 				new NamespaceDefinition<Number>(Number.class, "VAR");
-		stDefLib.defineGlobalScopeDefinition(vtd);
+		stDefLib.defineGlobalNamespaceDefinition(vtd);
 		globalScopeDef = stDefLib.getGlobalScopeDefinition("VAR");
 		varLibrary = new VariableLibrary(stDefLib);
 		globalScope = varLibrary.instantiateScope(null, globalScopeDef);

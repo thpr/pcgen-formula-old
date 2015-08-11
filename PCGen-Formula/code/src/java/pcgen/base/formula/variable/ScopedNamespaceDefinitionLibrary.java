@@ -68,13 +68,13 @@ public class ScopedNamespaceDefinitionLibrary
 	 *             match the given NamespaceDefinition
 	 */
 	@SuppressWarnings("unchecked")
-	public <T> ScopedNamespaceDefinition<T> defineGlobalScopeDefinition(
+	public <T> ScopedNamespaceDefinition<T> defineGlobalNamespaceDefinition(
 		NamespaceDefinition<T> nsDef)
 	{
 		if (nsDef == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot define Global scope definition for null Namespace");
+				"Cannot define Global Namespace definition for null Namespace");
 		}
 		String nsName = nsDef.getNamespaceName();
 		ScopedNamespaceDefinition<T> globalScope =
@@ -92,7 +92,7 @@ public class ScopedNamespaceDefinitionLibrary
 						globalScope.getNamespaceDefinition()
 							.getVariableFormat().getSimpleName();
 				throw new IllegalArgumentException(
-					"Attempt to redefine Global Scope Definition for: "
+					"Attempt to redefine Global Namespace Definition for: "
 						+ nsName + " from " + oldClass + " to "
 						+ nsDef.getVariableFormat().getSimpleName());
 			}
@@ -160,6 +160,9 @@ public class ScopedNamespaceDefinitionLibrary
 	 *             name is empty
 	 */
 	@SuppressWarnings("unchecked")
+	/*
+	 * TODO need a get that does NOT create :(
+	 */
 	public <T> ScopedNamespaceDefinition<T> getScopeDefinition(
 		ScopedNamespaceDefinition<T> parentDef, String scopeName)
 	{
