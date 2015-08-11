@@ -47,10 +47,10 @@ public interface FunctionLibrary
 	 * null or attempts to add a function with a null name. An exception may be
 	 * thrown (implementation dependent).
 	 * 
-	 * @param f
+	 * @param function
 	 *            The function to be added to the FunctionLibrary
 	 */
-	public void addFunction(Function f);
+	public void addFunction(Function function);
 
 	/**
 	 * Returns the Function with the given function name. This will return a
@@ -63,11 +63,11 @@ public interface FunctionLibrary
 	 * "null" is a legal return value if there is no function in the
 	 * FunctionLibrary for the given function name.
 	 * 
-	 * @param fname
+	 * @param functionName
 	 *            The name of the Function to be returned.
 	 * @return The Function with the given function name.
 	 */
-	public Function getFunction(String fname);
+	public Function getFunction(String functionName);
 
 	/**
 	 * Adds a bracket function to the FunctionLibrary. This is used for
@@ -77,10 +77,10 @@ public interface FunctionLibrary
 	 * null or attempts to add a function with a null name. An exception may be
 	 * thrown (implementation dependent).
 	 * 
-	 * @param f
+	 * @param function
 	 *            The bracket function to be added to the FunctionLibrary
 	 */
-	public void addBracketFunction(Function f);
+	public void addBracketFunction(Function function);
 
 	/**
 	 * Returns the Function with the given bracket function name. This will
@@ -93,10 +93,10 @@ public interface FunctionLibrary
 	 * "null" is a legal return value if there is no bracket function in the
 	 * FunctionLibrary for the given bracket function name.
 	 * 
-	 * @param fname
+	 * @param functionName
 	 *            The name of the bracket Function to be returned.
 	 * @return The Function with the given bracket function name.
 	 */
-	public Function getBracketFunction(String fname);
+	public Function getBracketFunction(String functionName);
 
 }

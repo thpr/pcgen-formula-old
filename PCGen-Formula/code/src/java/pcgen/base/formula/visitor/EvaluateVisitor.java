@@ -272,10 +272,10 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	public Object visit(ASTPCGenSingleWord node, Object data)
 	{
 		String varName = node.getText();
-		VariableLibrary varLib = fm.getFactory();
-		if (varLib.isLegalVariableID(scope.getScopeDefinition(), varName))
+		VariableLibrary varLibrary = fm.getFactory();
+		if (varLibrary.isLegalVariableID(scope.getScopeDefinition(), varName))
 		{
-			VariableID<?> id = varLib.getVariableID(scope, varName);
+			VariableID<?> id = varLibrary.getVariableID(scope, varName);
 			VariableStore resolver = fm.getResolver();
 			if (resolver.containsKey(id))
 			{

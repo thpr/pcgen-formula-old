@@ -63,24 +63,24 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * @see pcgen.base.formula.manager.FunctionLibrary#addFunction(pcgen.base.formula.function.Function)
 	 */
 	@Override
-	public void addFunction(Function f)
+	public void addFunction(Function function)
 	{
-		if (f == null)
+		if (function == null)
 		{
 			throw new IllegalArgumentException("Cannot add null Function");
 		}
-		String fName = f.getFunctionName();
-		if (fName == null)
+		String functionName = function.getFunctionName();
+		if (functionName == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot add Function with null name");
 		}
-		if (parenMap.containsKey(fName))
+		if (parenMap.containsKey(functionName))
 		{
 			throw new IllegalArgumentException(
-				"Cannot load two functions of name: " + fName);
+				"Cannot load two functions of name: " + functionName);
 		}
-		parenMap.put(fName, f);
+		parenMap.put(functionName, function);
 	}
 
 	/**
@@ -94,9 +94,9 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * @see pcgen.base.formula.manager.FunctionLibrary#getFunction(java.lang.String)
 	 */
 	@Override
-	public Function getFunction(String fname)
+	public Function getFunction(String functionName)
 	{
-		return parenMap.get(fname);
+		return parenMap.get(functionName);
 	}
 
 	/**
@@ -113,25 +113,25 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * @see pcgen.base.formula.manager.FunctionLibrary#addBracketFunction(pcgen.base.formula.function.Function)
 	 */
 	@Override
-	public void addBracketFunction(Function f)
+	public void addBracketFunction(Function function)
 	{
-		if (f == null)
+		if (function == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot add null Bracket Function");
 		}
-		String fName = f.getFunctionName();
-		if (fName == null)
+		String functionName = function.getFunctionName();
+		if (functionName == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot add Bracket Function with null name");
 		}
-		if (bracketMap.containsKey(fName))
+		if (bracketMap.containsKey(functionName))
 		{
 			throw new IllegalArgumentException(
-				"Cannot load two bracket functions of name: " + fName);
+				"Cannot load two bracket functions of name: " + functionName);
 		}
-		bracketMap.put(fName, f);
+		bracketMap.put(functionName, function);
 	}
 
 	/**
@@ -145,9 +145,9 @@ public class SimpleFunctionLibrary implements FunctionLibrary
 	 * @see pcgen.base.formula.manager.FunctionLibrary#getBracketFunction(java.lang.String)
 	 */
 	@Override
-	public Function getBracketFunction(String fname)
+	public Function getBracketFunction(String functionName)
 	{
-		return bracketMap.get(fname);
+		return bracketMap.get(functionName);
 	}
 
 }

@@ -41,11 +41,11 @@ public interface FormulaDependencyManager
 	 * The results of calling this function are not defined (exceptions may be
 	 * thrown) if the VariableID provided is null.
 	 * 
-	 * @param vid
+	 * @param varID
 	 *            The VariableID to be added as a dependency of the Formula this
 	 *            FormulaDependencyManager represents.
 	 */
-	void addVariable(VariableID<?> vid);
+	void addVariable(VariableID<?> varID);
 
 	/**
 	 * Returns a non-null list of VariableID objects that identify the list of

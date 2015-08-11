@@ -52,9 +52,9 @@ public class SimpleVariableStore implements WriteableVariableStore
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T get(VariableID<T> id)
+	public <T> T get(VariableID<T> varID)
 	{
-		return (T) resultsMap.get(id);
+		return (T) resultsMap.get(varID);
 	}
 
 	/**
@@ -67,9 +67,9 @@ public class SimpleVariableStore implements WriteableVariableStore
 	 * @see pcgen.base.formula.variable.VariableStore#containsKey(pcgen.base.formula.variable.VariableID)
 	 */
 	@Override
-	public boolean containsKey(VariableID<?> id)
+	public boolean containsKey(VariableID<?> varID)
 	{
-		return resultsMap.containsKey(id);
+		return resultsMap.containsKey(varID);
 	}
 
 	/**
@@ -81,9 +81,9 @@ public class SimpleVariableStore implements WriteableVariableStore
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> T put(VariableID<T> id, T value)
+	public <T> T put(VariableID<T> varID, T value)
 	{
-		if (id == null)
+		if (varID == null)
 		{
 			throw new IllegalArgumentException("VariableID cannot be null");
 		}
@@ -91,7 +91,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 		{
 			throw new IllegalArgumentException("Value cannot be null");
 		}
-		Class<T> varFormat = id.getVariableFormat();
+		Class<T> varFormat = varID.getVariableFormat();
 		if (!varFormat.isAssignableFrom(value.getClass()))
 		{
 			throw new IllegalArgumentException(
@@ -99,7 +99,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 					+ varFormat.getSimpleName() + " but got "
 					+ value.getClass().getSimpleName());
 		}
-		return (T) resultsMap.put(id, value);
+		return (T) resultsMap.put(varID, value);
 	}
 
 }

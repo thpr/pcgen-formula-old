@@ -104,22 +104,21 @@ public class ScopedNamespaceDefinitionLibrary
 	 * Returns the Global ScopedNamespaceDefinition for the given variable
 	 * namespace for this ScopedNamespaceDefinitionLibrary.
 	 * 
-	 * @param varNamespace
+	 * @param namespace
 	 *            The name of the variable namespace for which the global
 	 *            ScopedNamespaceDefinition is to be retrieved
 	 * @return The Global ScopedNamespaceDefinition in this
 	 *         ScopedNamespaceDefinitionLibrary for the given variable namespace
 	 */
 	public ScopedNamespaceDefinition<?> getGlobalScopeDefinition(
-		String varNamespace)
+		String namespace)
 	{
-		ScopedNamespaceDefinition<?> globalScope =
-				globalScopes.get(varNamespace);
+		ScopedNamespaceDefinition<?> globalScope = globalScopes.get(namespace);
 		if (globalScope == null)
 		{
 			throw new IllegalArgumentException(
-				"Global Scope Type Definition for Variable Namespace "
-					+ varNamespace + " is not defined");
+				"Global Scope Namespace Definition for Variable Namespace "
+					+ namespace + " is not defined");
 		}
 		return globalScope;
 	}

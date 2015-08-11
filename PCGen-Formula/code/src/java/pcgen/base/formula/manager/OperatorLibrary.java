@@ -34,10 +34,10 @@ public interface OperatorLibrary
 	 * null or attempts to add an OperatorAction with a null name. An exception
 	 * may be thrown (implementation dependent).
 	 * 
-	 * @param oa
+	 * @param action
 	 *            The OperatorAction to be added to the OperatorLibrary
 	 */
-	public void addAction(OperatorAction oa);
+	public void addAction(OperatorAction action);
 
 	/**
 	 * Perform an evaluation of the given Operator with the two given objects as
@@ -52,7 +52,7 @@ public interface OperatorLibrary
 	 * process the given arguments, an IllegalStateException is returned. (The
 	 * user should have checked with processAbstract)
 	 * 
-	 * @param op
+	 * @param operator
 	 *            The Operator to be evaluated
 	 * @param o1
 	 *            The first argument to the operation
@@ -64,7 +64,7 @@ public interface OperatorLibrary
 	 *             if this OperatorLibrary did not have an OperatorAction for
 	 *             the given Operator and arguments
 	 */
-	public Object evaluate(Operator op, Object o1, Object o2);
+	public Object evaluate(Operator operator, Object o1, Object o2);
 
 	/**
 	 * Processes an "abstract" version of the operation, performing a prediction
@@ -76,7 +76,7 @@ public interface OperatorLibrary
 	 * actual result. In other words, this may return Number.class, whereas
 	 * evaluate may return an Integer or Double.
 	 * 
-	 * @param op
+	 * @param operator
 	 *            The Operator to be evaluated
 	 * @param format1
 	 *            The class (data format) of the first argument to the abstract
@@ -88,7 +88,7 @@ public interface OperatorLibrary
 	 *         OperatorLibrary has an OperatorAction for the given Operator and
 	 *         arguments; null otherwise
 	 */
-	public Class<?> processAbstract(Operator op, Class<?> format1,
+	public Class<?> processAbstract(Operator operator, Class<?> format1,
 		Class<?> format2);
 
 }

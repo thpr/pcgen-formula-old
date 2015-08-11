@@ -46,11 +46,11 @@ public interface VariableStore
 	 * 
 	 * @param <T>
 	 *            The type of variable to be retrieved from this VariableStore.
-	 * @param id
+	 * @param varID
 	 *            The VariableID for which the stored value should be returned
 	 * @return Returns the value in this VariableStore for the given VariableID
 	 */
-	public <T> T get(VariableID<T> id);
+	public <T> T get(VariableID<T> varID);
 
 	/**
 	 * Returns true if this VariableStore contains a value for the given
@@ -59,12 +59,12 @@ public interface VariableStore
 	 * If this method returns true, then it is guaranteed that the get method
 	 * will not return null.
 	 * 
-	 * @param id
+	 * @param varID
 	 *            The VariableID for which the VariableStore will identify if it
 	 *            contains a value.
 	 * @return true if this VariableStore contains a value for the given
 	 *         VariableID; false otherwise
 	 */
-	public boolean containsKey(VariableID<?> id);
+	public boolean containsKey(VariableID<?> varID);
 
 }

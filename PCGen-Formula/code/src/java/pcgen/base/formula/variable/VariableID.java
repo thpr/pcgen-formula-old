@@ -67,34 +67,34 @@ public class VariableID<T>
 	 * 
 	 * @param scope
 	 *            The scope of the variable represented by this VariableID
-	 * @param name
+	 * @param varName
 	 *            The name of the variable represented by this VariableID
 	 * @throws IllegalArgumentException
 	 *             if any argument is null, or if the name is empty, or
 	 *             starts/ends with whitespace
 	 */
-	VariableID(VariableScope<T> scope, String name)
+	VariableID(VariableScope<T> scope, String varName)
 	{
 		if (scope == null)
 		{
 			throw new IllegalArgumentException("Scope cannot be null");
 		}
-		if (name == null)
+		if (varName == null)
 		{
 			throw new IllegalArgumentException("Variable Name cannot be null");
 		}
-		String trimmed = name.trim();
-		if (!name.equals(trimmed))
+		String trimmed = varName.trim();
+		if (!varName.equals(trimmed))
 		{
 			throw new IllegalArgumentException(
 				"Variable Name cannot start/end with whitespace");
 		}
-		if (name.length() == 0)
+		if (varName.length() == 0)
 		{
 			throw new IllegalArgumentException("Variable Name cannot be empty");
 		}
 		this.scope = scope;
-		this.varName = new CaseInsensitiveString(name);
+		this.varName = new CaseInsensitiveString(varName);
 	}
 
 	/**

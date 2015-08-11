@@ -74,13 +74,13 @@ public class FormulaManager
 	 * Constructs a new FormulaManager from the provided FunctionLibrary,
 	 * VariableLibrary, VariableScope, and VariableStore.
 	 * 
-	 * @param fl
+	 * @param ftnLibrary
 	 *            The FunctionLibrary used to store valid functions in this
 	 *            FormulaManager
-	 * @param ol
+	 * @param opLibraryl
 	 *            The OperatorLibrary used to store valid operators in this
 	 *            FormulaManager
-	 * @param sl
+	 * @param varLibrary
 	 *            The VariableLibrary used to get ScopedNamespaceDefinitions,
 	 *            VariableScopes, and VariableIDs
 	 * @param resultStore
@@ -89,32 +89,33 @@ public class FormulaManager
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
-	public FormulaManager(FunctionLibrary fl, OperatorLibrary ol,
-		VariableLibrary sl, VariableStore resultStore)
+	public FormulaManager(FunctionLibrary ftnLibrary,
+		OperatorLibrary opLibraryl, VariableLibrary varLibrary,
+		VariableStore resultStore)
 	{
-		if (fl == null)
+		if (ftnLibrary == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot build FormulaManager with null FunctionLibrary");
 		}
-		if (ol == null)
+		if (opLibraryl == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot build FormulaManager with null OperatorLibrary");
 		}
-		if (sl == null)
+		if (varLibrary == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot build FormulaManager with null VariableIDFactory");
+				"Cannot build FormulaManager with null VariableLibrary");
 		}
 		if (resultStore == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot build FormulaManager with null VariableStore");
 		}
-		this.ftnLibrary = fl;
-		this.opLibrary = ol;
-		this.varLibrary = sl;
+		this.ftnLibrary = ftnLibrary;
+		this.opLibrary = opLibraryl;
+		this.varLibrary = varLibrary;
 		this.results = resultStore;
 	}
 

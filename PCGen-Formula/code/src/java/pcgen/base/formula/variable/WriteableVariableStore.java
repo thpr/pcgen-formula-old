@@ -38,7 +38,7 @@ public interface WriteableVariableStore extends VariableStore
 	 * @param <T>
 	 *            The type of variable to be stored within this
 	 *            WriteableVariableStore
-	 * @param id
+	 * @param varID
 	 *            The VariableID used to index the value to be stored in this
 	 *            WriteableVariableStore
 	 * @param value
@@ -46,6 +46,6 @@ public interface WriteableVariableStore extends VariableStore
 	 * @return The previous value stored in this WriteableVariableStore for the
 	 *         given VariableID
 	 */
-	public <T> T put(VariableID<T> id, T value);
+	public <T> T put(VariableID<T> varID, T value);
 
 }

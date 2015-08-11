@@ -105,7 +105,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * class returned is defined by the ScopeInformation, which can therefore
 	 * implement the appropriate precision desired for the given calculation.
 	 * 
-	 * @param si
+	 * @param scopeInfo
 	 *            The ScopeInformation providing the context in which the
 	 *            ComplexNEPFormula is to be resolved.
 	 * @return A Number representing the value calculated for the
@@ -115,14 +115,14 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public T resolve(ScopeInformation si)
+	public T resolve(ScopeInformation scopeInfo)
 	{
-		if (si == null)
+		if (scopeInfo == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot resolve formula with null ScopeInformation");
 		}
-		return (T) si.evaluate(root);
+		return (T) scopeInfo.evaluate(root);
 	}
 
 	/**
@@ -137,7 +137,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * The given FormulaDependencyManager will be loaded with the dependency
 	 * information.
 	 * 
-	 * @param si
+	 * @param scopeInfo
 	 *            The ScopeInformation providing the context in which the
 	 *            ComplexNEPFormula variables are to be determined
 	 * @param fdm
@@ -147,10 +147,10 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 *             if the given ScopeInformation is null
 	 */
 	@Override
-	public void getDependencies(ScopeInformation si,
+	public void getDependencies(ScopeInformation scopeInfo,
 		FormulaDependencyManager fdm)
 	{
-		if (si == null)
+		if (scopeInfo == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot get formula dependencies with null ScopeInformation");
@@ -160,7 +160,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 			throw new IllegalArgumentException(
 				"Cannot get formula dependencies with null FormulaDependencyManager");
 		}
-		si.getDependencies(root, fdm);
+		scopeInfo.getDependencies(root, fdm);
 	}
 
 	/**

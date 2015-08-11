@@ -337,17 +337,17 @@ public class ValidVisitor implements FormulaParserVisitor
 		String ftnName = ftnNode.getText();
 		Node argNode = node.jjtGetChild(1);
 		Function function;
-		String context;
+		String functionForm;
 		FunctionLibrary library = fm.getLibrary();
 		if (argNode instanceof ASTFParen)
 		{
 			function = library.getFunction(ftnName);
-			context = "()";
+			functionForm = "()";
 		}
 		else if (argNode instanceof ASTPCGenBracket)
 		{
 			function = library.getBracketFunction(ftnName);
-			context = "[]";
+			functionForm = "[]";
 		}
 		else
 		{
@@ -356,7 +356,7 @@ public class ValidVisitor implements FormulaParserVisitor
 		}
 		if (function == null)
 		{
-			return new InvalidFunctionNotFound(ftnName, ftnName + context);
+			return new InvalidFunctionNotFound(ftnName, ftnName + functionForm);
 		}
 		//Extract arguments from the grouping to give them to the function
 		int argLength = argNode.jjtGetNumChildren();

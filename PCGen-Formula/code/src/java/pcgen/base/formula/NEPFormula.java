@@ -90,7 +90,7 @@ public interface NEPFormula<T>
 	 * The given FormulaDependencyManager will be loaded with the dependency
 	 * information.
 	 * 
-	 * @param si
+	 * @param scopeInfo
 	 *            The ScopeInformation providing the context in which the
 	 *            NEPFormula variables are to be determined
 	 * @param fdm
@@ -99,6 +99,6 @@ public interface NEPFormula<T>
 	 * @throws IllegalArgumentException
 	 *             if the given ScopeInformation is null
 	 */
-	public void getDependencies(ScopeInformation si,
+	public void getDependencies(ScopeInformation scopeInfo,
 		FormulaDependencyManager fdm);
 }

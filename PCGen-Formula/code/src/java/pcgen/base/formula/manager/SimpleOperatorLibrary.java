@@ -43,9 +43,9 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 	 * @see pcgen.base.formula.manager.OperatorLibrary#addAction(pcgen.base.formula.base.OperatorAction)
 	 */
 	@Override
-	public void addAction(OperatorAction oa)
+	public void addAction(OperatorAction action)
 	{
-		actionMTL.addToListFor(oa.getOperator(), oa);
+		actionMTL.addToListFor(action.getOperator(), action);
 	}
 
 	/**
@@ -53,12 +53,12 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 	 *      java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public Object evaluate(Operator op, Object o1, Object o2)
+	public Object evaluate(Operator operator, Object o1, Object o2)
 	{
-		List<OperatorAction> list = actionMTL.getListFor(op);
-		if (list != null)
+		List<OperatorAction> actionList = actionMTL.getListFor(operator);
+		if (actionList != null)
 		{
-			for (OperatorAction action : list)
+			for (OperatorAction action : actionList)
 			{
 				/*
 				 * null indicates the OperatorAction can't evaluate these, but
@@ -72,7 +72,7 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 			}
 		}
 		throw new IllegalStateException("Evaluate called on invalid Operator: "
-			+ op.getSymbol() + " cannot process "
+			+ operator.getSymbol() + " cannot process "
 			+ o1.getClass().getSimpleName() + " and "
 			+ o2.getClass().getSimpleName());
 	}
@@ -82,12 +82,13 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 	 *      java.lang.Class, java.lang.Class)
 	 */
 	@Override
-	public Class<?> processAbstract(Operator op, Class<?> format1, Class<?> format2)
+	public Class<?> processAbstract(Operator operator, Class<?> format1,
+		Class<?> format2)
 	{
-		List<OperatorAction> list = actionMTL.getListFor(op);
-		if (list != null)
+		List<OperatorAction> actionList = actionMTL.getListFor(operator);
+		if (actionList != null)
 		{
-			for (OperatorAction action : list)
+			for (OperatorAction action : actionList)
 			{
 				Class<?> result = action.abstractEvaluate(format1, format2);
 				/*

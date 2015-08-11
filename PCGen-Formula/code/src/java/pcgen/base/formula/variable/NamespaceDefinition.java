@@ -44,14 +44,14 @@ public class NamespaceDefinition<T>
 	 * 
 	 * @param varFormat
 	 *            The class (format) of object stored for variables of this type
-	 * @param varTypeName
+	 * @param name
 	 *            The name of this Namespacee
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null or the type name is length zero
 	 */
-	public NamespaceDefinition(Class<T> varFormat, String varTypeName)
+	public NamespaceDefinition(Class<T> varFormat, String name)
 	{
-		if ((varTypeName == null) || (varTypeName.length() == 0))
+		if ((name == null) || (name.length() == 0))
 		{
 			throw new IllegalArgumentException(
 				"Variable Namespace Name cannot be null or empty");
@@ -62,7 +62,7 @@ public class NamespaceDefinition<T>
 				"Variable Class (Format) cannot be null");
 		}
 		this.variableFormat = varFormat;
-		this.namespaceName = varTypeName;
+		this.namespaceName = name;
 	}
 
 	/**

@@ -40,20 +40,20 @@ public class SimpleFormulaDependencyManager implements FormulaDependencyManager
 	 * Adds a Variable (identified by the VariableID) to the list of
 	 * dependencies for a Formula.
 	 * 
-	 * @param vid
+	 * @param varID
 	 *            The VariableID to be added as a dependency of the Formula this
 	 *            SimpleFormulaDependencyManager represents
 	 * @throws IllegalArgumentException
 	 *             if the given VariableID is null
 	 */
 	@Override
-	public void addVariable(VariableID<?> vid)
+	public void addVariable(VariableID<?> varID)
 	{
-		if (vid == null)
+		if (varID == null)
 		{
 			throw new IllegalArgumentException("VariableID may not be null");
 		}
-		dependentVars.add(vid);
+		dependentVars.add(varID);
 	}
 
 	/**
