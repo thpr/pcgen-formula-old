@@ -112,7 +112,7 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 	@Test
 	public void testGetTypes()
 	{
-		Collection<String> c = library.getGlobalScopeTypeNames();
+		Collection<String> c = library.getGlobalScopeNamespaceNames();
 		assertNotNull(c);
 		assertEquals(0, c.size());
 		NamespaceDefinition move =
@@ -120,20 +120,20 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 		library.defineGlobalNamespaceDefinition(move);
 		//We reload because it's no guarantee we have a wrapped set
 		//No guarantee we don't though, so we don't test that either
-		c = library.getGlobalScopeTypeNames();
+		c = library.getGlobalScopeNamespaceNames();
 		assertNotNull(c);
 		assertEquals(1, c.size());
 		assertEquals("MOVE", c.iterator().next());
 		library.defineGlobalNamespaceDefinition(move);
 		//make sure duplicates don't fool things
-		c = library.getGlobalScopeTypeNames();
+		c = library.getGlobalScopeNamespaceNames();
 		assertNotNull(c);
 		assertEquals(1, c.size());
 		NamespaceDefinition flag =
 				new NamespaceDefinition(Boolean.class, "FLAG");
 		library.defineGlobalNamespaceDefinition(flag);
 		//reload, same
-		c = library.getGlobalScopeTypeNames();
+		c = library.getGlobalScopeNamespaceNames();
 		assertNotNull(c);
 		assertEquals(2, c.size());
 		Set<String> s = new HashSet<String>(c);
@@ -145,7 +145,7 @@ public class ScopedNamespaceDefinitionLibraryTest extends TestCase
 		try
 		{
 			c.add("AREA");
-			assertFalse(library.getGlobalScopeTypeNames().contains("AREA"));
+			assertFalse(library.getGlobalScopeNamespaceNames().contains("AREA"));
 		}
 		catch (UnsupportedOperationException e)
 		{

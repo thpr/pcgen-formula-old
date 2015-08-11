@@ -51,8 +51,8 @@ public class ScopedNamespaceDefinitionLibrary
 	 * Asserts (and if valid, returns) the existence of a "Global"
 	 * ScopedNamespaceDefinition for the given NamespaceDefinition.
 	 * 
-	 * If an existing "Global" ScopedNamespaceDefinition exists for the Type
-	 * Name of the given NamespaceDefintion, and it not based on the given
+	 * If an existing "Global" ScopedNamespaceDefinition exists for the name of
+	 * the given NamespaceDefintion, and it not based on the given
 	 * NamespaceDefinition, then this method will throw an Exception. Note that
 	 * this means the method either returns a non-null value or throws an
 	 * Exception.
@@ -64,8 +64,8 @@ public class ScopedNamespaceDefinitionLibrary
 	 *         NamespaceDefinition
 	 * @throws IllegalArgumentException
 	 *             if an existing "Global" ScopedNamespaceDefinition exists for
-	 *             the Type Name of the given NamespaceDefinition, but does not
-	 *             match the given NamespaceDefinition
+	 *             the Name of the given NamespaceDefinition, but does not match
+	 *             the given NamespaceDefinition
 	 */
 	@SuppressWarnings("unchecked")
 	public <T> ScopedNamespaceDefinition<T> defineGlobalNamespaceDefinition(
@@ -124,13 +124,13 @@ public class ScopedNamespaceDefinitionLibrary
 	}
 
 	/**
-	 * Returns a non-null Collection of the Type Names of all of the Global
-	 * Scope Types contained in this ScopedNamespaceDefinitionLibrary.
+	 * Returns a non-null Collection of the Namespace Names of all of the Global
+	 * Scope Namespaces contained in this ScopedNamespaceDefinitionLibrary.
 	 * 
-	 * @return A Collection of the Type Names of all of the Global Scope Types
-	 *         contained in this ScopedNamespaceDefinitionLibrary
+	 * @return A Collection of the Namespace Names of all of the Global Scope
+	 *         Namespaces contained in this ScopedNamespaceDefinitionLibrary
 	 */
-	public Collection<String> getGlobalScopeTypeNames()
+	public Collection<String> getGlobalScopeNamespaceNames()
 	{
 		return Collections.unmodifiableSet(globalScopes.keySet());
 	}
@@ -145,7 +145,7 @@ public class ScopedNamespaceDefinitionLibrary
 	 * returned. If not, a new ScopedNamespaceDefinition will be returned.
 	 * 
 	 * @param <T>
-	 *            The type of object contained in the VariableScopes defined by
+	 *            The format of object contained in the VariableScopes defined by
 	 *            the ScopedNamespaceDefinition to be returned
 	 * @param parentDef
 	 *            The parent ScopedNamespaceDefinition for the

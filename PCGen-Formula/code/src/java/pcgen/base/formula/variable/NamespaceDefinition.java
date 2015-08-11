@@ -43,11 +43,12 @@ public class NamespaceDefinition<T>
 	 * object and given Namespace name.
 	 * 
 	 * @param varFormat
-	 *            The class (format) of object stored for variables of this type
+	 *            The class (format) of object stored for variables in this
+	 *            namespace
 	 * @param name
 	 *            The name of this Namespacee
 	 * @throws IllegalArgumentException
-	 *             if any parameter is null or the type name is length zero
+	 *             if any parameter is null or the namespace name is length zero
 	 */
 	public NamespaceDefinition(Class<T> varFormat, String name)
 	{
@@ -67,10 +68,10 @@ public class NamespaceDefinition<T>
 
 	/**
 	 * Returns the Class representing the class (format) of object stored for
-	 * variables of this type.
+	 * variables in this namespace.
 	 * 
 	 * @return the Class representing the class (format) of object stored for
-	 *         variables of this type
+	 *         variables in this namespace
 	 */
 	public Class<T> getVariableFormat()
 	{
@@ -78,9 +79,9 @@ public class NamespaceDefinition<T>
 	}
 
 	/**
-	 * Returns the Namespace name of this type of variable.
+	 * Returns the Namespace name.
 	 * 
-	 * @return The Namespace name of this type of variable.
+	 * @return The Namespace name.
 	 */
 	public String getNamespaceName()
 	{

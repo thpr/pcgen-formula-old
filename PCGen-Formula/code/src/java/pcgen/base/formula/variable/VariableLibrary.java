@@ -53,7 +53,7 @@ public class VariableLibrary
 		if (sndLibrary == null)
 		{
 			throw new IllegalArgumentException(
-				"Scope Type Definition Library cannot be null");
+				"Scope Namespace Definition Library cannot be null");
 		}
 		library = sndLibrary;
 	}
@@ -193,7 +193,7 @@ public class VariableLibrary
 	 * @return true if the given VariableScope and variable name are a legal
 	 *         combination; false otherwise
 	 * @throws IllegalArgumentException
-	 *             if the given scope type definition is null
+	 *             if the given ScopedNamespaceDefinition is null
 	 */
 	public boolean isLegalVariableID(ScopedNamespaceDefinition<?> snDef,
 		String varName)
@@ -201,7 +201,7 @@ public class VariableLibrary
 		if (snDef == null)
 		{
 			throw new IllegalArgumentException(
-				"Scope Type Definition cannot be null");
+				"Scope Namespace Definition cannot be null");
 		}
 		if (variableDefs.containsInList(varName, snDef))
 		{
@@ -242,7 +242,7 @@ public class VariableLibrary
 	 * parent VariableScope.
 	 * 
 	 * @param <T>
-	 *            The type of object contained in the VariableScope to be
+	 *            The format of object contained in the VariableScope to be
 	 *            instantiated
 	 * @param parentScope
 	 *            The VariableScope that is the parent of this VaribleScope
@@ -301,7 +301,7 @@ public class VariableLibrary
 	 * calling this method is safe.
 	 * 
 	 * @param <T>
-	 *            The type of object identified by the VariableID to be returned
+	 *            The format of object identified by the VariableID to be returned
 	 * @param scope
 	 *            The VariableScope used to determine if the scope and name are
 	 *            a legal combination

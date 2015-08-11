@@ -19,7 +19,7 @@ package pcgen.base.formula.base;
 
 /**
  * FormulaSemanticsValid represents a report that a formula is valid, and
- * indicates the semantics of the Formula (what type it will return)
+ * indicates the semantics of the Formula (what format [class] it will return)
  */
 public class FormulaSemanticsValid implements FormulaSemantics
 {

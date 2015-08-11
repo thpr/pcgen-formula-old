@@ -101,7 +101,7 @@ public class ValidVisitor implements FormulaParserVisitor
 	private final FormulaManager fm;
 
 	/**
-	 * The scope type definition in which the formula resides, in order to
+	 * The scope namespace definition in which the formula resides, in order to
 	 * validate if variables used in the formula are legal.
 	 */
 	private final ScopedNamespaceDefinition<?> snDef;

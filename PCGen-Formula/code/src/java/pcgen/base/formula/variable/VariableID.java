@@ -35,7 +35,7 @@ import pcgen.base.lang.CaseInsensitiveString;
  * uniqueness are provided in VariableIDFactory.
  * 
  * @param <T>
- *            The type of object identified by this VariableID
+ *            The format of object identified by this VariableID
  */
 public class VariableID<T>
 {

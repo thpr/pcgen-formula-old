@@ -99,8 +99,8 @@ public class InvalidSemantics implements FormulaSemantics
 	}
 
 	/**
-	 * Constructs a new InvalidSemantics occurring on the given Node and with
-	 * the non-numeric Class type.
+	 * Constructs a new InvalidSemantics occurring on the given (non-numeric)
+	 * Node and with the format (class).
 	 * 
 	 * @param node
 	 *            The (non-numeric) node that was encountered by the visitor

@@ -26,7 +26,7 @@ package pcgen.base.formula.variable;
  * formulas.
  * 
  * It is expected that a variable will be defined by some definition statement.
- * In that statement, the type of variable Scope will be defined (e.g. Global or
+ * In that statement, the variable Scope will be defined (e.g. Global or
  * Local). If the scope is local, then it will have a specific context for that
  * locality based on where it was defined. In PCGen terms, that might be
  * "Equipment". There may also be a Sub-Scope such as "Equipment Part". (The
@@ -42,7 +42,7 @@ package pcgen.base.formula.variable;
  * in that it is specific to a certain *instance* of Equipment.class.
  * 
  * @param <T>
- *            The type of variable object to be contained in VariableScope
+ *            The format of variable object to be contained in VariableScope
  *            objects defined by this ScopedNamespaceDefinition
  */
 public class ScopedNamespaceDefinition<T>
@@ -93,7 +93,7 @@ public class ScopedNamespaceDefinition<T>
 	 * Package protected in order to have ScopeLibrary be the exclusive source
 	 * of creation for a ScopedNamespaceDefinition.
 	 * 
-	 * The type of object covered by this ScopedNamespaceDefinition will match
+	 * The format of object covered by this ScopedNamespaceDefinition will match
 	 * that of the given parent definition.
 	 * 
 	 * @param parentDef

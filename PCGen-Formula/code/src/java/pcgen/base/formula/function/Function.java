@@ -165,7 +165,7 @@ public interface Function
 	 * @param args
 	 *            The arguments to this Function within the Formula
 	 * @return A non-null FormulaSemantics indicating whether this Function is
-	 *         valid, as well as the type of objects that this Function will
+	 *         valid, as well as the format of objects that this Function will
 	 *         return based on the given arguments
 	 */
 	FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args);

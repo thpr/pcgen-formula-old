@@ -95,7 +95,7 @@ public class SimpleVariableStore implements WriteableVariableStore
 		if (!varFormat.isAssignableFrom(value.getClass()))
 		{
 			throw new IllegalArgumentException(
-				"VariableID type misassignment.  Expected: "
+				"VariableID format misassignment.  Expected: "
 					+ varFormat.getSimpleName() + " but got "
 					+ value.getClass().getSimpleName());
 		}

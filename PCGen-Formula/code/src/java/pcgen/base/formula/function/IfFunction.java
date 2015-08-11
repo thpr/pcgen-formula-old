@@ -101,7 +101,7 @@ public class IfFunction implements Function
 		}
 		//Semantics are arbitrary - just need True and False to match, see below
 
-		//Check for Mismatch in types between True and False results
+		//Check for Mismatch in formats between True and False results
 		if (!tResult.getSemanticState().equals(fResult.getSemanticState()))
 		{
 			return new InvalidSemantics(conditionalNode,

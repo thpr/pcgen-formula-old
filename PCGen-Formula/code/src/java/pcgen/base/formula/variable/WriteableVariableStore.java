@@ -36,7 +36,7 @@ public interface WriteableVariableStore extends VariableStore
 	 * exception if the given VariableID or value are null.
 	 * 
 	 * @param <T>
-	 *            The type of variable to be stored within this
+	 *            The format of variable to be stored within this
 	 *            WriteableVariableStore
 	 * @param varID
 	 *            The VariableID used to index the value to be stored in this

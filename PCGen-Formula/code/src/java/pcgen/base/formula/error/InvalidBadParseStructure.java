@@ -20,7 +20,7 @@ package pcgen.base.formula.error;
 import pcgen.base.formula.base.FormulaSemantics;
 
 /**
- * An InvalidBadParseStructure error represents an incorrect argument type
+ * An InvalidBadParseStructure error represents an incorrect argument format
  * within a function.
  * 
  * Consider a function such as max(a,b), which would calculate the maximum of
@@ -41,9 +41,9 @@ public class InvalidBadParseStructure implements FormulaSemantics
 
 	/**
 	 * Represents the class that was expected as an argument to the function.
-	 * Note that a function may take multiple different class types in different
-	 * argument positions. This represents the expected class in the position
-	 * where the expectation did not match reality.
+	 * Note that a function may take multiple different formats (classes) in
+	 * different argument positions. This represents the expected class in the
+	 * position where the expectation did not match reality.
 	 * 
 	 * Note also that this does not have to be a concrete class. It can be an
 	 * interface or a parent class, so something like Number.class is a legal
@@ -117,7 +117,7 @@ public class InvalidBadParseStructure implements FormulaSemantics
 	public String getReport()
 	{
 		return "Parse Error: Function " + functionName
-			+ " received invalid argument type, expected: "
+			+ " received invalid argument format, expected: "
 			+ expectedClass.getName() + " got " + found.getClass().getName()
 			+ ": " + found;
 	}

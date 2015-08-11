@@ -19,7 +19,7 @@ package pcgen.base.formula.base;
 
 /**
  * FormulaSemantics represents a report on whether a formula is valid, and if
- * valid the semantics of the Formula (what type it will return).
+ * valid the semantics of the Formula (what format it will return).
  * 
  * If a formula is valid, then the isValid() method will return true. In such a
  * case, there is only a limited guarantee what the return value of getReport()
@@ -64,8 +64,8 @@ public interface FormulaSemantics
 	String getReport();
 
 	/**
-	 * Returns the Semantic state of the Formula - what it type of object it
-	 * will return if evaluated.
+	 * Returns the Semantic state of the Formula - what format (Class) of object
+	 * it will return if evaluated.
 	 * 
 	 * This method is only guaranteed to function if isValid() returns true. The
 	 * results of calling this method are not defined if isValid() returns

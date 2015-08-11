@@ -39,7 +39,7 @@ package pcgen.base.formula.variable;
  * collection).
  * 
  * @param <T>
- *            The type of object contained within this VariableScope
+ *            The format of object contained within this VariableScope
  */
 public class VariableScope<T>
 {

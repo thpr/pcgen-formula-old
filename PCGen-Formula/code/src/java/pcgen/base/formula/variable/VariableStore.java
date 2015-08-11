@@ -45,7 +45,7 @@ public interface VariableStore
 	 * in the class description.
 	 * 
 	 * @param <T>
-	 *            The type of variable to be retrieved from this VariableStore.
+	 *            The format of variable to be retrieved from this VariableStore.
 	 * @param varID
 	 *            The VariableID for which the stored value should be returned
 	 * @return Returns the value in this VariableStore for the given VariableID

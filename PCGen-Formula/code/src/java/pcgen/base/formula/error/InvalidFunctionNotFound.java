@@ -27,7 +27,7 @@ import pcgen.base.formula.base.FormulaSemantics;
  * evaluation context provided to the formula, then the evaluation can result in
  * an InvalidFunctionNotFound error.
  * 
- * Note: Any issues with the number or type of arguments to a function like
+ * Note: Any issues with the number or format of arguments to a function like
  * "foo" should NOT be reported with InvalidFunctionNotFound. This represents
  * that the function is NOT PRESENT, not that usage is not valid.
  */
