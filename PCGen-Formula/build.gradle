@@ -15,6 +15,7 @@ apply plugin: 'eclipse'
 apply plugin: "jacoco"
 apply plugin: 'ivy-publish'
 
+group = 'net.sourceforge.pcgen'
 description = """PCGen formula library"""
 
 defaultTasks 'clean', 'build'
@@ -30,7 +31,7 @@ repositories {
     mavenCentral()
     jcenter()
     ivy {
-        name "fileRepo"
+        name "Pcgen Repo"
         url 'http://librepo.pcgen.org'
     }
 }
