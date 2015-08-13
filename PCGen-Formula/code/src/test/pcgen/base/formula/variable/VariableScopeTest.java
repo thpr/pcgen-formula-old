@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-public class VariableScopeInstTest extends TestCase
+public class VariableScopeTest extends TestCase
 {
 
 	@Test

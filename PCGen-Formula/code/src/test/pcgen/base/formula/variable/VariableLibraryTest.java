@@ -36,6 +36,20 @@ public class VariableLibraryTest extends TestCase
 		stDefLib = new ScopedNamespaceDefinitionLibrary();
 		library = new VariableLibrary(stDefLib);
 	}
+	
+	@Test
+	public void testNullConstructor()
+	{
+		try
+		{
+			new VariableLibrary(null);
+			fail("null must be rejected in constructor");
+		}
+		catch (IllegalArgumentException e)
+		{
+			//ok
+		}
+	}
 
 	@Test
 	public void testAssertVariableFail()
