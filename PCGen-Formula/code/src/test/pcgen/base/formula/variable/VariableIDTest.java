@@ -21,15 +21,21 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.formula.base.LegalScope;
+import pcgen.base.formula.base.ScopeInstance;
+import pcgen.base.formula.manager.ScopeInstanceFactory;
+
 public class VariableIDTest extends TestCase
 {
+
+	private ScopeInstanceFactory instanceFactory = new ScopeInstanceFactory(null);
 
 	@Test
 	public void testDoubleConstructor()
 	{
 		try
 		{
-			new VariableID(null, null);
+			new VariableID(null, null, null);
 			fail("nulls must be rejected");
 		}
 		catch (NullPointerException e)
@@ -40,13 +46,12 @@ public class VariableIDTest extends TestCase
 		{
 			//ok, too			
 		}
-		NamespaceDefinition vtd =
-				new NamespaceDefinition(Number.class, "VAR");
-		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
-		VariableScope scope = new VariableScope(global, null);
+		NamespaceDefinition vtd = new NamespaceDefinition(Number.class, "VAR");
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		try
 		{
-			new VariableID(scope, null);
+			new VariableID(globalInst, vtd, null);
 			fail("null name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -59,8 +64,8 @@ public class VariableIDTest extends TestCase
 		}
 		try
 		{
-			new VariableID(null, "VAR");
-			fail("null class must be rejected");
+			new VariableID(globalInst, null, "VAR");
+			fail("null namespace must be rejected");
 		}
 		catch (NullPointerException e)
 		{
@@ -72,7 +77,20 @@ public class VariableIDTest extends TestCase
 		}
 		try
 		{
-			new VariableID(scope, "");
+			new VariableID(null, vtd, "VAR");
+			fail("null scope must be rejected");
+		}
+		catch (NullPointerException e)
+		{
+			//ok
+		}
+		catch (IllegalArgumentException e)
+		{
+			//ok, too			
+		}
+		try
+		{
+			new VariableID(globalInst, vtd, "");
 			fail("empty name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -85,7 +103,7 @@ public class VariableIDTest extends TestCase
 		}
 		try
 		{
-			new VariableID(scope, " test");
+			new VariableID(globalInst, vtd, " test");
 			fail("padded name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -100,27 +118,27 @@ public class VariableIDTest extends TestCase
 
 	public void testGlobal()
 	{
-		NamespaceDefinition vtd =
+		NamespaceDefinition varDef =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
-		VariableScope scope = new VariableScope(global, null);
-		VariableID vid = new VariableID(scope, "test");
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
+		VariableID vid = new VariableID(globalInst, varDef, "test");
 		assertEquals("test", vid.getName());
-		assertEquals(scope, vid.getScope());
+		assertEquals(globalInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
 	}
 
 	public void testEquals()
 	{
-		NamespaceDefinition vtd =
+		NamespaceDefinition varDef =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
-		VariableScope scope = new VariableScope(global, null);
-		VariableScope scope2 = new VariableScope(global, null);
-		VariableID vid1 = new VariableID(scope, "test");
-		VariableID vid2 = new VariableID(scope, "test");
-		VariableID vid3 = new VariableID(scope, "test2");
-		VariableID vid4 = new VariableID(scope2, "test");
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
+		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);
+		VariableID vid1 = new VariableID(globalInst, varDef, "test");
+		VariableID vid2 = new VariableID(globalInst, varDef, "test");
+		VariableID vid3 = new VariableID(globalInst, varDef, "test2");
+		VariableID vid4 = new VariableID(globalInst2, varDef, "test");
 		assertFalse(vid1.equals(null));
 		assertFalse(vid1.equals(new Object()));
 		assertTrue(vid1.equals(vid1));
@@ -132,15 +150,15 @@ public class VariableIDTest extends TestCase
 
 	public void testHashCode()
 	{
-		NamespaceDefinition vtd =
+		NamespaceDefinition varDef =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
-		VariableScope scope = new VariableScope(global, null);
-		VariableScope scope2 = new VariableScope(global, null);
-		VariableID vid1 = new VariableID(scope, "test");
-		VariableID vid2 = new VariableID(scope, "test");
-		VariableID vid3 = new VariableID(scope, "bummer");
-		VariableID vid4 = new VariableID(scope2, "test");
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
+		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);
+		VariableID vid1 = new VariableID(globalInst, varDef, "test");
+		VariableID vid2 = new VariableID(globalInst, varDef, "test");
+		VariableID vid3 = new VariableID(globalInst, varDef, "bummer");
+		VariableID vid4 = new VariableID(globalInst2, varDef, "test");
 		int hc1 = vid1.hashCode();
 		int hc2 = vid2.hashCode();
 		int hc3 = vid3.hashCode();

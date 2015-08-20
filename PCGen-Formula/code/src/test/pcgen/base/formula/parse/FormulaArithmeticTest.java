@@ -19,19 +19,9 @@ package pcgen.base.formula.parse;
 
 import org.junit.Test;
 
-import pcgen.base.formula.operator.number.NumberAdd;
-import pcgen.base.formula.operator.number.NumberDivide;
-import pcgen.base.formula.operator.number.NumberEquals;
-import pcgen.base.formula.operator.number.NumberGreaterThan;
-import pcgen.base.formula.operator.number.NumberGreaterThanOrEqualTo;
-import pcgen.base.formula.operator.number.NumberLessThan;
-import pcgen.base.formula.operator.number.NumberLessThanOrEqualTo;
-import pcgen.base.formula.operator.number.NumberMultiply;
-import pcgen.base.formula.operator.number.NumberNotEqual;
-import pcgen.base.formula.operator.number.NumberRemainder;
-import pcgen.base.formula.operator.number.NumberSubtract;
 import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
 import pcgen.base.formula.testsupport.TestUtilities;
+import pcgen.base.formula.util.FormulaUtilities;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 
 public class FormulaArithmeticTest extends AbstractFormulaTestCase
@@ -41,17 +31,7 @@ public class FormulaArithmeticTest extends AbstractFormulaTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		opLibrary.addAction(new NumberEquals());
-		opLibrary.addAction(new NumberNotEqual());
-		opLibrary.addAction(new NumberAdd());
-		opLibrary.addAction(new NumberSubtract());
-		opLibrary.addAction(new NumberDivide());
-		opLibrary.addAction(new NumberMultiply());
-		opLibrary.addAction(new NumberGreaterThanOrEqualTo());
-		opLibrary.addAction(new NumberGreaterThan());
-		opLibrary.addAction(new NumberLessThanOrEqualTo());
-		opLibrary.addAction(new NumberLessThan());
-		opLibrary.addAction(new NumberRemainder());
+		FormulaUtilities.loadBuiltInOperators(opLibrary);
 	}
 
 	@Test

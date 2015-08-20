@@ -21,14 +21,14 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import pcgen.base.formula.base.FormulaDependencyManager;
-import pcgen.base.formula.base.FormulaSemantics;
+import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.function.Function;
 import pcgen.base.formula.parse.Node;
-import pcgen.base.formula.visitor.DependencyCaptureVisitor;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
+import pcgen.base.formula.visitor.SemanticsVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
-import pcgen.base.formula.visitor.ValidVisitor;
 
 public class SimpleFunctionLibraryTest extends TestCase
 {
@@ -225,9 +225,8 @@ public class SimpleFunctionLibraryTest extends TestCase
 			}
 
 			@Override
-			public FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
+			public void allowArgs(SemanticsVisitor visitor, Node[] args, FormulaSemantics fs)
 			{
-				return null;
 			}
 
 			@Override
@@ -237,8 +236,8 @@ public class SimpleFunctionLibraryTest extends TestCase
 			}
 
 			@Override
-			public void getDependencies(DependencyCaptureVisitor visitor,
-				FormulaDependencyManager fdm, Node[] args)
+			public void getDependencies(DependencyVisitor visitor,
+				DependencyManager fdm, Node[] args)
 			{
 			}
 		};

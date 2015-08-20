@@ -29,5 +29,5 @@ package pcgen.base.formula.base;
  * pcgen.base.formula.* are built upon. Therefore, it is expected that items in
  * this package will have few dependencies, but will have MANY things dependent
  * upon them. (Yes, this implies that many of the items in this package are or
- * should be interfaces)
+ * should be interfaces).
  */

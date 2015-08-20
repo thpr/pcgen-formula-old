@@ -23,13 +23,15 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import pcgen.base.formula.manager.SimpleFormulaDependencyManager;
+import pcgen.base.formula.dependency.DependencyManager;
+import pcgen.base.formula.dependency.VariableDependencyManager;
 import pcgen.base.formula.operator.number.NumberEquals;
 import pcgen.base.formula.operator.number.NumberGreaterThan;
 import pcgen.base.formula.operator.number.NumberLessThan;
 import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
 import pcgen.base.formula.testsupport.TestUtilities;
+import pcgen.base.formula.util.KeyUtilities;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 
@@ -40,7 +42,7 @@ public class IfFunctionTest extends AbstractFormulaTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		library.addFunction(new IfFunction());
+		ftnLibrary.addFunction(new IfFunction());
 		opLibrary.addAction(new NumberEquals());
 		opLibrary.addAction(new NumberLessThan());
 		opLibrary.addAction(new NumberGreaterThan());
@@ -213,9 +215,11 @@ public class IfFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Double.valueOf(-3.3));
-		SimpleFormulaDependencyManager fdm = new SimpleFormulaDependencyManager();
-		varCapture.visit(node, fdm);
-		List<VariableID<?>> vars = fdm.getVariables();
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
 		assertEquals(0, vars.size());
 	}
 
@@ -228,9 +232,11 @@ public class IfFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, false);
 		evaluatesTo(formula, node, Integer.valueOf(5));
-		SimpleFormulaDependencyManager fdm = new SimpleFormulaDependencyManager();
-		varCapture.visit(node, fdm);
-		List<VariableID<?>> vars = fdm.getVariables();
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
 		assertEquals(1, vars.size());
 		VariableID<?> var = vars.get(0);
 		assertEquals("a", var.getName());
@@ -247,9 +253,11 @@ public class IfFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, false);
 		evaluatesTo(formula, node, Integer.valueOf(3));
-		SimpleFormulaDependencyManager fdm = new SimpleFormulaDependencyManager();
-		varCapture.visit(node, fdm);
-		List<VariableID<?>> vars = fdm.getVariables();
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
 		assertEquals(3, vars.size());
 		Set<String> set = new HashSet<String>();
 		set.add("a");
@@ -261,11 +269,61 @@ public class IfFunctionTest extends AbstractFormulaTestCase
 		}
 	}
 
-	/*
-	 * TODO Need to define if the result is an integer - does it return Integer or
-	 * Double?
-	 */
+	//This needs a way to grab from another namespace :/
+//	@Test
+//	public void testVariable1()
+//	{
+//		NamespaceDefinition<Boolean>flagNSdef = new NamespaceDefinition<Boolean>(
+//				Boolean.class, "FLAG");
+//		varLibrary.assertLegalVariableID(globalScope, flagNSdef, "a");
+//		VariableID<Boolean> variable =
+//				varLibrary.getVariableID(globalScopeInst, flagNSdef, "a");
+//		store.put(variable, true);
+//		String formula = "if(a, 4, 5)";
+//		SimpleNode node = TestUtilities.doParse(formula);
+//		isValid(formula, node);
+//		isStatic(formula, node, false);
+//		SimpleVariableDependencyManager fdm = new SimpleVariableDependencyManager();
+//		varCapture.visit(node, fdm);
+//		List<VariableID<?>> vars = fdm.getVariables();
+//		assertEquals(1, vars.size());
+//		VariableID<?> var = vars.get(0);
+//		assertEquals("a", var.getName());
+//	}
 
-	//TODO Need to check variable capture
-	//TODO Need to check static with a variable
+	@Test
+	public void testVariable2()
+	{
+		store.put(getVariable("a"), 5);
+		String formula = "if(4<5, a, 3.4)";
+		SimpleNode node = TestUtilities.doParse(formula);
+		isValid(formula, node);
+		isStatic(formula, node, false);
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
+		assertEquals(1, vars.size());
+		VariableID<?> var = vars.get(0);
+		assertEquals("a", var.getName());
+	}
+
+	@Test
+	public void testVariable3()
+	{
+		store.put(getVariable("a"), 5);
+		String formula = "if(4<3, 3.4, a)";
+		SimpleNode node = TestUtilities.doParse(formula);
+		isValid(formula, node);
+		isStatic(formula, node, false);
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
+		assertEquals(1, vars.size());
+		VariableID<?> var = vars.get(0);
+		assertEquals("a", var.getName());
+	}
 }

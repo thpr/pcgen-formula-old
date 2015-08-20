@@ -145,6 +145,10 @@ public class NumberMultiplyTest extends TestCase
 			op.evaluate(Integer.valueOf(2), Double.valueOf(1.3)));
 		assertEquals(Integer.valueOf(8),
 			op.evaluate(Integer.valueOf(2), Integer.valueOf(4)));
+		assertEquals(Integer.valueOf(0),
+			op.evaluate(Double.valueOf(2.2), Double.valueOf(0.0)));
+		assertEquals(Integer.valueOf(0),
+			op.evaluate(Double.valueOf(0.0), Double.valueOf(4.5)));
 		Number val =
 				(Number) op.evaluate(Integer.valueOf(2), Float.valueOf(3.3f));
 		assertTrue(Math.abs(val.doubleValue() - 6.6) < (Math.pow(10, -7)));

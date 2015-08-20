@@ -129,8 +129,8 @@ public class StaticVisitor implements FormulaParserVisitor
 	/**
 	 * Processes the child of this node (this assumes the node has only one
 	 * child - so this is making an assumption about formula validity. To ensure
-	 * a formula will meet this assumption, ValidVisitor can be used prior to
-	 * using StaticVisitor)
+	 * a formula will meet this assumption, SemanticsVisitor can be used prior
+	 * to using StaticVisitor)
 	 */
 	@Override
 	public Object visit(ASTRoot node, Object data)
@@ -186,8 +186,8 @@ public class StaticVisitor implements FormulaParserVisitor
 	/**
 	 * Processes the child of this node (this assumes the node has only one
 	 * child - so this is making an assumption about formula validity. To ensure
-	 * a formula will meet this assumption, ValidVisitor can be used prior to
-	 * using StaticVisitor)
+	 * a formula will meet this assumption, SemanticsVisitor can be used prior
+	 * to using StaticVisitor)
 	 */
 	@Override
 	public Object visit(ASTUnary node, Object data)
@@ -207,8 +207,8 @@ public class StaticVisitor implements FormulaParserVisitor
 	/**
 	 * Processes the child of this node (this assumes the node has only one
 	 * child - so this is making an assumption about formula validity. To ensure
-	 * a formula will meet this assumption, ValidVisitor can be used prior to
-	 * using StaticVisitor)
+	 * a formula will meet this assumption, SemanticsVisitor can be used prior
+	 * to using StaticVisitor)
 	 */
 	@Override
 	public Object visit(ASTParen node, Object data)
@@ -331,6 +331,16 @@ public class StaticVisitor implements FormulaParserVisitor
 	private Object singleChildStatic(SimpleNode node)
 	{
 		return node.jjtGetChild(0).jjtAccept(this, null);
+	}
+
+	/**
+	 * Returns the underlying FunctionLibrary for this StaticVisitor.
+	 * 
+	 * @return the underlying FunctionLibrary for this StaticVisitor
+	 */
+	public FunctionLibrary getLibrary()
+	{
+		return library;
 	}
 
 }

@@ -21,10 +21,12 @@ import java.util.List;
 
 import org.junit.Test;
 
-import pcgen.base.formula.manager.SimpleFormulaDependencyManager;
+import pcgen.base.formula.dependency.DependencyManager;
+import pcgen.base.formula.dependency.VariableDependencyManager;
 import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
 import pcgen.base.formula.testsupport.TestUtilities;
+import pcgen.base.formula.util.KeyUtilities;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 
@@ -35,7 +37,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		library.addFunction(new AbsFunction());
+		ftnLibrary.addFunction(new AbsFunction());
 	}
 
 	@Test
@@ -50,6 +52,14 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	public void testNotValidNoVar()
 	{
 		String formula = "abs(ab)";
+		SimpleNode node = TestUtilities.doParse(formula);
+		isNotValid(formula, node);
+	}
+
+	@Test
+	public void testNotValidString()
+	{
+		String formula = "abs(\"ab\")";
 		SimpleNode node = TestUtilities.doParse(formula);
 		isNotValid(formula, node);
 	}
@@ -128,9 +138,11 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Double.valueOf(5.3));
-		SimpleFormulaDependencyManager fdm = new SimpleFormulaDependencyManager();
-		varCapture.visit(node, fdm);
-		List<VariableID<?>> vars = fdm.getVariables();
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
 		assertEquals(0, vars.size());
 	}
 
@@ -142,14 +154,13 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 		SimpleNode node = TestUtilities.doParse(formula);
 		isValid(formula, node);
 		isStatic(formula, node, false);
-		SimpleFormulaDependencyManager fdm = new SimpleFormulaDependencyManager();
-		varCapture.visit(node, fdm);
-		List<VariableID<?>> vars = fdm.getVariables();
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
 		assertEquals(1, vars.size());
 		VariableID<?> var = vars.get(0);
 		assertEquals("a", var.getName());
 	}
-
-	//TODO Need to check variable capture
-	//TODO Need to check static with a variable
 }

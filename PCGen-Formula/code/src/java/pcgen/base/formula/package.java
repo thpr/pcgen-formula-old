@@ -24,7 +24,8 @@ package pcgen.base.formula;
  * 
  * Note that the intent here is processing a SINGLE formula.
  * 
- * Other packages take on the responsibility of solving a system of formulas.
+ * Other packages take on the responsibility of solving a system of formulas
+ * (see pcgen.base.calculation and pcgen.base.solver).
  * 
  * Other packages also take on the responsibility of determining the current
  * value of a variable (this only uses a value, not how it is determined).

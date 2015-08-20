@@ -17,25 +17,24 @@
  */
 package pcgen.base.formula.function;
 
-import pcgen.base.formula.base.FormulaDependencyManager;
-import pcgen.base.formula.base.FormulaSemantics;
-import pcgen.base.formula.error.InvalidIncorrectArgumentCount;
-import pcgen.base.formula.error.InvalidSemantics;
+import java.util.Arrays;
+
+import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.parse.Node;
-import pcgen.base.formula.visitor.DependencyCaptureVisitor;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
+import pcgen.base.formula.util.KeyUtilities;
+import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
+import pcgen.base.formula.visitor.SemanticsVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
-import pcgen.base.formula.visitor.ValidVisitor;
 
 /**
  * IfFunction returns different values based on a given calculation. It follows
  * the common form for an if function: if (conditional, return_if_true,
  * return_if_false).
  * 
- * In the case of this implementation, conditional is NOT a boolean: it is a
- * numeric value. Any non-zero value will result in the first return value
- * (return_if_true) being returned.
- * 
+ * In the case of this implementation, conditional is a Boolean.
  */
 public class IfFunction implements Function
 {
@@ -53,62 +52,76 @@ public class IfFunction implements Function
 	}
 
 	/**
-	 * Checks if the given arguments are valid using the given ValidVisitor.
+	 * Checks if the given arguments are valid using the given SemanticsVisitor.
 	 * Three arguments are required, and each must be a valid formula value
-	 * (number, variable, another function, etc.)
+	 * (number, variable, another function, etc.).
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.ValidVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.SemanticsVisitor,
+	 *      pcgen.base.formula.parse.Node[],
+	 *      pcgen.base.formula.semantics.FormulaSemantics)
 	 */
 	@Override
-	public FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
+	public final void allowArgs(SemanticsVisitor visitor, Node[] args,
+		FormulaSemantics semantics)
 	{
 		int argCount = args.length;
 		if (argCount != 3)
 		{
-			return new InvalidIncorrectArgumentCount(getFunctionName(), 3, args);
+			FormulaSemanticsUtilities.setInvalid(semantics, "Function "
+				+ getFunctionName()
+				+ " received incorrect # of arguments, expected: 3 got "
+				+ args.length + " " + Arrays.asList(args));
+			return;
 		}
 		//Boolean conditional node
 		Node conditionalNode = args[0];
-		FormulaSemantics result =
-				(FormulaSemantics) conditionalNode.jjtAccept(visitor, null);
-		if (!result.isValid())
+		conditionalNode.jjtAccept(visitor, semantics);
+		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
 		{
-			return result;
+			return;
 		}
-		if (!result.getSemanticState().equals(Boolean.class))
+		Class<?> format = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		if (!format.equals(Boolean.class))
 		{
-			return new InvalidSemantics(conditionalNode, Boolean.class,
-				result.getSemanticState());
+			FormulaSemanticsUtilities.setInvalid(semantics,
+				"Parse Error: Invalid Value Format: " + format + " found in "
+					+ conditionalNode.getClass().getName()
+					+ " found in location requiring a"
+					+ " Boolean (class cannot be evaluated)");
+			return;
 		}
 
 		//If True node
 		Node trueNode = args[1];
-		FormulaSemantics tResult =
-				(FormulaSemantics) trueNode.jjtAccept(visitor, null);
-		if (!tResult.isValid())
+		trueNode.jjtAccept(visitor, semantics);
+		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
 		{
-			return tResult;
+			return;
 		}
-		//Semantics are arbitrary - just need True and False to match, see below
+		/*
+		 * Format is arbitrary - but capture now - just need True and False to
+		 * match, see below
+		 */
+		Class<?> tFormat = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 
 		//If False node
 		Node falseNode = args[2];
-		FormulaSemantics fResult =
-				(FormulaSemantics) falseNode.jjtAccept(visitor, null);
-		if (!fResult.isValid())
+		falseNode.jjtAccept(visitor, semantics);
+		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
 		{
-			return fResult;
+			return;
 		}
-		//Semantics are arbitrary - just need True and False to match, see below
 
 		//Check for Mismatch in formats between True and False results
-		if (!tResult.getSemanticState().equals(fResult.getSemanticState()))
+		Class<?> fFormat = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		if (!tFormat.equals(fFormat))
 		{
-			return new InvalidSemantics(conditionalNode,
-				tResult.getSemanticState(), fResult.getSemanticState());
+			FormulaSemanticsUtilities.setInvalid(semantics,
+				"Parse Error: Invalid Value Format: " + fFormat + " found in "
+					+ conditionalNode.getClass().getName()
+					+ " found in location requiring a " + tFormat
+					+ " (class cannot be evaluated)");
 		}
-
-		return tResult;
 	}
 
 	/**
@@ -118,7 +131,8 @@ public class IfFunction implements Function
 	 * valid values. See evaluate on the Function interface for important
 	 * assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor,
+	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Object evaluate(EvaluateVisitor visitor, Node[] args)
@@ -145,7 +159,8 @@ public class IfFunction implements Function
 	 * isStatic on the Function interface for important assumptions made when
 	 * this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor,
+	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)
@@ -181,13 +196,13 @@ public class IfFunction implements Function
 	 * getVariables on the Function interface for important assumptions made
 	 * when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#getDependencies(pcgen.base.formula.visitor.DependencyCaptureVisitor,
-	 *      pcgen.base.formula.base.FormulaDependencyManager,
+	 * @see pcgen.base.formula.function.Function#getDependencies(pcgen.base.formula.visitor.DependencyVisitor,
+	 *      pcgen.base.formula.dependency.DependencyManager,
 	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
-	public void getDependencies(DependencyCaptureVisitor visitor,
-		FormulaDependencyManager fdm, Node[] args)
+	public void getDependencies(DependencyVisitor visitor,
+		DependencyManager fdm, Node[] args)
 	{
 		for (Node n : args)
 		{

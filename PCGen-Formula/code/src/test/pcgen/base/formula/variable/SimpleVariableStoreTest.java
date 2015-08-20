@@ -17,22 +17,29 @@
  */
 package pcgen.base.formula.variable;
 
+import pcgen.base.formula.base.LegalScope;
+import pcgen.base.formula.base.ScopeInstance;
+import pcgen.base.formula.manager.ScopeInstanceFactory;
 import junit.framework.TestCase;
 
 public class SimpleVariableStoreTest extends TestCase
 {
 
+	private ScopeInstanceFactory instanceFactory = new ScopeInstanceFactory(
+		null);
+
 	public void testNulls()
 	{
-		SimpleVariableStore svs = new SimpleVariableStore();
-		NamespaceDefinition vtd =
-				new NamespaceDefinition(Number.class, "VAR");
-		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
-		VariableScope scope = new VariableScope(global, null);
-		VariableID vid = new VariableID(scope, "test");
+		SimpleVariableStore varStore = new SimpleVariableStore();
+		NamespaceDefinition<Number> varDef =
+				new NamespaceDefinition<>(Number.class, "VAR");
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
+		VariableID<Number> vid = new VariableID<>(globalInst, varDef, "test");
 		try
 		{
-			svs.put(null, Integer.valueOf(4));
+			varStore.put(null, Integer.valueOf(4));
+			fail();
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -40,7 +47,7 @@ public class SimpleVariableStoreTest extends TestCase
 		}
 		try
 		{
-			svs.put(vid, null);
+			varStore.put(vid, null);
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -48,7 +55,9 @@ public class SimpleVariableStoreTest extends TestCase
 		}
 		try
 		{
-			svs.put(vid, "NotANumber!");
+			//Intentionally break generics
+			varStore.put((VariableID) vid, "NotANumber!");
+			fail();
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -58,51 +67,51 @@ public class SimpleVariableStoreTest extends TestCase
 
 	public void testGlobal()
 	{
-		SimpleVariableStore svs = new SimpleVariableStore();
-		NamespaceDefinition vtd =
+		SimpleVariableStore varStore = new SimpleVariableStore();
+		NamespaceDefinition varDef =
 				new NamespaceDefinition(Number.class, "VAR");
-		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
-		VariableScope scope = new VariableScope(global, null);
-		VariableID vid = new VariableID(scope, "test");
-		assertFalse(svs.containsKey(vid));
-		assertNull(svs.put(vid, Integer.valueOf(9)));
-		assertTrue(svs.containsKey(vid));
-		assertEquals(Integer.valueOf(9), svs.get(vid));
-		assertEquals(Integer.valueOf(9), svs.put(vid, Integer.valueOf(4)));
-		assertTrue(svs.containsKey(vid));
-		assertEquals(Integer.valueOf(4), svs.get(vid));
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
+		VariableID vid = new VariableID(globalInst, varDef, "test");
+		assertFalse(varStore.containsKey(vid));
+		assertNull(varStore.put(vid, Integer.valueOf(9)));
+		assertTrue(varStore.containsKey(vid));
+		assertEquals(Integer.valueOf(9), varStore.get(vid));
+		assertEquals(Integer.valueOf(9), varStore.put(vid, Integer.valueOf(4)));
+		assertTrue(varStore.containsKey(vid));
+		assertEquals(Integer.valueOf(4), varStore.get(vid));
 	}
 
 	public void testIndependence()
 	{
-		SimpleVariableStore svs = new SimpleVariableStore();
-		NamespaceDefinition vtd =
-				new NamespaceDefinition(Number.class, "VAR");
-		ScopedNamespaceDefinition global = new ScopedNamespaceDefinition(vtd);
-		VariableScope scope = new VariableScope(global, null);
-		VariableScope scope2 = new VariableScope(global, null);
-		VariableID vid1 = new VariableID(scope, "test");
-		VariableID vid2 = new VariableID(scope, "test");
-		VariableID vid3 = new VariableID(scope, "test2");
-		VariableID vid4 = new VariableID(scope2, "test");
-		assertNull(svs.put(vid1, Integer.valueOf(9)));
-		assertTrue(svs.containsKey(vid1));
-		assertTrue(svs.containsKey(vid2));
-		assertFalse(svs.containsKey(vid3));
-		assertFalse(svs.containsKey(vid4));
-		assertEquals(Integer.valueOf(9), svs.put(vid2, Integer.valueOf(4)));
-		assertTrue(svs.containsKey(vid1));
-		assertTrue(svs.containsKey(vid2));
-		assertFalse(svs.containsKey(vid3));
-		assertFalse(svs.containsKey(vid4));
-		assertEquals(Integer.valueOf(4), svs.get(vid1));
-		assertNull(svs.put(vid4, Integer.valueOf(3)));
-		assertTrue(svs.containsKey(vid1));
-		assertTrue(svs.containsKey(vid2));
-		assertFalse(svs.containsKey(vid3));
-		assertTrue(svs.containsKey(vid4));
-		assertEquals(Integer.valueOf(4), svs.get(vid1));
-		assertEquals(Integer.valueOf(3), svs.get(vid4));
+		SimpleVariableStore varStore = new SimpleVariableStore();
+		NamespaceDefinition vtd = new NamespaceDefinition(Number.class, "VAR");
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
+		VariableID vid1 = new VariableID(globalInst, vtd, "test");
+		VariableID vid2 = new VariableID(globalInst, vtd, "test");
+		VariableID vid3 = new VariableID(globalInst, vtd, "test2");
+		LegalScope global2 = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);
+		VariableID vid4 = new VariableID(globalInst2, vtd, "test");
+		assertNull(varStore.put(vid1, Integer.valueOf(9)));
+		assertTrue(varStore.containsKey(vid1));
+		assertTrue(varStore.containsKey(vid2));
+		assertFalse(varStore.containsKey(vid3));
+		assertFalse(varStore.containsKey(vid4));
+		assertEquals(Integer.valueOf(9), varStore.put(vid2, Integer.valueOf(4)));
+		assertTrue(varStore.containsKey(vid1));
+		assertTrue(varStore.containsKey(vid2));
+		assertFalse(varStore.containsKey(vid3));
+		assertFalse(varStore.containsKey(vid4));
+		assertEquals(Integer.valueOf(4), varStore.get(vid1));
+		assertNull(varStore.put(vid4, Integer.valueOf(3)));
+		assertTrue(varStore.containsKey(vid1));
+		assertTrue(varStore.containsKey(vid2));
+		assertFalse(varStore.containsKey(vid3));
+		assertTrue(varStore.containsKey(vid4));
+		assertEquals(Integer.valueOf(4), varStore.get(vid1));
+		assertEquals(Integer.valueOf(3), varStore.get(vid4));
 	}
 
 }

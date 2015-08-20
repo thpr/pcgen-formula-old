@@ -17,11 +17,17 @@
  */
 package pcgen.base.formula.function;
 
+import java.util.List;
+
 import org.junit.Test;
 
+import pcgen.base.formula.dependency.DependencyManager;
+import pcgen.base.formula.dependency.VariableDependencyManager;
 import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
 import pcgen.base.formula.testsupport.TestUtilities;
+import pcgen.base.formula.util.KeyUtilities;
+import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 
 public class RoundFunctionTest extends AbstractFormulaTestCase
@@ -31,13 +37,21 @@ public class RoundFunctionTest extends AbstractFormulaTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		library.addFunction(new RoundFunction());
+		ftnLibrary.addFunction(new RoundFunction());
 	}
 
 	@Test
 	public void testInvalidTooManyArg()
 	{
 		String formula = "round(2, 3)";
+		SimpleNode node = TestUtilities.doParse(formula);
+		isNotValid(formula, node);
+	}
+
+	@Test
+	public void testNotValidString()
+	{
+		String formula = "round(\"ab\")";
 		SimpleNode node = TestUtilities.doParse(formula);
 		isNotValid(formula, node);
 	}
@@ -158,6 +172,21 @@ public class RoundFunctionTest extends AbstractFormulaTestCase
 		evaluatesTo(formula, node, Integer.valueOf(-5));
 	}
 
-	//TODO Need to check variable capture
-	//TODO Need to check static with a variable
+	@Test
+	public void testVariable()
+	{
+		store.put(getVariable("a"), 5);
+		String formula = "round(a)";
+		SimpleNode node = TestUtilities.doParse(formula);
+		isValid(formula, node);
+		isStatic(formula, node, false);
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
+		assertEquals(1, vars.size());
+		VariableID<?> var = vars.get(0);
+		assertEquals("a", var.getName());
+	}
 }

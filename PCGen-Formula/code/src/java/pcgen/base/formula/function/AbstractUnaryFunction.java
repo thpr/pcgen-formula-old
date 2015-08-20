@@ -17,37 +17,61 @@
  */
 package pcgen.base.formula.function;
 
-import pcgen.base.formula.base.FormulaDependencyManager;
-import pcgen.base.formula.base.FormulaSemantics;
-import pcgen.base.formula.error.InvalidIncorrectArgumentCount;
+import java.util.Arrays;
+
+import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.parse.Node;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
+import pcgen.base.formula.util.KeyUtilities;
+import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
-import pcgen.base.formula.visitor.ValidVisitor;
-import pcgen.base.formula.visitor.DependencyCaptureVisitor;
+import pcgen.base.formula.visitor.SemanticsVisitor;
 
 /**
- * AbstractUnaryFunction centralizes common behaviors for Functions that only
- * take one argument.
+ * AbstractUnaryFunction centralizes common behaviors for Functions that return
+ * a Number and only take one argument.
  */
 public abstract class AbstractUnaryFunction implements Function
 {
 
 	/**
-	 * Checks if the given arguments are valid using the given ValidVisitor.
+	 * Checks if the given arguments are valid using the given SemanticsVisitor.
 	 * Only one argument is allowed, and it must be a valid formula value
 	 * (number, variable, another function, etc.)
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.ValidVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.SemanticsVisitor,
+	 *      pcgen.base.formula.parse.Node[],
+	 *      pcgen.base.formula.semantics.FormulaSemantics)
 	 */
 	@Override
-	public final FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
+	public final void allowArgs(SemanticsVisitor visitor, Node[] args,
+		FormulaSemantics semantics)
 	{
 		if (args.length != 1)
 		{
-			return new InvalidIncorrectArgumentCount(getFunctionName(), 1, args);
+			FormulaSemanticsUtilities.setInvalid(semantics, "Function "
+				+ getFunctionName()
+				+ " received incorrect # of arguments, expected: 1 got "
+				+ args.length + " " + Arrays.asList(args));
+			return;
 		}
-		return (FormulaSemantics) args[0].jjtAccept(visitor, null);
+		args[0].jjtAccept(visitor, semantics);
+		if (semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		{
+			Class<?> format =
+					semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+			if (!format.equals(Number.class))
+			{
+				FormulaSemanticsUtilities.setInvalid(semantics,
+					"Parse Error: Invalid Value Format: " + format
+						+ " found in " + args[0].getClass().getName()
+						+ " found in location requiring a"
+						+ " Number (class cannot be evaluated)");
+				return;
+			}
+		}
 	}
 
 	/**
@@ -58,9 +82,10 @@ public abstract class AbstractUnaryFunction implements Function
 	 * valid value. See evaluate on the Function interface for important
 	 * assumptions made when this method is called.
 	 * 
-	 * Actual processing is delegated to evaluate(Double)
+	 * Actual processing is delegated to evaluate(Number)
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor,
+	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public final Number evaluate(EvaluateVisitor visitor, Node[] args)
@@ -75,7 +100,8 @@ public abstract class AbstractUnaryFunction implements Function
 	 * valid value in a formula. See isStatic on the Function interface for
 	 * important assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor,
+	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)
@@ -91,19 +117,19 @@ public abstract class AbstractUnaryFunction implements Function
 	 * Consistent with the contract of the Function interface, this list
 	 * recursively includes all of the contents of items within this function
 	 * (if this function calls another function, etc. all variables in the tree
-	 * below this function are included)
+	 * below this function are included).
 	 * 
 	 * This method assumes there is at least one argument, and the argument is a
 	 * valid value in a formula. See getDependencies on the Function interface
 	 * for important assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#getDependencies(pcgen.base.formula.visitor.DependencyCaptureVisitor,
-	 *      pcgen.base.formula.base.FormulaDependencyManager,
+	 * @see pcgen.base.formula.function.Function#getDependencies(pcgen.base.formula.visitor.DependencyVisitor,
+	 *      pcgen.base.formula.dependency.DependencyManager,
 	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
-	public void getDependencies(DependencyCaptureVisitor visitor,
-		FormulaDependencyManager fdm, Node[] args)
+	public void getDependencies(DependencyVisitor visitor,
+		DependencyManager fdm, Node[] args)
 	{
 		args[0].jjtAccept(visitor, fdm);
 	}

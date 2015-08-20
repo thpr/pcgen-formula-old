@@ -83,45 +83,45 @@ public class NamespaceDefinitionTest extends TestCase
 
 	public void testGlobal()
 	{
-		NamespaceDefinition vtd =
+		NamespaceDefinition varDef =
 				new NamespaceDefinition(Number.class, "VAR");
-		assertEquals("VAR", vtd.getNamespaceName());
-		assertEquals(Number.class, vtd.getVariableFormat());
+		assertEquals("VAR", varDef.getNamespaceName());
+		assertEquals(Number.class, varDef.getVariableFormat());
 	}
 
 	public void testEquals()
 	{
-		NamespaceDefinition vid1 =
+		NamespaceDefinition varDef1 =
 				new NamespaceDefinition(Number.class, "VAR");
-		NamespaceDefinition vid2 =
+		NamespaceDefinition varDef2 =
 				new NamespaceDefinition(Number.class, "VAR");
-		NamespaceDefinition vid3 =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		NamespaceDefinition vid4 =
+		NamespaceDefinition varDefBool =
 				new NamespaceDefinition(Boolean.class, "VAR");
-		assertFalse(vid1.equals(null));
-		assertFalse(vid1.equals(new Object()));
-		assertTrue(vid1.equals(vid1));
-		assertTrue(vid1.equals(vid2));
-		assertTrue(vid2.equals(vid1));
-		assertFalse(vid1.equals(vid3));
-		assertFalse(vid1.equals(vid4));
+		assertFalse(varDef1.equals(null));
+		assertFalse(varDef1.equals(new Object()));
+		assertTrue(varDef1.equals(varDef1));
+		assertTrue(varDef1.equals(varDef2));
+		assertTrue(varDef2.equals(varDef1));
+		assertFalse(varDef1.equals(moveDef));
+		assertFalse(varDef1.equals(varDefBool));
 	}
 
 	public void testHashCode()
 	{
-		NamespaceDefinition vid1 =
+		NamespaceDefinition varDef1 =
 				new NamespaceDefinition(Number.class, "VAR");
-		NamespaceDefinition vid2 =
+		NamespaceDefinition varDef2 =
 				new NamespaceDefinition(Number.class, "VAR");
-		NamespaceDefinition vid3 =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		NamespaceDefinition vid4 =
+		NamespaceDefinition varDefBool =
 				new NamespaceDefinition(Boolean.class, "VAR");
-		int hc1 = vid1.hashCode();
-		int hc2 = vid2.hashCode();
-		int hc3 = vid3.hashCode();
-		int hc4 = vid4.hashCode();
+		int hc1 = varDef1.hashCode();
+		int hc2 = varDef2.hashCode();
+		int hc3 = moveDef.hashCode();
+		int hc4 = varDefBool.hashCode();
 		assertTrue(hc1 == hc2);
 		assertFalse(hc2 == hc3);
 		assertFalse(hc2 == hc4);

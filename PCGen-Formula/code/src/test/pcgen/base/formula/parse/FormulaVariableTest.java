@@ -57,7 +57,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScope, var0.getScope());
+		assertEquals(globalScopeInst, var0.getScope());
 		evaluatesTo(formula, node, Integer.valueOf(5));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
@@ -76,7 +76,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScope, var0.getScope());
+		assertEquals(globalScopeInst, var0.getScope());
 		evaluatesTo(formula, node, Integer.valueOf(-7));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
@@ -95,7 +95,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScope, var0.getScope());
+		assertEquals(globalScopeInst, var0.getScope());
 		evaluatesTo(formula, node, Double.valueOf(-7.3));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
@@ -166,7 +166,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScope, var0.getScope());
+		assertEquals(globalScopeInst, var0.getScope());
 		//Note integer math
 		evaluatesTo(formula, node, Double.valueOf(.2));
 		Object rv =
@@ -336,9 +336,9 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 			}
 		}
 
-		assertEquals(globalScope, var0.getScope());
-		assertEquals(globalScope, var1.getScope());
-		assertEquals(globalScope, var2.getScope());
+		assertEquals(globalScopeInst, var0.getScope());
+		assertEquals(globalScopeInst, var1.getScope());
+		assertEquals(globalScopeInst, var2.getScope());
 	}
 
 	private void hasABVars(String formula, SimpleNode node)
@@ -358,8 +358,8 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 			assertEquals("b", var0.getName());
 			assertEquals("a", var1.getName());
 		}
-		assertEquals(globalScope, var0.getScope());
-		assertEquals(globalScope, var1.getScope());
+		assertEquals(globalScopeInst, var0.getScope());
+		assertEquals(globalScopeInst, var1.getScope());
 	}
 
 }

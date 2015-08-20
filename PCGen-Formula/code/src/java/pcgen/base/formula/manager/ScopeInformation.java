@@ -17,27 +17,31 @@
  */
 package pcgen.base.formula.manager;
 
-import pcgen.base.formula.base.FormulaDependencyManager;
+import pcgen.base.formula.base.ScopeInstance;
+import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.VariableScope;
-import pcgen.base.formula.visitor.DependencyCaptureVisitor;
+import pcgen.base.formula.variable.NamespaceDefinition;
+import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
 
 /**
  * ScopeInformation exists to simplify those things that require context of a
- * formula to be resolved (legal functions, variables (which pulls in scope)).
- * This provides a convenient, single location for consolidation of these
- * capabilities (and thus keeps the number of parameters that have to be passed
- * around to a reasonable level)
+ * formula to be resolved (legal functions, variables (which pulls in namespace
+ * and scope)). This provides a convenient, single location for consolidation of
+ * these capabilities (and thus keeps the number of parameters that have to be
+ * passed around to a reasonable level).
  * 
  * This is also an object used to "cache" the visitors (since each visitor needs
  * to know some of the contents in the ScopeInformation, they can be lazily
  * instantiated but then effectively cached as long as that ScopeInformation is
  * reused - especially valuable for things like the global context which in the
- * future we can create once for the PC and never have to recreate...)
+ * future we can create once for the PC and never have to recreate...).
+ * 
+ * @param <T>
+ *            The Format (class) of object processed by this ScopeInformation
  */
-public class ScopeInformation
+public class ScopeInformation<T>
 {
 
 	/**
@@ -54,10 +58,10 @@ public class ScopeInformation
 	private EvaluateVisitor evaluateVisitor;
 
 	/**
-	 * The DependencyCaptureVisitor for this ScopeInformation. Captures the
+	 * The DependencyVisitor for this ScopeInformation. Captures the
 	 * dependencies for a parsed tree. Lazily Instantiated.
 	 */
-	private DependencyCaptureVisitor variableVisitor;
+	private DependencyVisitor variableVisitor;
 
 	/**
 	 * The FormulaManager for this ScopeInformation, which stores things like
@@ -66,36 +70,50 @@ public class ScopeInformation
 	private final FormulaManager fm;
 
 	/**
-	 * The active VariableScope for parsed trees processed through this .
+	 * The scope namespace definition in which the formula resides, in order to
+	 * validate if variables used in the formula are legal.
 	 */
-	private final VariableScope<?> scope;
+	private final NamespaceDefinition<T> namespaceDef;
 
 	/**
-	 * Constructs a new from the provided FunctionLibrary, ScopeLibrary,
-	 * VariableScope, and VariableStore.
+	 * The Scope in which the formula resides.
+	 */
+	private final ScopeInstance varScope;
+
+	/**
+	 * Constructs a new from the provided FormulaManager, NamespaceDefinition,
+	 * and ScopeInstance.
 	 * 
 	 * @param fm
 	 *            The FormulaManager for this ScopeInformation
-	 * @param scope
-	 *            The VariableScope for parsed trees processed through this
+	 * @param scopeInst
+	 *            The ScopeInstance for parsed trees processed through this
 	 *            ScopeInformation
+	 * @param namespaceDef
+	 *            The NamespaceDefinition for parsed trees processed through
+	 *            this ScopeInformation
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
-	public ScopeInformation(FormulaManager fm, VariableScope<?> scope)
+	public ScopeInformation(FormulaManager fm, ScopeInstance scopeInst,
+		NamespaceDefinition<T> namespaceDef)
 	{
 		if (fm == null)
 		{
-			throw new IllegalArgumentException(
-				"Cannot build ScopeInformation with null FormulaManager");
+			throw new IllegalArgumentException("FormulaManager cannot be null");
 		}
-		if (scope == null)
+		if (namespaceDef == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot build ScopeInformation with null VariableScope");
+				"NamespaceDefinition cannot be null");
+		}
+		if (scopeInst == null)
+		{
+			throw new IllegalArgumentException("ScopeInstance cannot be null");
 		}
 		this.fm = fm;
-		this.scope = scope;
+		this.namespaceDef = namespaceDef;
+		this.varScope = scopeInst;
 	}
 
 	/**
@@ -146,7 +164,7 @@ public class ScopeInformation
 		}
 		if (evaluateVisitor == null)
 		{
-			evaluateVisitor = new EvaluateVisitor(fm, scope);
+			evaluateVisitor = new EvaluateVisitor(fm, varScope, namespaceDef);
 		}
 		return evaluateVisitor.visit(root, null);
 	}
@@ -154,10 +172,10 @@ public class ScopeInformation
 	/**
 	 * Loads the dependencies for the formula (starting with with the given
 	 * SimpleNode as the root of the parsed tree of the formula) into the given
-	 * FormulaDependencyManager.
+	 * DependencyManager.
 	 * 
-	 * The FormulaDependencyManager will be altered if the isStatic method
-	 * returns false.
+	 * The DependencyManager will be altered if the isStatic method returns
+	 * false.
 	 * 
 	 * @param root
 	 *            The starting node in a parsed tree of a formula, to be used
@@ -168,7 +186,7 @@ public class ScopeInformation
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
-	public void getDependencies(SimpleNode root, FormulaDependencyManager fdm)
+	public void getDependencies(SimpleNode root, DependencyManager fdm)
 	{
 		if (root == null)
 		{
@@ -178,25 +196,35 @@ public class ScopeInformation
 		if (fdm == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot get dependencies with null FormulaDependencyManager");
+				"Cannot get dependencies with null DependencyManager");
 		}
 		if (variableVisitor == null)
 		{
-			variableVisitor = new DependencyCaptureVisitor(fm, scope);
+			variableVisitor = new DependencyVisitor(fm, varScope, namespaceDef);
 		}
 		variableVisitor.visit(root, fdm);
 	}
 
 	/**
-	 * Returns the VariableScope for parsed trees processed through this
+	 * Returns the ScopeInstance for parsed trees processed through this
 	 * ScopeInformation.
 	 * 
-	 * @return The VariableScope for parsed trees processed through this
+	 * @return The ScopeInstance for parsed trees processed through this
 	 *         ScopeInformation
 	 */
-	public VariableScope<?> getScope()
+	public ScopeInstance getScope()
 	{
-		return scope;
+		return varScope;
+	}
+
+	/**
+	 * Returns the NamespaceDefinition underlying this ScopeInformation.
+	 * 
+	 * @return The NamespaceDefinition underlying this ScopeInformation
+	 */
+	public NamespaceDefinition<T> getNamespaceDefinition()
+	{
+		return namespaceDef;
 	}
 
 	/**

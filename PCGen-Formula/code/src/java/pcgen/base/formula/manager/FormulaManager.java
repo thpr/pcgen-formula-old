@@ -17,35 +17,37 @@
  */
 package pcgen.base.formula.manager;
 
-import pcgen.base.formula.base.FormulaSemantics;
-import pcgen.base.formula.error.InvalidSemantics;
+import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.ScopedNamespaceDefinition;
-import pcgen.base.formula.variable.VariableLibrary;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
+import pcgen.base.formula.util.KeyUtilities;
+import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.VariableStore;
-import pcgen.base.formula.visitor.ValidVisitor;
+import pcgen.base.formula.visitor.SemanticsVisitor;
 
 /**
  * A FormulaManager exists as compound object to simplify those things that
  * require context to be resolved (legal functions, variables). This provides a
  * convenient, single location for consolidation of these capabilities (and thus
  * keeps the number of parameters that have to be passed around to a reasonable
- * level)
+ * level).
  * 
- * This is also an object used to "cache" the valid visitor (since the visitor
- * needs to know some of the contents in the FormulaManager, it can be lazily
- * instantiated but then effectively cached as long as that FormulaManager is
- * reused - especially valuable for things like the global context which in the
- * future we can create once for the PC and never have to recreate...)
+ * This is also an object used to "cache" the SemanticsVisitor (since the
+ * visitor needs to know some of the contents in the FormulaManager, it can be
+ * lazily instantiated but then effectively cached as long as that
+ * FormulaManager is reused - especially valuable for things like the global
+ * context which in the future we can create once for the PC and never have to
+ * recreate...)
  */
 public class FormulaManager
 {
 
 	/**
-	 * The ValidVisitor for this FormulaManager. Can return the FormulaSemantics
-	 * for a parsed tree. Lazily Instantiated.
+	 * The SemanticsVisitor for this FormulaManager. Can return the
+	 * FormulaSemantics for a parsed tree. Lazily Instantiated.
 	 */
-	private ValidVisitor validVisitor;
+	private SemanticsVisitor semanticsVisitor;
 
 	/**
 	 * The FunctionLibrary used to store valid functions in this FormulaManager.
@@ -58,8 +60,7 @@ public class FormulaManager
 	private final OperatorLibrary opLibrary;
 
 	/**
-	 * The VariableLibrary used to get ScopedNamespaceDefinitions,
-	 * VariableScopes, and VariableIDs.
+	 * The VariableLibrary used to get VariableIDs.
 	 */
 	private final VariableLibrary varLibrary;
 
@@ -72,17 +73,16 @@ public class FormulaManager
 
 	/**
 	 * Constructs a new FormulaManager from the provided FunctionLibrary,
-	 * VariableLibrary, VariableScope, and VariableStore.
+	 * OperatorLibrary, VariableLibrary, and VariableStore.
 	 * 
 	 * @param ftnLibrary
 	 *            The FunctionLibrary used to store valid functions in this
 	 *            FormulaManager
-	 * @param opLibraryl
+	 * @param opLibrary
 	 *            The OperatorLibrary used to store valid operators in this
 	 *            FormulaManager
 	 * @param varLibrary
-	 *            The VariableLibrary used to get ScopedNamespaceDefinitions,
-	 *            VariableScopes, and VariableIDs
+	 *            The VariableLibrary used to get VariableIDs
 	 * @param resultStore
 	 *            The VariableStore used to hold variables values for items
 	 *            processed through this FormulaManager
@@ -90,7 +90,7 @@ public class FormulaManager
 	 *             if any parameter is null
 	 */
 	public FormulaManager(FunctionLibrary ftnLibrary,
-		OperatorLibrary opLibraryl, VariableLibrary varLibrary,
+		OperatorLibrary opLibrary, VariableLibrary varLibrary,
 		VariableStore resultStore)
 	{
 		if (ftnLibrary == null)
@@ -98,7 +98,7 @@ public class FormulaManager
 			throw new IllegalArgumentException(
 				"Cannot build FormulaManager with null FunctionLibrary");
 		}
-		if (opLibraryl == null)
+		if (opLibrary == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot build FormulaManager with null OperatorLibrary");
@@ -114,17 +114,15 @@ public class FormulaManager
 				"Cannot build FormulaManager with null VariableStore");
 		}
 		this.ftnLibrary = ftnLibrary;
-		this.opLibrary = opLibraryl;
+		this.opLibrary = opLibrary;
 		this.varLibrary = varLibrary;
 		this.results = resultStore;
 	}
 
 	/**
-	 * Returns the VariableLibrary used to get ScopedNamespaceDefinitions,
-	 * VariableScopes, and VariableIDs.
+	 * Returns the VariableLibrary used to get VariableIDs.
 	 * 
-	 * @return The VariableLibrary used to get ScopedNamespaceDefinitions,
-	 *         VariableScopes, and VariableIDs
+	 * @return The VariableLibrary used to get VariableIDs
 	 */
 	public VariableLibrary getFactory()
 	{
@@ -174,43 +172,54 @@ public class FormulaManager
 	 * @param root
 	 *            The starting node in a parsed tree of a formula, to be used
 	 *            for the semantics evaluation
-	 * @param snDef
-	 *            The ScopedNamespaceDefinition used to check for validity of
+	 * @param legalScope
+	 *            The LegalScope used to check for validity of variables used
+	 *            within the formula
+	 * @param namespaceDef
+	 *            The NamespaceDefinition used to check for validity of
 	 *            variables used within the formula
 	 * @return The FormulaSemantics for the formula starting with with the given
 	 *         SimpleNode as the root of the parsed tree of the formula
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
-	public FormulaSemantics isValid(SimpleNode root,
-		ScopedNamespaceDefinition<?> snDef)
+	public FormulaSemantics isValid(SimpleNode root, LegalScope legalScope,
+		NamespaceDefinition<?> namespaceDef)
 	{
 		if (root == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot determine validity with null root");
 		}
-		if (snDef == null)
+		if (namespaceDef == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot determine validity with null ScopedNamespaceDefinition");
 		}
-		if (validVisitor == null)
+		if (semanticsVisitor == null)
 		{
-			validVisitor = new ValidVisitor(this, snDef);
+			semanticsVisitor =
+					new SemanticsVisitor(this, legalScope, namespaceDef);
 		}
-		FormulaSemantics fs = (FormulaSemantics) validVisitor.visit(root, null);
-		if (!fs.isValid())
+		FormulaSemantics semantics =
+				FormulaSemanticsUtilities.getInitializedSemantics();
+		semanticsVisitor.visit(root, semantics);
+		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
 		{
-			return fs;
+			return semantics;
 		}
-		if (!fs.getSemanticState().equals(
-			snDef.getNamespaceDefinition().getVariableFormat()))
+		Class<?> nsFormat = namespaceDef.getVariableFormat();
+		Class<?> formulaFormat =
+				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		if (!formulaFormat.equals(nsFormat))
 		{
-			return new InvalidSemantics(root, snDef.getNamespaceDefinition()
-				.getVariableFormat(), fs.getSemanticState());
+			FormulaSemanticsUtilities.setInvalid(semantics,
+				"Parse Error: Invalid Value Format: " + formulaFormat
+					+ " found in " + root.getClass().getName()
+					+ " found in location requiring a " + nsFormat
+					+ " (class cannot be evaluated)");
 		}
-		return fs;
+		return semantics;
 	}
 
 }

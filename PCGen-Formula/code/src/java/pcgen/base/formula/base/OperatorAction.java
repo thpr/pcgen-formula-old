@@ -46,7 +46,7 @@ import pcgen.base.formula.parse.Operator;
  * The Operators that perform mathematical functions attempt to perform Integer
  * math if that is sensible for the given situation, but the system is
  * conservative and does not strictly guarantee Integer math in every legal
- * situation. For example, it will NOT perform Integer division due to risk of
+ * situation. For example, it may not perform Integer division due to risk of
  * rounding, even if the two incoming values divide into an integer.
  */
 public interface OperatorAction
@@ -55,7 +55,7 @@ public interface OperatorAction
 	/**
 	 * Returns the Operator that this OperatorAction represents.
 	 * 
-	 * @return The Operator that this OperatorAction represents.
+	 * @return The Operator that this OperatorAction represents
 	 */
 	public Operator getOperator();
 
@@ -69,7 +69,7 @@ public interface OperatorAction
 	 * 
 	 * Note that this provides a prediction of the returned Class, not the
 	 * actual class. However, the returned Class from this method is guaranteed
-	 * to be more generic than the actual result. In other words, this may
+	 * to be assignable from than the actual result. In other words, this may
 	 * return Number.class, whereas evaluate may return an Integer or Double.
 	 * 
 	 * The return value of abstractEvaluate is part of a contract with evaluate.
@@ -90,8 +90,8 @@ public interface OperatorAction
 	public Class<?> abstractEvaluate(Class<?> format1, Class<?> format2);
 
 	/**
-	 * Perform an evaluation with the two given objects as arguments. and
-	 * returns a non-null result of the evaluation.
+	 * Perform an evaluation with the two given objects as arguments and returns
+	 * a non-null result of the evaluation.
 	 * 
 	 * This method requires that abstractEvaluate called on the classes of the
 	 * given arguments would not return null. In other words, if

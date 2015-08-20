@@ -18,9 +18,9 @@
 package pcgen.base.formula.function;
 
 /**
- * MinFunction calculates the minimum value of two or more arguments. The same
+ * MaxFunction calculates the maximum value of two or more arguments. The same
  * situations/boundary condition rules apply as those in
- * java.lang.Math.max(double, double)
+ * java.lang.Math.max(double, double).
  */
 public class MaxFunction extends AbstractNaryFunction
 {
@@ -41,9 +41,10 @@ public class MaxFunction extends AbstractNaryFunction
 	 * Returns the maximum of the two arguments provided.
 	 * 
 	 * The same situations/boundary condition rules apply as those in
-	 * java.lang.Math.max(double, double)
+	 * java.lang.Math.max(double, double).
 	 * 
-	 * @see pcgen.base.formula.function.AbstractNaryFunction#evaluate(java.lang.Number, java.lang.Number)
+	 * @see pcgen.base.formula.function.AbstractNaryFunction#evaluate(java.lang.Number,
+	 *      java.lang.Number)
 	 */
 	@Override
 	protected Number evaluate(Number n1, Number n2)

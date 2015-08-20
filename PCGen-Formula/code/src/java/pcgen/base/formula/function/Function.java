@@ -17,13 +17,13 @@
  */
 package pcgen.base.formula.function;
 
-import pcgen.base.formula.base.FormulaDependencyManager;
-import pcgen.base.formula.base.FormulaSemantics;
+import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.parse.Node;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
-import pcgen.base.formula.visitor.ValidVisitor;
-import pcgen.base.formula.visitor.DependencyCaptureVisitor;
+import pcgen.base.formula.visitor.SemanticsVisitor;
 
 /**
  * A Function is part of a Formula that performs an operation. It can be
@@ -51,10 +51,9 @@ import pcgen.base.formula.visitor.DependencyCaptureVisitor;
  * may be passed by allowArgs() because the database to determine "Bob" being a
  * legal name is not present (and allowArgs is designed to be used as early as
  * possible). If allowArgs returns TRUE and has NOT validated the the person
- * "Bob" actually exists, then then getDependencies() MUST assume a more
- * complicated FormulaDependencyManager is present, cast the object as
- * necessary, and indicate that "Bob" is a name upon which the formula is
- * dependent.
+ * "Bob" actually exists, then then getDependencies() MUST be able to load an
+ * appropriate manager with a DependencyManager in order to indicate that "Bob"
+ * is a name upon which the formula is dependent.
  */
 public interface Function
 {
@@ -114,7 +113,8 @@ public interface Function
 	Boolean isStatic(StaticVisitor visitor, Node[] args);
 
 	/**
-	 * Checks if the given arguments are valid using the given ValidVisitor.
+	 * Checks if the given arguments are valid using the given SemanticsVisitor,
+	 * loading any necessary information into the given FormulaSemantics.
 	 * 
 	 * This must check the entire set of arguments to the function for validity,
 	 * as best can be done (assuming no items are resolvable to actual values).
@@ -149,26 +149,28 @@ public interface Function
 	 * Note also that the legality of variables or content within the function
 	 * that can be evaluated as a sub formula (e.g. both "min(4,T)" and "Y" as
 	 * part of "max(min(4,T),Y)") should be passed back into the provided
-	 * ValidVisitor for further analysis. Therefore, the function makes no
+	 * SemanticsVisitor for further analysis. Therefore, the function makes no
 	 * direct claims of whether a variable or subfunction is valid or not - that
-	 * responsibility is entirely delegated back to the ValidVisitor.
+	 * responsibility is entirely delegated back to the SemanticsVisitor.
 	 * 
 	 * The contract of the Function interface requires that the arguments passed
 	 * to this method are not null and the returned value must not be null. In
 	 * addition, the contract specifies that the args array provided as a
-	 * parameter has ownership transferred to the function. The ValidVisitor or
-	 * other calling object should not reuse or otherwise share a reference to
-	 * the array.
+	 * parameter has ownership transferred to the function. The SemanticsVisitor
+	 * or other calling object should not reuse or otherwise share a reference
+	 * to the array. The given FormulaSemantics object will be modified as
+	 * necessary.
 	 * 
 	 * @param visitor
-	 *            The ValidVisitor that visits portions of a Formula
+	 *            The SemanticsVisitor that visits portions of a Formula
 	 * @param args
 	 *            The arguments to this Function within the Formula
-	 * @return A non-null FormulaSemantics indicating whether this Function is
-	 *         valid, as well as the format of objects that this Function will
-	 *         return based on the given arguments
+	 * @param semantics
+	 *            The FormulaSemantics object that is used to capture semantic
+	 *            information about this Function
 	 */
-	FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args);
+	void allowArgs(SemanticsVisitor visitor, Node[] args,
+		FormulaSemantics semantics);
 
 	/*
 	 * TODO Does this need an object to resolve with? (e.g. PC?)
@@ -187,9 +189,7 @@ public interface Function
 	/**
 	 * Evaluates the given arguments using the given EvaluateVisitor.
 	 * 
-	 * This method assumes there are three arguments, and the arguments are
-	 * valid values. See evaluate on the Function interface for important
-	 * assumptions made when this method is called.
+	 * This method assumes the arguments are valid values.
 	 * 
 	 * The results of calling this function are not defined (exceptions may be
 	 * thrown) if allowArgs returns a FormulaValidity that indicates the formula
@@ -211,9 +211,9 @@ public interface Function
 	 * to the array.
 	 * 
 	 * Note that this returns Object, since we do not know whether the Function
-	 * returns a Boolean or a Double value. The semantic rules of what is
-	 * returned must have been clearly provided in allowArgs, again, reinforcing
-	 * the importance of running allowArgs before evaluate.
+	 * returns a Boolean or a Double value (or anything else). The semantic
+	 * rules of what is returned must have been clearly provided in allowArgs,
+	 * again, reinforcing the importance of running allowArgs before evaluate.
 	 * 
 	 * @param visitor
 	 *            The EvaluateVisitor that visits portions of a Formula
@@ -225,9 +225,9 @@ public interface Function
 	Object evaluate(EvaluateVisitor visitor, Node[] args);
 
 	/**
-	 * Captures dependencies of this function. This includes Variables (in the
-	 * form of VariableIDs), but is not limited to those as the only possible
-	 * dependency.
+	 * Captures dependencies of this function. This may include Variables (in
+	 * the form of VariableIDs), but is not limited to those as the only
+	 * possible dependency.
 	 * 
 	 * This must be applied recursively for any contents within this function
 	 * (if this function calls another function, etc. all variables in the tree
@@ -240,47 +240,46 @@ public interface Function
 	 * Note also that the legality of variables or content within the function
 	 * that can be evaluated as a sub formula (e.g. both "min(4,T)" and "Y" as
 	 * part of "max(min(4,T),Y)") should be passed back into the provided
-	 * DependencyCaptureVisitor for further analysis. Therefore, the function
-	 * directly makes no claims of whether a variable or subfunction has any
-	 * dependencies - that is entirely the responsibility delegated back to
-	 * DependencyCaptureVisitor.
+	 * DependencyVisitor for further analysis. Therefore, the function directly
+	 * makes no claims of whether a variable or subfunction has any dependencies
+	 * - that is entirely the responsibility delegated back to
+	 * DependencyVisitor.
 	 * 
 	 * The contract of the Function interface requires that the arguments passed
 	 * to this method are not null and the returned value must not be null. The
-	 * provided FormulaDependencyManager may be altered in this method (that's
-	 * kind of the idea :P ). In addition, the contract specifies that the args
-	 * array provided as a parameter has ownership transferred to the function.
-	 * The DependencyCaptureVisitor or other calling object should not reuse or
-	 * otherwise share a reference to the array.
+	 * provided DependencyManager may be altered in this method (that's kind of
+	 * the idea :P ). In addition, the contract specifies that the args array
+	 * provided as a parameter has ownership transferred to the function. The
+	 * DependencyVisitor or other calling object should not reuse or otherwise
+	 * share a reference to the array.
 	 * 
 	 * @param visitor
-	 *            The DependencyCaptureVisitor that visits portions of a Formula
+	 *            The DependencyVisitor that visits portions of a Formula
 	 * @param fdm
-	 *            The FormulaDependencyManager used to capture dependencies
+	 *            The DependencyManager used to capture dependencies
 	 * @param args
 	 *            The arguments to this Function within the Formula
 	 */
-	void getDependencies(DependencyCaptureVisitor visitor,
-		FormulaDependencyManager fdm, Node[] args);
+	void getDependencies(DependencyVisitor visitor, DependencyManager fdm,
+		Node[] args);
 
 	/*
-	 * Note: The "void" return of getDependencies is intentional, even though at
-	 * first glance it seems inconsistent with the visitor pattern most of the
-	 * methods in Function are used with. The reason for this design is due to
-	 * the polymorphic behavior of FormulaDependencyManager.
+	 * Note: The "void" return of getDependencies and allowArgs are intentional,
+	 * even though at first glance it seems inconsistent with the visitor
+	 * pattern most of the methods in Function are used with. The reason for
+	 * this design is due to the polymorphic behavior of DependencyManager.
 	 * 
 	 * In the case of "isStatic" or "evaluate", both of those return a
 	 * definitive class (Boolean or some form of Number). Those are concrete and
-	 * unambiguous behaviors. In the case of FormulaDependencyManager, it is
-	 * *expected* that the behavior will be enhanced beyond the base interface
-	 * as domain-specific methods need to define domain-specific dependencies.
+	 * unambiguous behaviors. In the case of DependencyManager, it is *expected*
+	 * that the behavior will be enhanced as domain-specific methods need to
+	 * define domain-specific dependencies.
 	 * 
-	 * As a result, modification (either by replacing or decorating) of the
-	 * "active" the FormulaDependencyManager is prohibited for a Function. The
-	 * entire ownership of the "active" FormulaDependencyManager is contained
-	 * within the DependencyCaptureVisitor (which presumably only returns the
-	 * FormulaDependencyManager that was originally provided in the visit call
-	 * to the root node).
+	 * As a result, full replacement of the "active" the DependencyManager is
+	 * prohibited for a Function. The entire ownership of the "active"
+	 * DependencyManager is contained within the DependencyVisitor (which
+	 * presumably only returns the DependencyManager that was originally
+	 * provided in the visit call to the root node).
 	 * 
 	 * So generally, this is restricting behavior in order to protect the
 	 * dependency analysis system from a Function that was designed for a

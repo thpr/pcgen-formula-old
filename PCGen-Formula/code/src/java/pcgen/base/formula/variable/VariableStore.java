@@ -33,9 +33,12 @@ public interface VariableStore
 {
 
 	/**
-	 * Returns the value in this VariableStore for the given VariableID. It is
-	 * not necessary to check containsKey. Will return null if there is no value
-	 * stored for the given VariableID.
+	 * Returns the value in this VariableStore for the given VariableID.
+	 * 
+	 * It is necessary to check the implementation to determine if containsKey
+	 * must be called before get().
+	 * 
+	 * Will return null if there is no value stored for the given VariableID.
 	 * 
 	 * While a null id is allowed as a parameter, the result will be
 	 * unconditionally null for a return value, as the null id is not allowed in
@@ -45,7 +48,7 @@ public interface VariableStore
 	 * in the class description.
 	 * 
 	 * @param <T>
-	 *            The format of variable to be retrieved from this VariableStore.
+	 *            The format of variable to be retrieved from this VariableStore
 	 * @param varID
 	 *            The VariableID for which the stored value should be returned
 	 * @return Returns the value in this VariableStore for the given VariableID
@@ -61,7 +64,7 @@ public interface VariableStore
 	 * 
 	 * @param varID
 	 *            The VariableID for which the VariableStore will identify if it
-	 *            contains a value.
+	 *            contains a value
 	 * @return true if this VariableStore contains a value for the given
 	 *         VariableID; false otherwise
 	 */

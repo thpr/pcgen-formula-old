@@ -23,20 +23,28 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.formula.base.LegalScope;
+import pcgen.base.formula.base.ScopeInstance;
+import pcgen.base.formula.manager.LegalScopeLibrary;
+import pcgen.base.formula.manager.ScopeInstanceFactory;
+import pcgen.base.formula.manager.VariableLibrary;
+
 public class VariableLibraryTest extends TestCase
 {
 
-	private ScopedNamespaceDefinitionLibrary stDefLib;
-	private VariableLibrary library;
+	private ScopeInstanceFactory instanceFactory;
+	private LegalScopeLibrary varScopeLib;
+	private VariableLibrary varLib;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		stDefLib = new ScopedNamespaceDefinitionLibrary();
-		library = new VariableLibrary(stDefLib);
+		varScopeLib = new LegalScopeLibrary();
+		instanceFactory = new ScopeInstanceFactory(varScopeLib);
+		varLib = new VariableLibrary(varScopeLib);
 	}
-	
+
 	@Test
 	public void testNullConstructor()
 	{
@@ -54,12 +62,12 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testAssertVariableFail()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
+		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		try
 		{
-			library.assertVariableScope(gmDef, null);
+			varLib.assertLegalVariableID(globalScope, moveDef, null);
 			fail("null var must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -68,7 +76,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.assertVariableScope(gmDef, "");
+			varLib.assertLegalVariableID(globalScope, moveDef, "");
 			fail("empty var must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -77,7 +85,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.assertVariableScope(gmDef, " Walk");
+			varLib.assertLegalVariableID(globalScope, moveDef, " Walk");
 			fail("padded var must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -86,7 +94,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.assertVariableScope(gmDef, "Walk ");
+			varLib.assertLegalVariableID(globalScope, moveDef, "Walk ");
 			fail("padded var must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -95,8 +103,17 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.assertVariableScope(null, "Walk");
-			fail("null def must be rejected");
+			varLib.assertLegalVariableID(globalScope, null, "Walk");
+			fail("null namespace must be rejected");
+		}
+		catch (IllegalArgumentException e)
+		{
+			//ok
+		}
+		try
+		{
+			varLib.assertLegalVariableID(null, moveDef, "Walk");
+			fail("null scope must be rejected");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -105,72 +122,70 @@ public class VariableLibraryTest extends TestCase
 		//Just to check
 		try
 		{
-			assertFalse(library.isLegalVariableID(gmDef, null));
+			assertFalse(varLib.isLegalVariableID(globalScope, moveDef, null));
 		}
 		catch (IllegalArgumentException e)
 		{
 			//ok
 		}
-		assertFalse(library.isLegalVariableID(gmDef, ""));
-		assertFalse(library.isLegalVariableID(gmDef, " Walk"));
-		assertFalse(library.isLegalVariableID(gmDef, "Walk "));
+		assertFalse(varLib.isLegalVariableID(globalScope, moveDef, ""));
+		assertFalse(varLib.isLegalVariableID(globalScope, moveDef, " Walk"));
+		assertFalse(varLib.isLegalVariableID(globalScope, moveDef, "Walk "));
 	}
 
 	@Test
 	public void testAssertVariable()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
+		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
+		SimpleLegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
+		SimpleLegalScope eqScope =
+				new SimpleLegalScope(globalScope, "Equipment");
+		SimpleLegalScope eqPartScope = new SimpleLegalScope(eqScope, "Part");
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
 		//Dupe is safe
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
-		ScopedNamespaceDefinition eqMove =
-				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopedNamespaceDefinition eqPartMove =
-				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopedNamespaceDefinition spMove =
-				stDefLib.getScopeDefinition(gmDef, "SPELL");
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
 		//Check child
-		assertFalse(library.assertVariableScope(eqMove, "Walk"));
+		assertFalse(varLib.assertLegalVariableID(eqScope, moveDef, "Walk"));
 		//Check child recursive
-		assertFalse(library.assertVariableScope(eqPartMove, "Walk"));
+		assertFalse(varLib.assertLegalVariableID(eqPartScope, moveDef, "Walk"));
 
-		assertTrue(library.assertVariableScope(eqMove, "Float"));
+		assertTrue(varLib.assertLegalVariableID(eqScope, moveDef, "Float"));
 		//Check child
-		assertFalse(library.assertVariableScope(eqPartMove, "Float"));
+		assertFalse(varLib.assertLegalVariableID(eqPartScope, moveDef, "Float"));
 		//Check parent
-		assertFalse(library.assertVariableScope(gmDef, "Float"));
+		assertFalse(varLib.assertLegalVariableID(globalScope, moveDef, "Float"));
 		//Allow peer
-		assertTrue(library.assertVariableScope(spMove, "Float"));
+		assertTrue(varLib.assertLegalVariableID(spScope, moveDef, "Float"));
 
-		assertTrue(library.assertVariableScope(eqPartMove, "Hover"));
+		assertTrue(varLib.assertLegalVariableID(eqPartScope, moveDef, "Hover"));
 		//Check parent
-		assertFalse(library.assertVariableScope(eqMove, "Hover"));
+		assertFalse(varLib.assertLegalVariableID(eqScope, moveDef, "Hover"));
 		//Check parent recursive
-		assertFalse(library.assertVariableScope(gmDef, "Hover"));
+		assertFalse(varLib.assertLegalVariableID(globalScope, moveDef, "Hover"));
 
-		assertTrue(library.assertVariableScope(spMove, "Drive"));
+		assertTrue(varLib.assertLegalVariableID(spScope, moveDef, "Drive"));
 		//Check peer child
-		assertTrue(library.assertVariableScope(eqPartMove, "Drive"));
+		assertTrue(varLib.assertLegalVariableID(eqPartScope, moveDef, "Drive"));
 
-		assertTrue(library.assertVariableScope(spMove, "Fly"));
+		assertTrue(varLib.assertLegalVariableID(spScope, moveDef, "Fly"));
 		//Check peer with children
-		assertTrue(library.assertVariableScope(eqMove, "Fly"));
+		assertTrue(varLib.assertLegalVariableID(eqScope, moveDef, "Fly"));
 
 	}
 
 	@Test
 	public void testIsLegalVIDFail()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
+		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
 		try
 		{
-			library.isLegalVariableID(null, "Walk");
-			fail("null def must be rejected");
+			varLib.isLegalVariableID(null, moveDef, "Walk");
+			fail("null namespace must be rejected");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -178,7 +193,16 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			assertFalse(library.isLegalVariableID(gmDef, null));
+			varLib.isLegalVariableID(globalScope, null, "Walk");
+			fail("null scope must be rejected");
+		}
+		catch (IllegalArgumentException e)
+		{
+			//ok
+		}
+		try
+		{
+			assertFalse(varLib.isLegalVariableID(globalScope, moveDef, null));
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -189,52 +213,50 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testIsLegalVID()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		ScopedNamespaceDefinition eqMove =
-				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopedNamespaceDefinition eqPartMove =
-				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopedNamespaceDefinition spMove =
-				stDefLib.getScopeDefinition(gmDef, "SPELL");
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
-		assertTrue(library.isLegalVariableID(gmDef, "Walk"));
-		assertFalse(library.isLegalVariableID(gmDef, "Run"));
+		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
+		SimpleLegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
+		SimpleLegalScope eqScope =
+				new SimpleLegalScope(globalScope, "Equipment");
+		SimpleLegalScope eqPartScope = new SimpleLegalScope(eqScope, "Part");
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
+		assertTrue(varLib.isLegalVariableID(globalScope, moveDef, "Walk"));
+		assertFalse(varLib.isLegalVariableID(globalScope, moveDef, "Run"));
 		//Works for child
-		assertTrue(library.isLegalVariableID(eqMove, "Walk"));
+		assertTrue(varLib.isLegalVariableID(eqScope, moveDef, "Walk"));
 		//Works for child recursively
-		assertTrue(library.isLegalVariableID(eqPartMove, "Walk"));
+		assertTrue(varLib.isLegalVariableID(eqPartScope, moveDef, "Walk"));
 
-		assertTrue(library.assertVariableScope(eqMove, "Float"));
-		assertTrue(library.isLegalVariableID(eqMove, "Float"));
+		assertTrue(varLib.assertLegalVariableID(eqScope, moveDef, "Float"));
+		assertTrue(varLib.isLegalVariableID(eqScope, moveDef, "Float"));
 		//Works for child 
-		assertTrue(library.isLegalVariableID(eqPartMove, "Float"));
+		assertTrue(varLib.isLegalVariableID(eqPartScope, moveDef, "Float"));
 		//but not parent
-		assertFalse(library.isLegalVariableID(gmDef, "Float"));
+		assertFalse(varLib.isLegalVariableID(globalScope, moveDef, "Float"));
 		//and not peer
-		assertFalse(library.isLegalVariableID(spMove, "Float"));
+		assertFalse(varLib.isLegalVariableID(spScope, moveDef, "Float"));
 
-		assertTrue(library.assertVariableScope(eqPartMove, "Hover"));
-		assertTrue(library.isLegalVariableID(eqPartMove, "Hover"));
+		assertTrue(varLib.assertLegalVariableID(eqPartScope, moveDef, "Hover"));
+		assertTrue(varLib.isLegalVariableID(eqPartScope, moveDef, "Hover"));
 		//but not parent
-		assertFalse(library.isLegalVariableID(eqMove, "Hover"));
+		assertFalse(varLib.isLegalVariableID(eqScope, moveDef, "Hover"));
 		//or parent recursively
-		assertFalse(library.isLegalVariableID(gmDef, "Hover"));
+		assertFalse(varLib.isLegalVariableID(globalScope, moveDef, "Hover"));
 		//and not unrelated
-		assertFalse(library.isLegalVariableID(spMove, "Hover"));
+		assertFalse(varLib.isLegalVariableID(spScope, moveDef, "Hover"));
 	}
 
 	@Test
 	public void testKnownVarScopeFail()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
+		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
 		try
 		{
-			library.getKnownVariableScopes(null);
+			varLib.getKnownLegalScopes(moveDef, null);
 			fail("null name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -243,7 +265,16 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getKnownVariableScopes("");
+			varLib.getKnownLegalScopes(null, "Good");
+			fail("null namespace must be rejected");
+		}
+		catch (IllegalArgumentException e)
+		{
+			//ok
+		}
+		try
+		{
+			varLib.getKnownLegalScopes(moveDef, "");
 			fail("empty name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -252,7 +283,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getKnownVariableScopes("Walk ");
+			varLib.getKnownLegalScopes(moveDef, "Walk ");
 			fail("padded name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -261,7 +292,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getKnownVariableScopes(" Walk");
+			varLib.getKnownLegalScopes(moveDef, " Walk");
 			fail("padded name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -273,170 +304,78 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testKnownVarScope()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		ScopedNamespaceDefinition eqMove =
-				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopedNamespaceDefinition eqPartMove =
-				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopedNamespaceDefinition spMove =
-				stDefLib.getScopeDefinition(gmDef, "SPELL");
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
-		assertTrue(library.assertVariableScope(eqMove, "Float"));
-		assertTrue(library.assertVariableScope(eqPartMove, "Hover"));
-		assertTrue(library.assertVariableScope(spMove, "Hover"));
-		List<ScopedNamespaceDefinition<?>> list =
-				library.getKnownVariableScopes("Walk");
+		LegalScope globalScope = new SimpleLegalScope(null, "Global");
+		LegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
+		LegalScope eqScope = new SimpleLegalScope(globalScope, "Equipment");
+		LegalScope eqPartScope = new SimpleLegalScope(eqScope, "Part");
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
+		assertTrue(varLib.assertLegalVariableID(eqScope, moveDef, "Float"));
+		assertTrue(varLib.assertLegalVariableID(eqPartScope, moveDef, "Hover"));
+		assertTrue(varLib.assertLegalVariableID(spScope, moveDef, "Hover"));
+		List<LegalScope> list = varLib.getKnownLegalScopes(moveDef, "Walk");
 		assertNotNull(list);
 		assertEquals(1, list.size());
-		assertEquals(gmDef, list.iterator().next());
+		assertEquals(globalScope, list.iterator().next());
 		//Assert independence (would be a conflict)
 		try
 		{
-			list.add(spMove);
-			assertFalse(library.getKnownVariableScopes("Walk").contains(spMove));
+			list.add(spScope);
+			assertFalse(varLib.getKnownLegalScopes(moveDef, "Walk").contains(
+				spScope));
 		}
 		catch (UnsupportedOperationException e)
 		{
-			//ok
+			//also ok if list was unwriteable
 		}
 
-		list = library.getKnownVariableScopes("Float");
+		list = varLib.getKnownLegalScopes(moveDef, "Float");
 		assertNotNull(list);
 		assertEquals(1, list.size());
-		assertEquals(eqMove, list.iterator().next());
+		assertEquals(eqScope, list.iterator().next());
 		//Assert independence (no conflict)
 		try
 		{
-			list.add(spMove);
-			assertFalse(library.getKnownVariableScopes("Float")
-				.contains(spMove));
+			list.add(spScope);
+			assertFalse(varLib.getKnownLegalScopes(moveDef, "Float").contains(
+				spScope));
 		}
 		catch (UnsupportedOperationException e)
 		{
-			//ok
+			//also ok if list was unwriteable
 		}
 
-		list = library.getKnownVariableScopes("Hover");
+		list = varLib.getKnownLegalScopes(moveDef, "Hover");
 		assertNotNull(list);
 		assertEquals(2, list.size());
-		assertTrue(list.contains(spMove));
-		assertTrue(list.contains(eqPartMove));
-	}
-
-	@Test
-	public void testInstantiateScopeFail()
-	{
-		NamespaceDefinition move =
-				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		ScopedNamespaceDefinition eqMove =
-				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopedNamespaceDefinition eqPartMove =
-				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopedNamespaceDefinition spMove =
-				stDefLib.getScopeDefinition(gmDef, "SPELL");
-
-		try
-		{
-			library.instantiateScope(null, null);
-			fail("null def must be rejected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			//ok
-		}
-		VariableScope parent = library.instantiateScope(null, gmDef);
-		try
-		{
-			library.instantiateScope(parent, null);
-			fail("null def must be rejected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			//ok
-		}
-		try
-		{
-			library.instantiateScope(parent, gmDef);
-			fail("instantation of global with parent must be rejected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			//ok
-		}
-		try
-		{
-			library.instantiateScope(null, eqMove);
-			fail("null parent with non-global def must be rejected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			//ok
-		}
-		try
-		{
-			library.instantiateScope(parent, eqPartMove);
-			fail("attempt to instantiate non-child must be rejected");
-		}
-		catch (IllegalArgumentException e)
-		{
-			//ok
-		}
-
-	}
-
-	@Test
-	public void testInstantiateScope()
-	{
-		NamespaceDefinition move =
-				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		ScopedNamespaceDefinition eqMove =
-				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopedNamespaceDefinition eqPartMove =
-				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopedNamespaceDefinition spMove =
-				stDefLib.getScopeDefinition(gmDef, "SPELL");
-		VariableScope globalScope = library.instantiateScope(null, gmDef);
-		assertNull(globalScope.getParentScope());
-		assertEquals(gmDef, globalScope.getScopeDefinition());
-		VariableScope eqScope = library.instantiateScope(globalScope, eqMove);
-		assertNotNull(eqScope.getParentScope());
-		assertEquals(globalScope, eqScope.getParentScope());
-		assertEquals(eqMove, eqScope.getScopeDefinition());
-		VariableScope eqPartScope =
-				library.instantiateScope(eqScope, eqPartMove);
-		assertNotNull(eqPartScope.getParentScope());
-		assertEquals(eqScope, eqPartScope.getParentScope());
-		assertEquals(eqPartMove, eqPartScope.getScopeDefinition());
-		//independence...
-		VariableScope eqPartScope2 =
-				library.instantiateScope(eqScope, eqPartMove);
-		assertFalse(eqPartScope2 == eqPartScope);
-		assertFalse(eqPartScope2.equals(eqPartScope));
+		assertTrue(list.contains(spScope));
+		assertTrue(list.contains(eqPartScope));
 	}
 
 	@Test
 	public void testGetVIDFail()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		ScopedNamespaceDefinition eqMove =
-				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopedNamespaceDefinition eqPartMove =
-				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopedNamespaceDefinition spMove =
-				stDefLib.getScopeDefinition(gmDef, "SPELL");
-		VariableScope globalScope = library.instantiateScope(null, gmDef);
-		VariableScope eqScope = library.instantiateScope(globalScope, eqMove);
-		VariableScope eqPartScope =
-				library.instantiateScope(eqScope, eqPartMove);
+		LegalScope globalScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst =
+				instanceFactory.getInstance(null, globalScope);
+		LegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
+		LegalScope eqScope = new SimpleLegalScope(globalScope, "Equipment");
+		ScopeInstance eqInst = instanceFactory.getInstance(globalInst, eqScope);
 		try
 		{
-			library.getVariableID(null, "Walk");
+			varLib.getVariableID(globalInst, null, "Walk");
+			fail("null namespace must be rejected");
+		}
+		catch (IllegalArgumentException e)
+		{
+			//ok
+		}
+		try
+		{
+			varLib.getVariableID(null, moveDef, "Walk");
 			fail("null scope must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -445,7 +384,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getVariableID(globalScope, null);
+			varLib.getVariableID(globalInst, moveDef, null);
 			fail("null name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -454,7 +393,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getVariableID(globalScope, "");
+			varLib.getVariableID(globalInst, moveDef, "");
 			fail("empty name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -463,7 +402,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getVariableID(globalScope, " Walk");
+			varLib.getVariableID(globalInst, moveDef, " Walk");
 			fail("padded name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -472,7 +411,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getVariableID(globalScope, "Walk ");
+			varLib.getVariableID(globalInst, moveDef, "Walk ");
 			fail("padded name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -481,7 +420,7 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getVariableID(globalScope, "Walk");
+			varLib.getVariableID(globalInst, moveDef, "Walk");
 			fail("undefined name must be rejected");
 		}
 		catch (IllegalArgumentException e)
@@ -490,18 +429,18 @@ public class VariableLibraryTest extends TestCase
 		}
 		try
 		{
-			library.getVariableID(eqScope, "Walk");
+			varLib.getVariableID(eqInst, moveDef, "Walk");
 			fail("undefined name must be rejected");
 		}
 		catch (IllegalArgumentException e)
 		{
 			//undefined, ok
 		}
-		assertTrue(library.assertVariableScope(spMove, "Float"));
+		assertTrue(varLib.assertLegalVariableID(spScope, moveDef, "Float"));
 		try
 		{
-			library.getVariableID(eqScope, "Float");
-			fail("undefined name must be rejected");
+			varLib.getVariableID(eqInst, moveDef, "Float");
+			fail("undefined name (unrelated scope) must be rejected");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -513,115 +452,101 @@ public class VariableLibraryTest extends TestCase
 	@Test
 	public void testGetVID()
 	{
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		NamespaceDefinition flag =
+		NamespaceDefinition flagDef =
 				new NamespaceDefinition(Boolean.class, "FLAG");
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		ScopedNamespaceDefinition gfDef = stDefLib.defineGlobalNamespaceDefinition(flag);
-		ScopedNamespaceDefinition eqMove =
-				stDefLib.getScopeDefinition(gmDef, "EQUIPMENT");
-		ScopedNamespaceDefinition eqPartMove =
-				stDefLib.getScopeDefinition(eqMove, "EQUIPMENT.PART");
-		ScopedNamespaceDefinition spFlag =
-				stDefLib.getScopeDefinition(gfDef, "SPELL");
-		VariableScope globalScope = library.instantiateScope(null, gmDef);
-		VariableScope globalFlagScope = library.instantiateScope(null, gfDef);
-		VariableScope eqScope = library.instantiateScope(globalScope, eqMove);
-		VariableScope eqPartScope =
-				library.instantiateScope(eqScope, eqPartMove);
-		VariableScope spScope =
-				library.instantiateScope(globalFlagScope, spFlag);
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
-		assertTrue(library.assertVariableScope(eqMove, "Float"));
-		assertTrue(library.assertVariableScope(eqPartMove, "Hover"));
-		assertTrue(library.assertVariableScope(spFlag, "Hover"));
-		VariableID vid = library.getVariableID(globalScope, "Walk");
+		LegalScope globalScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst =
+				instanceFactory.getInstance(null, globalScope);
+		LegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
+		ScopeInstance spInst = instanceFactory.getInstance(globalInst, spScope);
+		LegalScope eqScope = new SimpleLegalScope(globalScope, "Equipment");
+		ScopeInstance eqInst = instanceFactory.getInstance(globalInst, eqScope);
+		LegalScope eqPartScope = new SimpleLegalScope(eqScope, "Part");
+		ScopeInstance eqPartInst =
+				instanceFactory.getInstance(eqInst, eqPartScope);
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
+		assertTrue(varLib.assertLegalVariableID(eqScope, moveDef, "Float"));
+		assertTrue(varLib.assertLegalVariableID(eqPartScope, moveDef, "Hover"));
+		assertTrue(varLib.assertLegalVariableID(spScope, flagDef, "Hover"));
+		VariableID vid = varLib.getVariableID(globalInst, moveDef, "Walk");
 		assertEquals("Walk", vid.getName());
-		assertEquals(globalScope, vid.getScope());
+		assertEquals(globalInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
 
-		vid = library.getVariableID(eqScope, "Float");
+		vid = varLib.getVariableID(eqInst, moveDef, "Float");
 		assertEquals("Float", vid.getName());
-		assertEquals(eqScope, vid.getScope());
+		assertEquals(eqInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
 
-		vid = library.getVariableID(eqScope, "Walk");
+		vid = varLib.getVariableID(eqInst, moveDef, "Walk");
 		assertEquals("Walk", vid.getName());
 		//NOTE: Global scope here even though eqScope was passed into getVariableID
-		assertEquals(globalScope, vid.getScope());
+		assertEquals(globalInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
 
-		vid = library.getVariableID(eqPartScope, "Walk");
+		vid = varLib.getVariableID(eqPartInst, moveDef, "Walk");
 		assertEquals("Walk", vid.getName());
 		//NOTE: Global scope here even though eqPartScope was passed into getVariableID
-		assertEquals(globalScope, vid.getScope());
+		assertEquals(globalInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
 
-		vid = library.getVariableID(eqPartScope, "Hover");
+		vid = varLib.getVariableID(eqPartInst, moveDef, "Hover");
 		assertEquals("Hover", vid.getName());
-		assertEquals(eqPartScope, vid.getScope());
+		assertEquals(eqPartInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
 
-		vid = library.getVariableID(eqPartScope, "Hover");
+		vid = varLib.getVariableID(eqPartInst, moveDef, "Hover");
 		assertEquals("Hover", vid.getName());
-		assertEquals(eqPartScope, vid.getScope());
+		assertEquals(eqPartInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
 
-		vid = library.getVariableID(spScope, "Hover");
+		vid = varLib.getVariableID(spInst, flagDef, "Hover");
 		assertEquals("Hover", vid.getName());
-		assertEquals(spScope, vid.getScope());
+		assertEquals(spInst, vid.getScope());
 		assertEquals(Boolean.class, vid.getVariableFormat());
 	}
-
 
 	@Test
 	public void testProveReuse()
 	{
-		NamespaceDefinition var =
+		NamespaceDefinition varDef =
 				new NamespaceDefinition(Number.class, "VAR");
-		NamespaceDefinition move =
+		NamespaceDefinition moveDef =
 				new NamespaceDefinition(Number.class, "MOVE");
-		NamespaceDefinition flag =
+		NamespaceDefinition flagDef =
 				new NamespaceDefinition(Boolean.class, "FLAG");
-		ScopedNamespaceDefinition gvDef = stDefLib.defineGlobalNamespaceDefinition(var);
-		assertNotNull(gvDef);
-		ScopedNamespaceDefinition gmDef = stDefLib.defineGlobalNamespaceDefinition(move);
-		assertNotNull(gmDef);
-		ScopedNamespaceDefinition gfDef = stDefLib.defineGlobalNamespaceDefinition(flag);
-		assertNotNull(gfDef);
+		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
+		ScopeInstance globalInst =
+				instanceFactory.getInstance(null, globalScope);
+		SimpleLegalScope eqScope =
+				new SimpleLegalScope(globalScope, "Equipment");
 
-		VariableScope globalVarScope = library.instantiateScope(null, gvDef);
-		assertNotNull(globalVarScope);
-		VariableScope globalMoveScope = library.instantiateScope(null, gmDef);
-		assertNotNull(globalMoveScope);
-		VariableScope globalFlagScope = library.instantiateScope(null, gfDef);
-		assertNotNull(globalFlagScope);
-
-		assertTrue(library.assertVariableScope(gvDef, "Walk"));
-		VariableID vidv = library.getVariableID(globalVarScope, "Walk");
+		assertTrue(varLib.assertLegalVariableID(globalScope, varDef, "Walk"));
+		VariableID vidv = varLib.getVariableID(globalInst, varDef, "Walk");
 		assertEquals("Walk", vidv.getName());
-		assertEquals(globalVarScope, vidv.getScope());
+		assertEquals(globalInst, vidv.getScope());
 		assertEquals(Number.class, vidv.getVariableFormat());
 
-		assertTrue(library.assertVariableScope(gmDef, "Walk"));
-		VariableID vidm = library.getVariableID(globalMoveScope, "Walk");
+		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
+		VariableID vidm = varLib.getVariableID(globalInst, moveDef, "Walk");
 		assertEquals("Walk", vidm.getName());
-		assertEquals(globalMoveScope, vidm.getScope());
+		assertEquals(globalInst, vidm.getScope());
 		assertEquals(Number.class, vidm.getVariableFormat());
 
-		assertTrue(library.assertVariableScope(gfDef, "Walk"));
-		VariableID vidf = library.getVariableID(globalFlagScope, "Walk");
+		assertTrue(varLib.assertLegalVariableID(globalScope, flagDef, "Walk"));
+		VariableID vidf = varLib.getVariableID(globalInst, flagDef, "Walk");
 		assertEquals("Walk", vidf.getName());
-		assertEquals(globalFlagScope, vidf.getScope());
+		assertEquals(globalInst, vidf.getScope());
 		assertEquals(Boolean.class, vidf.getVariableFormat());
-		
+
 		assertFalse(vidv.equals(vidf));
 		assertFalse(vidv.equals(vidm));
 		assertFalse(vidm.equals(vidf));
 		assertFalse(vidm.equals(vidv));
 		assertFalse(vidf.equals(vidm));
 		assertFalse(vidf.equals(vidv));
-		
+
 	}
 }

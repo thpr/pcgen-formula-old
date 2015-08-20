@@ -72,7 +72,7 @@ public interface OperatorLibrary
 	 * 
 	 * Note that an OperatorAction (and thus by extension OperatorLibrary)
 	 * provides a prediction of the returned Class, not the actual class. The
-	 * returned Class from this method is guaranteed to be more generic than the
+	 * returned Class from this method is guaranteed to be assignable from the
 	 * actual result. In other words, this may return Number.class, whereas
 	 * evaluate may return an Integer or Double.
 	 * 

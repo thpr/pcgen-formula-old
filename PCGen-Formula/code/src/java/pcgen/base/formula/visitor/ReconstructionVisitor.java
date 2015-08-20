@@ -73,7 +73,7 @@ import pcgen.base.formula.parse.SimpleNode;
  * 
  * WARNING: If you have modified a formula tree, you should ONLY write out a
  * formula into a persistent location if you KNOW is valid. You should use the
- * ValidVisitor to check this if necessary. ReconstructionVisitor makes no
+ * SemanticsVisitor to check this if necessary. ReconstructionVisitor makes no
  * attempt to ensure that the tree is valid, so even if the tree structure is
  * not a valid formula, ReconstructionVisitor will still happily produce a
  * String which if read, will not parse without an error.

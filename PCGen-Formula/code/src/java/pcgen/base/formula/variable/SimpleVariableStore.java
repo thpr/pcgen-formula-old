@@ -80,7 +80,6 @@ public class SimpleVariableStore implements WriteableVariableStore
 	 *      java.lang.Object)
 	 */
 	@Override
-	@SuppressWarnings("unchecked")
 	public <T> T put(VariableID<T> varID, T value)
 	{
 		if (varID == null)
@@ -99,7 +98,9 @@ public class SimpleVariableStore implements WriteableVariableStore
 					+ varFormat.getSimpleName() + " but got "
 					+ value.getClass().getSimpleName());
 		}
-		return (T) resultsMap.put(varID, value);
+		@SuppressWarnings("unchecked")
+		T obj = (T) resultsMap.put(varID, value);
+		return obj;
 	}
 
 }

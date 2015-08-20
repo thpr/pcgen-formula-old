@@ -18,7 +18,7 @@
 package pcgen.base.formula.function;
 
 /**
- * FloorFunction rounds the value of a Number to the next lowest integer value.
+ * CeilFunction rounds the value of a Number to the next highest integer value.
  * The same situations/rules apply as those in java.lang.Math.ceil(double)
  */
 public class CeilFunction extends AbstractUnaryFunction

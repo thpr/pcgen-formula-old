@@ -17,8 +17,10 @@
  */
 package pcgen.base.formula.visitor;
 
+import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.function.Function;
 import pcgen.base.formula.manager.FormulaManager;
+import pcgen.base.formula.manager.VariableLibrary;
 import pcgen.base.formula.parse.ASTArithmetic;
 import pcgen.base.formula.parse.ASTEquality;
 import pcgen.base.formula.parse.ASTExpon;
@@ -38,9 +40,8 @@ import pcgen.base.formula.parse.FormulaParserVisitor;
 import pcgen.base.formula.parse.Node;
 import pcgen.base.formula.parse.Operator;
 import pcgen.base.formula.parse.SimpleNode;
+import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.VariableID;
-import pcgen.base.formula.variable.VariableLibrary;
-import pcgen.base.formula.variable.VariableScope;
 import pcgen.base.formula.variable.VariableStore;
 
 /**
@@ -55,22 +56,27 @@ import pcgen.base.formula.variable.VariableStore;
  * 
  * EvaluateVisitor enforces no contract that it will validate a formula, but
  * reserves the right to do so. As a result, the behavior of EvaluationVisitor
- * is not defined if ValidVisitor returned a FormulaSemantics that indicated
+ * is not defined if SemanticsVisitor returned a FormulaSemantics that indicated
  * isValid() was false.
  * 
- * Also, a user of EvaluateVisitor should ensure that DependencyCaptureVisitor
- * has been called and successfully processed to ensure that evaluation will run
- * without an Exception.
+ * Also, a user of EvaluateVisitor should ensure that DependencyVisitor has been
+ * called and successfully processed to ensure that evaluation will run without
+ * an Exception.
  */
 @SuppressWarnings("PMD.TooManyMethods")
 public class EvaluateVisitor implements FormulaParserVisitor
 {
 
 	/**
-	 * The scope in which the formula resides, in order to determine the exact
-	 * variable (with context) used in the formula.
+	 * The scope namespace definition in which the formula resides, in order to
+	 * validate if variables used in the formula are legal.
 	 */
-	private final VariableScope<?> scope;
+	private final NamespaceDefinition<?> namespaceDef;
+
+	/**
+	 * The ScopeInstance in which the formula resides.
+	 */
+	private final ScopeInstance scopeInst;
 
 	/**
 	 * The FormulaManager used to get information about functions and other key
@@ -85,24 +91,32 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	 * @param fm
 	 *            The FormulaManager used to get information about functions and
 	 *            other key parameters of a Formula
-	 * @param scope
-	 *            The scope in which the formula resides, in order to validate
-	 *            if variables used in the formula are valid
+	 * @param scopeInst
+	 *            The ScopeInstance used to evaluate the formula
+	 * @param namespaceDef
+	 *            The NamespaceDefinition used to evaluate the formula
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null
 	 */
-	public EvaluateVisitor(FormulaManager fm, VariableScope<?> scope)
+	public EvaluateVisitor(FormulaManager fm, ScopeInstance scopeInst,
+		NamespaceDefinition<?> namespaceDef)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException("FormulaManager cannot be null");
 		}
-		if (scope == null)
+		if (namespaceDef == null)
 		{
-			throw new IllegalArgumentException("Function Scope cannot be null");
+			throw new IllegalArgumentException(
+				"NamespaceDefinition cannot be null");
+		}
+		if (scopeInst == null)
+		{
+			throw new IllegalArgumentException("ScopeInstance cannot be null");
 		}
 		this.fm = fm;
-		this.scope = scope;
+		this.namespaceDef = namespaceDef;
+		this.scopeInst = scopeInst;
 	}
 
 	/**
@@ -184,7 +198,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	{
 		/*
 		 * Note we only support unary minus for Number.class. This was enforced
-		 * by ValidVisitor.
+		 * by SemanticsVisitor.
 		 */
 		Number n = (Number) evaluateSingleNumericChild(node);
 		if (n instanceof Integer)
@@ -202,7 +216,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	{
 		/*
 		 * Note we only support exponent (^) for Number.class. This was enforced
-		 * by ValidVisitor.
+		 * by SemanticsVisitor.
 		 */
 		int childCount = node.jjtGetNumChildren();
 
@@ -264,7 +278,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 
 	/**
 	 * Processes a variable within the formula. This relies on the
-	 * VariableIDFactory and the VariableScope to precisely determine the
+	 * VariableIDFactory and the ScopeInstance to precisely determine the
 	 * VariableID and then fetch the value for that VariableID from the
 	 * VariableStore (cache).
 	 */
@@ -273,9 +287,11 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	{
 		String varName = node.getText();
 		VariableLibrary varLibrary = fm.getFactory();
-		if (varLibrary.isLegalVariableID(scope.getScopeDefinition(), varName))
+		if (varLibrary.isLegalVariableID(scopeInst.getLegalScope(),
+			namespaceDef, varName))
 		{
-			VariableID<?> id = varLibrary.getVariableID(scope, varName);
+			VariableID<?> id =
+					varLibrary.getVariableID(scopeInst, namespaceDef, varName);
 			VariableStore resolver = fm.getResolver();
 			if (resolver.containsKey(id))
 			{
@@ -381,5 +397,37 @@ public class EvaluateVisitor implements FormulaParserVisitor
 		}
 		Node child = node.jjtGetChild(0);
 		return child.jjtAccept(this, null);
+	}
+
+	/**
+	 * Returns the ScopeInstance in which this EvaluateVisitor is operating.
+	 * 
+	 * @return the ScopeInstance in which this EvaluateVisitor is operating
+	 */
+	public ScopeInstance getScopeInstance()
+	{
+		return scopeInst;
+	}
+
+	/**
+	 * Returns the NamespaceDefinition in which this EvaluateVisitor is
+	 * operating.
+	 * 
+	 * @return the NamespaceDefinition in which this EvaluateVisitor is
+	 *         operating
+	 */
+	public NamespaceDefinition<?> getNamespaceDefinition()
+	{
+		return namespaceDef;
+	}
+
+	/**
+	 * Returns the underlying FormulaManager for this EvaluateVisitor.
+	 * 
+	 * @return the underlying FormulaManager for this EvaluateVisitor
+	 */
+	public FormulaManager getFormulaManager()
+	{
+		return fm;
 	}
 }

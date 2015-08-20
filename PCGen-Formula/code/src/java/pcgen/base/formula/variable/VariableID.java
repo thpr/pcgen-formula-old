@@ -17,6 +17,7 @@
  */
 package pcgen.base.formula.variable;
 
+import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.lang.CaseInsensitiveString;
 
 /**
@@ -26,13 +27,13 @@ import pcgen.base.lang.CaseInsensitiveString;
  * uniquely identify a variable in one location.
  * 
  * The variable name is considered case-insensitive. The scope is a
- * VariableScope.
+ * ScopeInstance.
  * 
  * Note that a user should not directly construct a VariableID. Since it is
  * intended that only VariableIDs in a specific scope is legal, a system should
- * depend on pcgen.base.formula.variable.VariableIDFactory to provide
- * construction services for VariableID objects. Exact details of VariableID
- * uniqueness are provided in VariableIDFactory.
+ * depend on pcgen.base.formula.manager.VariableLibrary to provide construction
+ * services for VariableID objects. Exact details of VariableID uniqueness are
+ * provided in VariableIDFactory.
  * 
  * @param <T>
  *            The format of object identified by this VariableID
@@ -41,9 +42,14 @@ public class VariableID<T>
 {
 
 	/**
-	 * The Scope for this VariableID.
+	 * The Namespace for this VariableID.
 	 */
-	private final VariableScope<T> scope;
+	private final NamespaceDefinition<T> namespace;
+
+	/**
+	 * The ScopeInstance for this VariableID.
+	 */
+	private final ScopeInstance scope;
 
 	/**
 	 * The name for this VariableID (how it will appear in a formula).
@@ -60,22 +66,33 @@ public class VariableID<T>
 	 */
 
 	/**
-	 * Constructs a new VariableID with the given scope and name.
+	 * Constructs a new VariableID with the given ScopeInstance,
+	 * NamespaceDefinition and name.
 	 * 
-	 * Package visibility because it is intended that the user will use
+	 * Note: While this is public, it is highly advised to use a
 	 * VariableIDFactory to construct new instances of VariableID.
 	 * 
-	 * @param scope
-	 *            The scope of the variable represented by this VariableID
+	 * @param scopeInst
+	 *            The ScopeInstance of the variable represented by this
+	 *            VariableID
+	 * @param namespace
+	 *            The NamespaceDefinition of the variable represented by this
+	 *            VariableID
 	 * @param varName
 	 *            The name of the variable represented by this VariableID
 	 * @throws IllegalArgumentException
-	 *             if any argument is null, or if the name is empty, or
+	 *             if any argument is null, or if the name is empty or
 	 *             starts/ends with whitespace
 	 */
-	VariableID(VariableScope<T> scope, String varName)
+	public VariableID(ScopeInstance scopeInst,
+		NamespaceDefinition<T> namespace, String varName)
 	{
-		if (scope == null)
+		if (namespace == null)
+		{
+			throw new IllegalArgumentException(
+				"NamespaceDefinition cannot be null");
+		}
+		if (scopeInst == null)
 		{
 			throw new IllegalArgumentException("Scope cannot be null");
 		}
@@ -93,17 +110,18 @@ public class VariableID<T>
 		{
 			throw new IllegalArgumentException("Variable Name cannot be empty");
 		}
-		this.scope = scope;
+		this.namespace = namespace;
+		this.scope = scopeInst;
 		this.varName = new CaseInsensitiveString(varName);
 	}
 
 	/**
-	 * Returns the scope of the variable represented by this VariableID.
+	 * Returns the ScopeInstance of the variable represented by this VariableID.
 	 * Guaranteed to be non-null.
 	 * 
-	 * @return The scope of the variable represented by this VariableID
+	 * @return The ScopeInstance of the variable represented by this VariableID
 	 */
-	public VariableScope<T> getScope()
+	public ScopeInstance getScope()
 	{
 		return scope;
 	}
@@ -120,14 +138,24 @@ public class VariableID<T>
 	}
 
 	/**
+	 * Returns the NamespaceDefinition of this VariableID.
+	 * 
+	 * @return The NamespaceDefinition of this VariableID
+	 */
+	public NamespaceDefinition<T> getNamespace()
+	{
+		return namespace;
+	}
+
+	/**
 	 * Returns the format (e.g. Number.class) of this VariableID (as controlled
-	 * by the Scope).
+	 * by the NamespaceDefinition).
 	 * 
 	 * @return The format (e.g. Number.class) of this VariableID
 	 */
 	public Class<T> getVariableFormat()
 	{
-		return scope.getVariableFormat();
+		return namespace.getVariableFormat();
 	}
 
 	/**
@@ -163,7 +191,8 @@ public class VariableID<T>
 			return false;
 		}
 		VariableID<?> other = (VariableID<?>) obj;
-		return varName.equals(other.varName) && scope.equals(other.scope);
+		return varName.equals(other.varName)
+			&& namespace.equals(other.namespace) && scope.equals(other.scope);
 	}
 
 }

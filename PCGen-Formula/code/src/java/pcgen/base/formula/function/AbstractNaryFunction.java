@@ -17,20 +17,21 @@
  */
 package pcgen.base.formula.function;
 
-import pcgen.base.formula.base.FormulaDependencyManager;
-import pcgen.base.formula.base.FormulaSemantics;
-import pcgen.base.formula.base.FormulaSemanticsValid;
-import pcgen.base.formula.error.InvalidIncorrectArgumentCount;
-import pcgen.base.formula.error.InvalidSemantics;
+import java.util.Arrays;
+
+import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.parse.Node;
-import pcgen.base.formula.visitor.DependencyCaptureVisitor;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
+import pcgen.base.formula.util.KeyUtilities;
+import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
-import pcgen.base.formula.visitor.ValidVisitor;
+import pcgen.base.formula.visitor.SemanticsVisitor;
 
 /**
- * AbstractUnaryFunction centralizes common behaviors for Functions that take a
- * variable number of arguments, with a minimum of two arguments.
+ * AbstractNaryFunction centralizes common behaviors for Functions that take a
+ * variable number of Number arguments, with a minimum of two arguments.
  * 
  * It is important to understand that this is designed to work for functions
  * that use two values at a time, and when more than two are present, the
@@ -45,35 +46,46 @@ public abstract class AbstractNaryFunction implements Function
 {
 
 	/**
-	 * Checks if the given arguments are valid using the given ValidVisitor. A
-	 * minimum of two arguments are required, and each must be a valid formula
-	 * value (number, variable, another function, etc.)
+	 * Checks if the given arguments are valid using the given SemanticsVisitor.
+	 * A minimum of two arguments are required, and each must be a valid formula
+	 * value (number, variable, another function, etc.).
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.ValidVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.SemanticsVisitor,
+	 *      pcgen.base.formula.parse.Node[],
+	 *      pcgen.base.formula.semantics.FormulaSemantics)
 	 */
 	@Override
-	public final FormulaSemantics allowArgs(ValidVisitor visitor, Node[] args)
+	public final void allowArgs(SemanticsVisitor visitor, Node[] args,
+		FormulaSemantics semantics)
 	{
 		int argCount = args.length;
 		if (argCount < 2)
 		{
-			return new InvalidIncorrectArgumentCount(getFunctionName(), 2, args);
+			FormulaSemanticsUtilities.setInvalid(semantics, "Function "
+				+ getFunctionName()
+				+ " received incorrect # of arguments, expected: 2 got "
+				+ args.length + " " + Arrays.asList(args));
+			return;
 		}
 		for (Node n : args)
 		{
-			FormulaSemantics result =
-					(FormulaSemantics) n.jjtAccept(visitor, null);
-			if (!result.isValid())
+			n.jjtAccept(visitor, semantics);
+			if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
 			{
-				return result;
+				return;
 			}
-			if (!result.getSemanticState().equals(Number.class))
+			Class<?> format =
+					semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+			if (!format.equals(Number.class))
 			{
-				return new InvalidSemantics(n, Number.class,
-					result.getSemanticState());
+				FormulaSemanticsUtilities.setInvalid(semantics,
+					"Parse Error: Invalid Value Format: " + format
+						+ " found in " + n.getClass().getName()
+						+ " found in location requiring a"
+						+ " Number (class cannot be evaluated)");
+				return;
 			}
 		}
-		return new FormulaSemanticsValid(Number.class);
 	}
 
 	/**
@@ -85,9 +97,10 @@ public abstract class AbstractNaryFunction implements Function
 	 * assumptions made when this method is called.
 	 * 
 	 * Actual processing is delegated to (potentially repeated calls to)
-	 * evaluate(double, double)
+	 * evaluate(Number, Number).
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor,
+	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public final Number evaluate(EvaluateVisitor visitor, Node[] args)
@@ -110,7 +123,8 @@ public abstract class AbstractNaryFunction implements Function
 	 * are valid values in a formula. See isStatic on the Function interface for
 	 * important assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor, pcgen.base.formula.parse.Node[])
+	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor,
+	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)
@@ -134,19 +148,19 @@ public abstract class AbstractNaryFunction implements Function
 	 * Consistent with the contract of the Function interface, this list
 	 * recursively includes all of the contents of items within this function
 	 * (if this function calls another function, etc. all variables in the tree
-	 * below this function are included)
+	 * below this function are included).
 	 * 
-	 * This method assumes there are at least two arguments, and the arguments
-	 * are valid values in a formula. See getDependencies on the Function
-	 * interface for important assumptions made when this method is called.
+	 * This method assumes valid arguments to the formula. See getDependencies
+	 * on the Function interface for important assumptions made when this method
+	 * is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#getDependencies(pcgen.base.formula.visitor.DependencyCaptureVisitor,
-	 *      pcgen.base.formula.base.FormulaDependencyManager,
+	 * @see pcgen.base.formula.function.Function#getDependencies(pcgen.base.formula.visitor.DependencyVisitor,
+	 *      pcgen.base.formula.dependency.DependencyManager,
 	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
-	public void getDependencies(DependencyCaptureVisitor visitor,
-		FormulaDependencyManager fdm, Node[] args)
+	public void getDependencies(DependencyVisitor visitor,
+		DependencyManager fdm, Node[] args)
 	{
 		for (Node n : args)
 		{

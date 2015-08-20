@@ -23,21 +23,21 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import pcgen.base.formula.FormulaUtilities;
-import pcgen.base.formula.base.FormulaSemantics;
+import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.parse.FormulaParser;
 import pcgen.base.formula.parse.ParseException;
 import pcgen.base.formula.parse.SimpleNode;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.util.FormulaUtilities;
+import pcgen.base.formula.util.KeyUtilities;
 import pcgen.base.formula.variable.NamespaceDefinition;
-import pcgen.base.formula.variable.ScopedNamespaceDefinition;
-import pcgen.base.formula.variable.ScopedNamespaceDefinitionLibrary;
+import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleVariableStore;
-import pcgen.base.formula.variable.VariableLibrary;
 
 public class FormulaManagerTest extends TestCase
 {
 
-	private ScopedNamespaceDefinitionLibrary stDefLib;
+	private LegalScopeLibrary scopeLibrary;
 	private VariableLibrary varLibrary;
 	private SimpleFunctionLibrary ftnLibrary;
 	private SimpleOperatorLibrary opLibrary;
@@ -47,8 +47,8 @@ public class FormulaManagerTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		stDefLib = new ScopedNamespaceDefinitionLibrary();
-		varLibrary = new VariableLibrary(stDefLib);
+		scopeLibrary = new LegalScopeLibrary();
+		varLibrary = new VariableLibrary(scopeLibrary);
 		opLibrary = new SimpleOperatorLibrary();
 		ftnLibrary = new SimpleFunctionLibrary();
 		resultsStore = new SimpleVariableStore();
@@ -123,16 +123,19 @@ public class FormulaManagerTest extends TestCase
 			//ok, too			
 		}
 	}
-	
+
 	@Test
 	public void testIsValid()
 	{
-		FormulaManager manager = new FormulaManager(ftnLibrary, opLibrary, varLibrary, resultsStore);
-		NamespaceDefinition<Number> nsDef = new NamespaceDefinition<Number>(Number.class, "VAR");
-		ScopedNamespaceDefinition<Number> snDef = stDefLib.defineGlobalNamespaceDefinition(nsDef);
+		FormulaManager manager =
+				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
+					resultsStore);
+		NamespaceDefinition<Number> nsDef =
+				new NamespaceDefinition<Number>(Number.class, "VAR");
+		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		try
 		{
-			manager.isValid(null, snDef);
+			manager.isValid(null, varScope, nsDef);
 			fail("isValid should reject null root");
 		}
 		catch (IllegalArgumentException e)
@@ -141,9 +144,27 @@ public class FormulaManagerTest extends TestCase
 		}
 		try
 		{
-			SimpleNode fp = new FormulaParser(new StringReader("myvar+yourvar")).query();
-			manager.isValid(fp, null);
-			fail("isValid should reject null manager");
+			SimpleNode fp =
+					new FormulaParser(new StringReader("myvar+yourvar"))
+						.query();
+			manager.isValid(fp, varScope, null);
+			fail("isValid should reject null namespace");
+		}
+		catch (ParseException e)
+		{
+			fail(e.getMessage());
+		}
+		catch (IllegalArgumentException e)
+		{
+			//yep
+		}
+		try
+		{
+			SimpleNode fp =
+					new FormulaParser(new StringReader("myvar+yourvar"))
+						.query();
+			manager.isValid(fp, null, nsDef);
+			fail("isValid should reject null scope");
 		}
 		catch (ParseException e)
 		{
@@ -157,30 +178,36 @@ public class FormulaManagerTest extends TestCase
 		try
 		{
 			SimpleNode fp = new FormulaParser(new StringReader("4==1")).query();
-			FormulaSemantics valid = manager.isValid(fp, snDef);
-			assertFalse("Should reject Boolean return value", valid.isValid());
+			FormulaSemantics valid = manager.isValid(fp, varScope, nsDef);
+			assertFalse("Should reject Boolean return value",
+				valid.getInfo(KeyUtilities.SEM_VALID).isValid());
 		}
 		catch (ParseException e)
 		{
 			fail(e.getMessage());
 		}
-		varLibrary.assertVariableScope(snDef, "myvar");
+		varLibrary.assertLegalVariableID(varScope, nsDef, "myvar");
 		try
 		{
-			SimpleNode fp = new FormulaParser(new StringReader("myvar+yourvar")).query();
-			FormulaSemantics valid = manager.isValid(fp, snDef);
-			assertFalse("Should reject missing var", valid.isValid());
+			SimpleNode fp =
+					new FormulaParser(new StringReader("myvar+yourvar"))
+						.query();
+			FormulaSemantics valid = manager.isValid(fp, varScope, nsDef);
+			assertFalse("Should reject missing var",
+				valid.getInfo(KeyUtilities.SEM_VALID).isValid());
 		}
 		catch (ParseException e)
 		{
 			fail(e.getMessage());
 		}
-		varLibrary.assertVariableScope(snDef, "yourvar");
+		varLibrary.assertLegalVariableID(varScope, nsDef, "yourvar");
 		try
 		{
-			SimpleNode fp = new FormulaParser(new StringReader("myvar+yourvar")).query();
-			FormulaSemantics valid = manager.isValid(fp, snDef);
-			assertTrue(valid.getReport(), valid.isValid());
+			SimpleNode fp =
+					new FormulaParser(new StringReader("myvar+yourvar"))
+						.query();
+			FormulaSemantics valid = manager.isValid(fp, varScope, nsDef);
+			assertTrue(valid.getInfo(KeyUtilities.SEM_VALID).isValid());
 		}
 		catch (ParseException e)
 		{
