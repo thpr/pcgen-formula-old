@@ -25,8 +25,7 @@ package pcgen.base.formula.dependency;
 public class ArgumentDependencyManager
 {
 	
-	//TODO Check if this is -1 or 0 depending on index
-	private int maxArgument = 0;
+	private int maxArgument = -1;
 
 	/**
 	 * Adds a called argument (by number) to the list of dependencies for a

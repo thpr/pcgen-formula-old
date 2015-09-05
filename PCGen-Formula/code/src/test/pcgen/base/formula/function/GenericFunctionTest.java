@@ -40,7 +40,7 @@ public class GenericFunctionTest extends AbstractFormulaTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		String formula = "floor((arg(1)-10)/2)";
+		String formula = "floor((arg(0)-10)/2)";
 		SimpleNode node = TestUtilities.doParse(formula);
 		ftnLibrary.addFunction(new GenericFunction("d20Mod", node));
 		ftnLibrary.addFunction(new FloorFunction());
@@ -86,14 +86,14 @@ public class GenericFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, true);
 		varCapture.visit(node, depManager);
-		assertEquals(0, argManager.getMaximumArgument());
+		assertEquals(-1, argManager.getMaximumArgument());
 		evaluatesTo(formula, node, Integer.valueOf(2));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
 		assertTrue(rv.toString().equals(formula));
 		resetManager();
 		varCapture.visit(node, depManager);
-		assertEquals(0, argManager.getMaximumArgument());
+		assertEquals(-1, argManager.getMaximumArgument());
 	}
 
 	@Test
@@ -112,14 +112,14 @@ public class GenericFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, true);
 		varCapture.visit(node, depManager);
-		assertEquals(1, argManager.getMaximumArgument());
+		assertEquals(0, argManager.getMaximumArgument());
 		evaluatesTo(formula, node, Integer.valueOf(2));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
 		assertTrue(rv.toString().equals(formula));
 		resetManager();
 		varCapture.visit(node, depManager);
-		assertEquals(1, argManager.getMaximumArgument());
+		assertEquals(0, argManager.getMaximumArgument());
 	}
 
 	@Test
@@ -130,20 +130,20 @@ public class GenericFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, true);
 		varCapture.visit(node, depManager);
-		assertEquals(1, argManager.getMaximumArgument());
+		assertEquals(0, argManager.getMaximumArgument());
 		evaluatesTo(formula, node, Integer.valueOf(3));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
 		assertTrue(rv.toString().equals(formula));
 		resetManager();
 		varCapture.visit(node, depManager);
-		assertEquals(1, argManager.getMaximumArgument());
+		assertEquals(0, argManager.getMaximumArgument());
 	}
 
 	@Test
 	public void testEmbedded1()
 	{
-		String formula2 = "floor((arg(1)-arg(2))/2)";
+		String formula2 = "floor((arg(0)-arg(1))/2)";
 		SimpleNode node2 = TestUtilities.doParse(formula2);
 		ftnLibrary.addFunction(new GenericFunction("embed", node2));
 		String formula = "d20Mod(embed(14,10))";
@@ -151,20 +151,20 @@ public class GenericFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, true);
 		varCapture.visit(node, depManager);
-		assertEquals(2, argManager.getMaximumArgument());
+		assertEquals(1, argManager.getMaximumArgument());
 		evaluatesTo(formula, node, Integer.valueOf(-4));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
 		assertTrue(rv.toString().equals(formula));
 		resetManager();
 		varCapture.visit(node, depManager);
-		assertEquals(2, argManager.getMaximumArgument());
+		assertEquals(1, argManager.getMaximumArgument());
 	}
 
 	@Test
 	public void testEmbedded2()
 	{
-		String formula2 = "floor((arg(1)-arg(2))/2)";
+		String formula2 = "floor((arg(0)-arg(1))/2)";
 		SimpleNode node2 = TestUtilities.doParse(formula2);
 		ftnLibrary.addFunction(new GenericFunction("embed", node2));
 		String formula = "embed(14,d20Mod(14))";
@@ -172,14 +172,14 @@ public class GenericFunctionTest extends AbstractFormulaTestCase
 		isValid(formula, node);
 		isStatic(formula, node, true);
 		varCapture.visit(node, depManager);
-		assertEquals(2, argManager.getMaximumArgument());
+		assertEquals(1, argManager.getMaximumArgument());
 		evaluatesTo(formula, node, Integer.valueOf(6));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
 		assertTrue(rv.toString().equals(formula));
 		resetManager();
 		varCapture.visit(node, depManager);
-		assertEquals(2, argManager.getMaximumArgument());
+		assertEquals(1, argManager.getMaximumArgument());
 	}
 
 }

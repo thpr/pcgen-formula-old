@@ -139,7 +139,7 @@ public class GenericFunction implements Function
 			}
 			return;
 		}
-		int maxArg = myArgs.getMaximumArgument();
+		int maxArg = myArgs.getMaximumArgument() + 1;
 		if (maxArg != args.length)
 		{
 			FormulaSemanticsUtilities.setInvalid(semantics,

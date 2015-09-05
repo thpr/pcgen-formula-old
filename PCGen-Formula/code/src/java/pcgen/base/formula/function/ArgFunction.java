@@ -80,8 +80,7 @@ public class ArgFunction implements Function
 	{
 		ASTNum node = (ASTNum) args[0];
 		int argNum = Integer.parseInt(node.getText());
-		return (Boolean) visitor.visit((SimpleNode) masterArgs[argNum - 1],
-			null);
+		return (Boolean) visitor.visit((SimpleNode) masterArgs[argNum], null);
 	}
 
 	/**
@@ -119,18 +118,17 @@ public class ArgFunction implements Function
 		try
 		{
 			int argNum = Integer.parseInt(nodeText);
-			if ((argNum <= 0) || (argNum > masterArgs.length))
+			if ((argNum < 0) || (argNum >= masterArgs.length))
 			{
-				FormulaSemanticsUtilities.setInvalid(
-					semantics,
+				FormulaSemanticsUtilities.setInvalid(semantics,
 					"Function " + FUNCTION_NAME
 						+ " received incorrect # of arguments, expected: "
-						+ argNum + " got " + masterArgs.length + " "
+						+ (argNum + 1) + " got " + masterArgs.length + " "
 						+ Arrays.asList(masterArgs));
 				return;
 			}
 			assertArgs(semantics, argNum);
-			Node n = masterArgs[argNum - 1];
+			Node n = masterArgs[argNum];
 			n.jjtAccept(visitor, semantics);
 		}
 		catch (NumberFormatException e)
@@ -163,7 +161,7 @@ public class ArgFunction implements Function
 	{
 		ASTNum node = (ASTNum) args[0];
 		int argNum = Integer.parseInt(node.getText());
-		return visitor.visit((SimpleNode) masterArgs[argNum - 1], null);
+		return visitor.visit((SimpleNode) masterArgs[argNum], null);
 	}
 
 	/**
@@ -187,6 +185,6 @@ public class ArgFunction implements Function
 		{
 			argManager.addArgument(argNum);
 		}
-		visitor.visit((SimpleNode) masterArgs[argNum - 1], fdm);
+		visitor.visit((SimpleNode) masterArgs[argNum], fdm);
 	}
 }
