@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pcgen.base.calculation.Modifier;
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.manager.ScopeInformation;
 
 /**
@@ -121,11 +122,12 @@ public class SolverFactory
 			throw new IllegalArgumentException(
 				"Cannot create Solver: Scope Information cannot be null");
 		}
-		Class<T> varFormat =
-				scopeInfo.getNamespaceDefinition().getVariableFormat();
+		FormatManager<T> varFormat =
+				scopeInfo.getNamespaceDefinition().getFormatManager();
 		@SuppressWarnings("unchecked")
 		Modifier<T> defaultModifier =
-				(Modifier<T>) defaultModifierMap.get(varFormat);
+				(Modifier<T>) defaultModifierMap.get(varFormat
+					.getManagedClass());
 		if (defaultModifier == null)
 		{
 			throw new IllegalArgumentException(

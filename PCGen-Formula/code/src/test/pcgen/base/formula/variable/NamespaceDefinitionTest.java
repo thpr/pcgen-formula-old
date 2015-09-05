@@ -21,6 +21,9 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.format.BooleanManager;
+import pcgen.base.format.NumberManager;
+
 public class NamespaceDefinitionTest extends TestCase
 {
 
@@ -42,7 +45,7 @@ public class NamespaceDefinitionTest extends TestCase
 		}
 		try
 		{
-			new NamespaceDefinition(Number.class, null);
+			new NamespaceDefinition(new NumberManager(), null);
 			fail("null name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -68,7 +71,7 @@ public class NamespaceDefinitionTest extends TestCase
 		}
 		try
 		{
-			new NamespaceDefinition(Number.class, "");
+			new NamespaceDefinition(new NumberManager(), "");
 			fail("empty name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -84,21 +87,21 @@ public class NamespaceDefinitionTest extends TestCase
 	public void testGlobal()
 	{
 		NamespaceDefinition varDef =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		assertEquals("VAR", varDef.getNamespaceName());
-		assertEquals(Number.class, varDef.getVariableFormat());
+		assertEquals(new NumberManager(), varDef.getFormatManager());
 	}
 
 	public void testEquals()
 	{
 		NamespaceDefinition varDef1 =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		NamespaceDefinition varDef2 =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		NamespaceDefinition varDefBool =
-				new NamespaceDefinition(Boolean.class, "VAR");
+				new NamespaceDefinition(new BooleanManager(), "VAR");
 		assertFalse(varDef1.equals(null));
 		assertFalse(varDef1.equals(new Object()));
 		assertTrue(varDef1.equals(varDef1));
@@ -111,13 +114,13 @@ public class NamespaceDefinitionTest extends TestCase
 	public void testHashCode()
 	{
 		NamespaceDefinition varDef1 =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		NamespaceDefinition varDef2 =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		NamespaceDefinition varDefBool =
-				new NamespaceDefinition(Boolean.class, "VAR");
+				new NamespaceDefinition(new BooleanManager(), "VAR");
 		int hc1 = varDef1.hashCode();
 		int hc2 = varDef2.hashCode();
 		int hc3 = moveDef.hashCode();

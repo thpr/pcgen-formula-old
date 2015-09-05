@@ -20,6 +20,7 @@ package pcgen.base.formula.testsupport;
 import java.util.List;
 
 import junit.framework.TestCase;
+import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.dependency.DependencyManager;
@@ -62,7 +63,7 @@ public abstract class AbstractFormulaTestCase extends TestCase
 	private LegalScopeLibrary scopeLibrary;
 	protected VariableLibrary varLibrary;
 	NamespaceDefinition<Number> varNSdef = new NamespaceDefinition<Number>(
-		Number.class, "VAR");
+		new NumberManager(), "VAR");
 
 	@Override
 	protected void setUp() throws Exception

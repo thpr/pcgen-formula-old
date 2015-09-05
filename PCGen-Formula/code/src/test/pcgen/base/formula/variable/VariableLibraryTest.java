@@ -23,6 +23,8 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.format.BooleanManager;
+import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.manager.LegalScopeLibrary;
@@ -63,7 +65,7 @@ public class VariableLibraryTest extends TestCase
 	public void testAssertVariableFail()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		try
 		{
@@ -137,7 +139,7 @@ public class VariableLibraryTest extends TestCase
 	public void testAssertVariable()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
 		SimpleLegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
 		SimpleLegalScope eqScope =
@@ -179,7 +181,7 @@ public class VariableLibraryTest extends TestCase
 	public void testIsLegalVIDFail()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
 		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
 		try
@@ -214,7 +216,7 @@ public class VariableLibraryTest extends TestCase
 	public void testIsLegalVID()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
 		SimpleLegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
 		SimpleLegalScope eqScope =
@@ -251,7 +253,7 @@ public class VariableLibraryTest extends TestCase
 	public void testKnownVarScopeFail()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
 		assertTrue(varLib.assertLegalVariableID(globalScope, moveDef, "Walk"));
 		try
@@ -305,7 +307,7 @@ public class VariableLibraryTest extends TestCase
 	public void testKnownVarScope()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		LegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
 		LegalScope eqScope = new SimpleLegalScope(globalScope, "Equipment");
@@ -357,7 +359,7 @@ public class VariableLibraryTest extends TestCase
 	public void testGetVIDFail()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst =
 				instanceFactory.getInstance(null, globalScope);
@@ -453,9 +455,9 @@ public class VariableLibraryTest extends TestCase
 	public void testGetVID()
 	{
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		NamespaceDefinition flagDef =
-				new NamespaceDefinition(Boolean.class, "FLAG");
+				new NamespaceDefinition(new BooleanManager(), "FLAG");
 		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst =
 				instanceFactory.getInstance(null, globalScope);
@@ -512,11 +514,11 @@ public class VariableLibraryTest extends TestCase
 	public void testProveReuse()
 	{
 		NamespaceDefinition varDef =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		NamespaceDefinition moveDef =
-				new NamespaceDefinition(Number.class, "MOVE");
+				new NamespaceDefinition(new NumberManager(), "MOVE");
 		NamespaceDefinition flagDef =
-				new NamespaceDefinition(Boolean.class, "FLAG");
+				new NamespaceDefinition(new BooleanManager(), "FLAG");
 		SimpleLegalScope globalScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst =
 				instanceFactory.getInstance(null, globalScope);

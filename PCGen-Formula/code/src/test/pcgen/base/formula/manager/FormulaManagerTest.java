@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.parse.FormulaParser;
 import pcgen.base.formula.parse.ParseException;
@@ -131,7 +132,7 @@ public class FormulaManagerTest extends TestCase
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
 		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(Number.class, "VAR");
+				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		try
 		{

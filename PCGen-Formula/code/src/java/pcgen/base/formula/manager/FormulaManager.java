@@ -208,7 +208,7 @@ public class FormulaManager
 		{
 			return semantics;
 		}
-		Class<?> nsFormat = namespaceDef.getVariableFormat();
+		Class<?> nsFormat = namespaceDef.getFormatManager().getManagedClass();
 		Class<?> formulaFormat =
 				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 		if (!formulaFormat.equals(nsFormat))

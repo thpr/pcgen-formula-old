@@ -17,10 +17,11 @@
  */
 package pcgen.base.formula.variable;
 
+import junit.framework.TestCase;
+import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.manager.ScopeInstanceFactory;
-import junit.framework.TestCase;
 
 public class SimpleVariableStoreTest extends TestCase
 {
@@ -32,7 +33,7 @@ public class SimpleVariableStoreTest extends TestCase
 	{
 		SimpleVariableStore varStore = new SimpleVariableStore();
 		NamespaceDefinition<Number> varDef =
-				new NamespaceDefinition<>(Number.class, "VAR");
+				new NamespaceDefinition<>(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		VariableID<Number> vid = new VariableID<>(globalInst, varDef, "test");
@@ -69,7 +70,7 @@ public class SimpleVariableStoreTest extends TestCase
 	{
 		SimpleVariableStore varStore = new SimpleVariableStore();
 		NamespaceDefinition varDef =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		VariableID vid = new VariableID(globalInst, varDef, "test");
@@ -85,7 +86,7 @@ public class SimpleVariableStoreTest extends TestCase
 	public void testIndependence()
 	{
 		SimpleVariableStore varStore = new SimpleVariableStore();
-		NamespaceDefinition vtd = new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd = new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		VariableID vid1 = new VariableID(globalInst, vtd, "test");

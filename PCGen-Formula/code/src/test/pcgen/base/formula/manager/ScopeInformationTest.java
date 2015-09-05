@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.dependency.DependencyManager;
@@ -72,7 +73,7 @@ public class ScopeInformationTest extends TestCase
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
 		NamespaceDefinition<Number> varDef =
-				new NamespaceDefinition<Number>(Number.class, "VAR");
+				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		try
@@ -151,7 +152,7 @@ public class ScopeInformationTest extends TestCase
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
 		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(Number.class, "VAR");
+				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		ScopeInformation scopeInfo =
@@ -220,7 +221,7 @@ public class ScopeInformationTest extends TestCase
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
 		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(Number.class, "VAR");
+				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		ScopeInformation scopeInfo =
@@ -259,7 +260,7 @@ public class ScopeInformationTest extends TestCase
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
 		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(Number.class, "VAR");
+				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		ScopeInformation scopeInfo =

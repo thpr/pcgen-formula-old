@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.manager.ScopeInstanceFactory;
@@ -46,7 +47,7 @@ public class VariableIDTest extends TestCase
 		{
 			//ok, too			
 		}
-		NamespaceDefinition vtd = new NamespaceDefinition(Number.class, "VAR");
+		NamespaceDefinition vtd = new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		try
@@ -119,7 +120,7 @@ public class VariableIDTest extends TestCase
 	public void testGlobal()
 	{
 		NamespaceDefinition varDef =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		VariableID vid = new VariableID(globalInst, varDef, "test");
@@ -131,7 +132,7 @@ public class VariableIDTest extends TestCase
 	public void testEquals()
 	{
 		NamespaceDefinition varDef =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);
@@ -151,7 +152,7 @@ public class VariableIDTest extends TestCase
 	public void testHashCode()
 	{
 		NamespaceDefinition varDef =
-				new NamespaceDefinition(Number.class, "VAR");
+				new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);

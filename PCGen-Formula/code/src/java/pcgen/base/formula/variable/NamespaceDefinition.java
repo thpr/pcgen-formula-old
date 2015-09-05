@@ -17,6 +17,8 @@
  */
 package pcgen.base.formula.variable;
 
+import pcgen.base.format.FormatManager;
+
 /**
  * A NamespaceDefinition is a combination of a name (e.g. "AREA") with a Format
  * Class (e.g. Point2D.class).
@@ -29,9 +31,9 @@ public class NamespaceDefinition<T>
 {
 
 	/**
-	 * The class (format) of object stored for variables in this namespace.
+	 * The FormatManager of objects stored for variables in this namespace.
 	 */
-	private final Class<T> variableFormat;
+	private final FormatManager<T> formatManager;
 
 	/**
 	 * The name of this Namespace.
@@ -42,40 +44,40 @@ public class NamespaceDefinition<T>
 	 * Constructs a new NamespaceDefinition representing the given format of
 	 * object and given Namespace name.
 	 * 
-	 * @param varFormat
-	 *            The class (format) of object stored for variables in this
+	 * @param fmtManager
+	 *            The FormatManager of objects stored for variables in this
 	 *            namespace
 	 * @param name
 	 *            The name of this Namespacee
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null or the namespace name is length zero
 	 */
-	public NamespaceDefinition(Class<T> varFormat, String name)
+	public NamespaceDefinition(FormatManager<T> fmtManager, String name)
 	{
 		if ((name == null) || (name.length() == 0))
 		{
 			throw new IllegalArgumentException(
 				"Variable Namespace Name cannot be null or empty");
 		}
-		if (varFormat == null)
+		if (fmtManager == null)
 		{
 			throw new IllegalArgumentException(
-				"Variable Class (Format) cannot be null");
+				"FormatManager cannot be null");
 		}
-		this.variableFormat = varFormat;
+		this.formatManager = fmtManager;
 		this.namespaceName = name;
 	}
 
 	/**
-	 * Returns the Class representing the class (format) of object stored for
-	 * variables in this namespace.
+	 * Returns the FormatManager representing the class (format) of object
+	 * stored for variables in this namespace.
 	 * 
-	 * @return the Class representing the class (format) of object stored for
-	 *         variables in this namespace
+	 * @return the FormatManager representing the class (format) of object
+	 *         stored for variables in this namespace
 	 */
-	public Class<T> getVariableFormat()
+	public FormatManager<T> getFormatManager()
 	{
-		return variableFormat;
+		return formatManager;
 	}
 
 	/**
@@ -96,7 +98,7 @@ public class NamespaceDefinition<T>
 	@Override
 	public int hashCode()
 	{
-		return variableFormat.hashCode() ^ namespaceName.hashCode();
+		return formatManager.hashCode() ^ namespaceName.hashCode();
 	}
 
 	/**
@@ -108,7 +110,7 @@ public class NamespaceDefinition<T>
 		if (o instanceof NamespaceDefinition)
 		{
 			NamespaceDefinition<?> other = (NamespaceDefinition<?>) o;
-			return variableFormat.equals(other.variableFormat)
+			return formatManager.equals(other.formatManager)
 				&& namespaceName.equals(other.namespaceName);
 		}
 		return false;
@@ -120,6 +122,7 @@ public class NamespaceDefinition<T>
 	@Override
 	public String toString()
 	{
-		return namespaceName + " [" + variableFormat.getSimpleName() + "]";
+		return namespaceName + " ["
+			+ formatManager.getManagedClass().getSimpleName() + "]";
 	}
 }

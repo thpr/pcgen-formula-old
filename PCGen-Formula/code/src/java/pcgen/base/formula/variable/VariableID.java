@@ -155,7 +155,7 @@ public class VariableID<T>
 	 */
 	public Class<T> getVariableFormat()
 	{
-		return namespace.getVariableFormat();
+		return namespace.getFormatManager().getManagedClass();
 	}
 
 	/**
