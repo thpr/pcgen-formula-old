@@ -75,13 +75,10 @@ public final class FormulaCalculation<T> extends AbstractNEPCalculation<T>
 	@Override
 	public T process(final T input, ScopeInformation<T> scopeInfo)
 	{
-		FormulaManager formulaManager = scopeInfo.getFormulaManager();
+		FormulaManager fManager = scopeInfo.getFormulaManager();
 		FunctionLibrary valueLibrary =
-				new ValueWrappingLibrary(formulaManager.getLibrary(), input);
-		FormulaManager withValue =
-				new FormulaManager(valueLibrary,
-					formulaManager.getOperatorLibrary(),
-					formulaManager.getFactory(), formulaManager.getResolver());
+				new ValueWrappingLibrary(fManager.getLibrary(), input);
+		FormulaManager withValue = fManager.swapFunctionLibrary(valueLibrary);
 		ScopeInformation<T> stepInfo =
 				new ScopeInformation<T>(withValue, scopeInfo.getScope(),
 					scopeInfo.getNamespaceDefinition());

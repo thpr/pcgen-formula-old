@@ -226,8 +226,6 @@ public class GenericFunction implements Function
 	{
 		FunctionLibrary argLibrary =
 				new ArgWrappingLibrary(formulaManager.getLibrary(), args);
-		return new FormulaManager(argLibrary,
-			formulaManager.getOperatorLibrary(), formulaManager.getFactory(),
-			formulaManager.getResolver());
+		return formulaManager.swapFunctionLibrary(argLibrary);
 	}
 }

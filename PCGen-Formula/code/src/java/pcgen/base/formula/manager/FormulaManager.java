@@ -222,4 +222,9 @@ public class FormulaManager
 		return semantics;
 	}
 
+	public FormulaManager swapFunctionLibrary(FunctionLibrary ftnLib)
+	{
+		return new FormulaManager(ftnLib, opLibrary, varLibrary, results);
+	}
+
 }
