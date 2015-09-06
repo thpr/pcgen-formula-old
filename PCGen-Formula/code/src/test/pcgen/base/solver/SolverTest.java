@@ -28,7 +28,6 @@ import pcgen.base.format.FormatManager;
 import pcgen.base.format.NumberManager;
 import pcgen.base.format.OrderedPairManager;
 import pcgen.base.formula.base.LegalScope;
-import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.FunctionLibrary;
 import pcgen.base.formula.manager.LegalScopeLibrary;
@@ -42,12 +41,11 @@ import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleScopeInstance;
 import pcgen.base.formula.variable.SimpleVariableStore;
 import pcgen.base.formula.variable.VariableStore;
-import pcgen.base.lang.NumberUtilities;
 import pcgen.base.math.OrderedPair;
+import pcgen.base.solver.testsupport.AbstractModifier;
 
 public class SolverTest extends TestCase
 {
-	private static final Class<Number> NUMBER_CLASS = Number.class;
 	private final FunctionLibrary fl = new SimpleFunctionLibrary();
 	private final OperatorLibrary ol = new SimpleOperatorLibrary();
 	private LegalScopeLibrary vsLib = new LegalScopeLibrary();
@@ -74,7 +72,7 @@ public class SolverTest extends TestCase
 	@Test
 	public void testIllegalConstruction()
 	{
-		Modifier<Number> mod = add(1, 100);
+		Modifier<Number> mod = AbstractModifier.add(1, 100);
 		try
 		{
 			new Solver<Number>(mod, si);
@@ -84,7 +82,7 @@ public class SolverTest extends TestCase
 		{
 			//ok
 		}
-		mod = setNumber(6, 0);
+		mod = AbstractModifier.setNumber(6, 0);
 		try
 		{
 			new Solver<Number>(mod, null);
@@ -109,9 +107,9 @@ public class SolverTest extends TestCase
 	@Test
 	public void testIllegalAdd()
 	{
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
-		mod = add(1, 100);
+		mod = AbstractModifier.add(1, 100);
 		try
 		{
 			solver.addModifier(null, new Object());
@@ -130,7 +128,7 @@ public class SolverTest extends TestCase
 		{
 			//ok
 		}
-		Modifier<String> badm = setString();
+		Modifier<String> badm = AbstractModifier.setString();
 		try
 		{
 			//have to be bad about generics to even get this to be set up to fail
@@ -148,9 +146,9 @@ public class SolverTest extends TestCase
 	@Test
 	public void testIllegalRemove()
 	{
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
-		mod = add(1, 100);
+		mod = AbstractModifier.add(1, 100);
 		try
 		{
 			solver.removeModifier(null, new Object());
@@ -193,7 +191,7 @@ public class SolverTest extends TestCase
 	@Test
 	public void testIllegalRemoveFromSource()
 	{
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
 		try
 		{
@@ -209,8 +207,8 @@ public class SolverTest extends TestCase
 	@Test
 	public void testHarmless()
 	{
-		Modifier<Number> addm = add(1, 100);
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> addm = AbstractModifier.add(1, 100);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
 		solver.removeModifier(addm, this);
 		assertEquals(Integer.valueOf(6), solver.process());
@@ -219,10 +217,10 @@ public class SolverTest extends TestCase
 	@Test
 	public void testRemoveFromSource()
 	{
-		Modifier<Number> addm = add(1, 100);
-		Modifier<Number> multm = multiply(2, 100);
-		Modifier<Number> setm = setNumber(4, 100);
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> addm = AbstractModifier.add(1, 100);
+		Modifier<Number> multm = AbstractModifier.multiply(2, 100);
+		Modifier<Number> setm = AbstractModifier.setNumber(4, 100);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
 		//harmless
 		solver.removeFromSource(this);
@@ -242,10 +240,10 @@ public class SolverTest extends TestCase
 	@Test
 	public void testProcessSamePriority()
 	{
-		Modifier<Number> addm = add(1, 100);
-		Modifier<Number> multm = multiply(2, 100);
-		Modifier<Number> setm = setNumber(4, 100);
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> addm = AbstractModifier.add(1, 100);
+		Modifier<Number> multm = AbstractModifier.multiply(2, 100);
+		Modifier<Number> setm = AbstractModifier.setNumber(4, 100);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
 		solver.addModifier(addm, this);
 		solver.addModifier(multm, this);
@@ -259,10 +257,10 @@ public class SolverTest extends TestCase
 	public void testProcessUserPriority1()
 	{
 		//Will be ignored due to later set
-		Modifier<Number> addm = add(1, 100);
-		Modifier<Number> setm = setNumber(4, 200);
-		Modifier<Number> multm = multiply(2, 300);
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> addm = AbstractModifier.add(1, 100);
+		Modifier<Number> setm = AbstractModifier.setNumber(4, 200);
+		Modifier<Number> multm = AbstractModifier.multiply(2, 300);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
 		solver.addModifier(addm, this);
 		solver.addModifier(multm, this);
@@ -273,9 +271,9 @@ public class SolverTest extends TestCase
 	@Test
 	public void testProcessUserPriority2()
 	{
-		Modifier<Number> addm = add(1, 100);
-		Modifier<Number> multm = multiply(2, 300);
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> addm = AbstractModifier.add(1, 100);
+		Modifier<Number> multm = AbstractModifier.multiply(2, 300);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
 		solver.addModifier(addm, this);
 		solver.addModifier(multm, this);
@@ -285,10 +283,10 @@ public class SolverTest extends TestCase
 	@Test
 	public void testDiagnose()
 	{
-		Modifier<Number> addm = add(1, 100);
-		Modifier<Number> setm = setNumber(4, 100);
-		Modifier<Number> multm = multiply(2, 100);
-		Modifier<Number> mod = setNumber(6, 0);
+		Modifier<Number> addm = AbstractModifier.add(1, 100);
+		Modifier<Number> setm = AbstractModifier.setNumber(4, 100);
+		Modifier<Number> multm = AbstractModifier.multiply(2, 100);
+		Modifier<Number> mod = AbstractModifier.setNumber(6, 0);
 		Solver<Number> solver = new Solver<Number>(mod, si);
 		List<ProcessStep<Number>> list = solver.diagnose();
 		assertNotNull(list);
@@ -321,115 +319,6 @@ public class SolverTest extends TestCase
 		assertEquals(this, step.getSource());
 		assertEquals(9, step.getResult());
 		assertEquals(addm, step.getModifier());
-
-	}
-
-	private AbstractModifier<String> setString()
-	{
-		return new AbstractModifier<String>(0, String.class)
-		{
-			@Override
-			public String process(String input,
-				ScopeInformation<String> scopeInfo)
-			{
-				return "Something";
-			}
-		};
-	}
-
-	private AbstractModifier<Number> add(final int value, int priority)
-	{
-		return new AbstractModifier<Number>(2, NUMBER_CLASS, priority)
-		{
-			@Override
-			public Number process(Number input,
-				ScopeInformation<Number> scopeInfo)
-			{
-				return NumberUtilities.add(input, value);
-			}
-		};
-	}
-
-	private AbstractModifier<Number> multiply(final int value, int priority)
-	{
-		return new AbstractModifier<Number>(1, NUMBER_CLASS, priority)
-		{
-			@Override
-			public Number process(Number input,
-				ScopeInformation<Number> scopeInfo)
-			{
-				return NumberUtilities.multiply(input, value);
-			}
-		};
-	}
-
-	private AbstractModifier<Number> setNumber(final int value, int priority)
-	{
-		return new AbstractModifier<Number>(0, NUMBER_CLASS, priority)
-		{
-			@Override
-			public Number process(Number input,
-				ScopeInformation<Number> scopeInfo)
-			{
-				return value;
-			}
-		};
-	}
-
-	public static abstract class AbstractModifier<T> implements Modifier<T>
-	{
-
-		private final Class<T> format;
-		private final int priority;
-		private final int inherent;
-
-		public AbstractModifier(int inherent, Class<T> cl)
-		{
-			this(inherent, cl, 100);
-		}
-
-		public AbstractModifier(int inherent, Class<T> cl, int priority)
-		{
-			format = cl;
-			this.priority = priority;
-			this.inherent = inherent;
-		}
-
-		@Override
-		public void getDependencies(ScopeInformation<T> scopeInfo,
-			DependencyManager fdm)
-		{
-		}
-
-		@Override
-		public String getIdentification()
-		{
-			return "DO";
-		}
-
-		@Override
-		public Class<T> getVariableFormat()
-		{
-			return format;
-		}
-
-		@Override
-		public int getInherentPriority()
-		{
-			return inherent;
-		}
-
-		@Override
-		public int getUserPriority()
-		{
-			return priority;
-		}
-
-		@Override
-		public String getInstructions()
-		{
-			return "Ignored";
-		}
 
 	}
 }
