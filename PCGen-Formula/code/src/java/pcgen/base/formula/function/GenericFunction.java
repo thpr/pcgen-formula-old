@@ -122,7 +122,8 @@ public class GenericFunction implements Function
 		NamespaceDefinition<?> namespaceDef = visitor.getNamespaceDefinition();
 		SemanticsVisitor subVisitor =
 				new SemanticsVisitor(withArgs, legalScope, namespaceDef);
-		//Need to handle "embedded" GenericFunction objects properly
+		//Need to save original to handle "embedded" GenericFunction objects properly
+		@SuppressWarnings("PMD.PrematureDeclaration")
 		ArgumentDependencyManager original =
 				semantics.removeInfo(KeyUtilities.SEM_ARGS);
 		subVisitor.visit(root, semantics);

@@ -222,6 +222,18 @@ public class FormulaManager
 		return semantics;
 	}
 
+	/**
+	 * Returns a new FormulaManager, with similar features to this
+	 * FormulaManager, but with the FunctionLibrary swapped for the given
+	 * FunctionLibrary.
+	 * 
+	 * @param ftnLib
+	 *            The FunctionLibrary to be included in the returned
+	 *            FormulaManager
+	 * @return a new FormulaManager, with similar features to this
+	 *         FormulaManager, but with the FunctionLibrary swapped for the
+	 *         given FunctionLibrary
+	 */
 	public FormulaManager swapFunctionLibrary(FunctionLibrary ftnLib)
 	{
 		return new FormulaManager(ftnLib, opLibrary, varLibrary, results);

@@ -25,8 +25,19 @@ import pcgen.base.formula.semantics.FormulaInvalidReport;
 import pcgen.base.formula.semantics.FormulaValidity;
 import pcgen.base.formula.semantics.SemanticsKey;
 
-public class KeyUtilities
+/**
+ * KeyUtilities is a storage location for keys within the PCGen-Formula
+ * infrastructure.
+ * 
+ * External storage helps avoid dependency loops.
+ */
+public final class KeyUtilities
 {
+
+	private KeyUtilities()
+	{
+		//Do not instantiate utility class
+	}
 
 	public static final DependencyKey<ArgumentDependencyManager> DEP_ARGUMENT =
 			new DependencyKey<>();

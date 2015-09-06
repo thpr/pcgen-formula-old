@@ -102,6 +102,7 @@ public class IfFunction implements Function
 		 * Format is arbitrary - but capture now - just need True and False to
 		 * match, see below
 		 */
+		@SuppressWarnings("PMD.PrematureDeclaration")
 		Class<?> tFormat = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 
 		//If False node

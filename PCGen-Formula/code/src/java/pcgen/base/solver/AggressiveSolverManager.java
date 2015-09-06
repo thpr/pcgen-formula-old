@@ -244,8 +244,11 @@ public class AggressiveSolverManager
 				 * operations risk (2) Process can still write to cache knowing
 				 * ID
 				 */
-				graph.addEdge(new DefaultDirectionalGraphEdge<VariableID<?>>(
-					depID, varID));
+				@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+				DefaultDirectionalGraphEdge<VariableID<?>> edge =
+						new DefaultDirectionalGraphEdge<VariableID<?>>(depID,
+							varID);
+				graph.addEdge(edge);
 			}
 		}
 		//Cast above effectively enforced here

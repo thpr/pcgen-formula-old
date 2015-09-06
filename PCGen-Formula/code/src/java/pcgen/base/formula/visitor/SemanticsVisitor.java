@@ -528,6 +528,7 @@ public class SemanticsVisitor implements FormulaParserVisitor
 			return semantics;
 		}
 		//Need to capture now
+		@SuppressWarnings("PMD.PrematureDeclaration")
 		Class<?> format1 = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 
 		Node child2 = node.jjtGetChild(1);

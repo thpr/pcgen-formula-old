@@ -289,6 +289,7 @@ public class Solver<T>
 				for (Modifier<T> modifier : modifierList.getListFor(priority))
 				{
 					stepResult = modifier.process(stepResult, scopeInfo);
+					@SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
 					ProcessStep<T> step =
 							new ProcessStep<T>(modifier, sources.get(modifier),
 								stepResult);
