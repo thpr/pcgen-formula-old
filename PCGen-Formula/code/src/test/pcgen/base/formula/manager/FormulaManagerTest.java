@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.parse.FormulaParser;
@@ -31,7 +32,6 @@ import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.semantics.FormulaSemantics;
 import pcgen.base.formula.util.FormulaUtilities;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleVariableStore;
 
@@ -131,12 +131,11 @@ public class FormulaManagerTest extends TestCase
 		FormulaManager manager =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
-		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
+		FormatManager<Number> numberManager = new NumberManager();
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		try
 		{
-			manager.isValid(null, varScope, nsDef);
+			manager.isValid(null, varScope, numberManager);
 			fail("isValid should reject null root");
 		}
 		catch (IllegalArgumentException e)
@@ -149,7 +148,7 @@ public class FormulaManagerTest extends TestCase
 					new FormulaParser(new StringReader("myvar+yourvar"))
 						.query();
 			manager.isValid(fp, varScope, null);
-			fail("isValid should reject null namespace");
+			fail("isValid should reject null FormatManager");
 		}
 		catch (ParseException e)
 		{
@@ -164,7 +163,7 @@ public class FormulaManagerTest extends TestCase
 			SimpleNode fp =
 					new FormulaParser(new StringReader("myvar+yourvar"))
 						.query();
-			manager.isValid(fp, null, nsDef);
+			manager.isValid(fp, null, numberManager);
 			fail("isValid should reject null scope");
 		}
 		catch (ParseException e)
@@ -179,7 +178,7 @@ public class FormulaManagerTest extends TestCase
 		try
 		{
 			SimpleNode fp = new FormulaParser(new StringReader("4==1")).query();
-			FormulaSemantics valid = manager.isValid(fp, varScope, nsDef);
+			FormulaSemantics valid = manager.isValid(fp, varScope, numberManager);
 			assertFalse("Should reject Boolean return value",
 				valid.getInfo(KeyUtilities.SEM_VALID).isValid());
 		}
@@ -187,13 +186,13 @@ public class FormulaManagerTest extends TestCase
 		{
 			fail(e.getMessage());
 		}
-		varLibrary.assertLegalVariableID(varScope, nsDef, "myvar");
+		varLibrary.assertLegalVariableID("myvar", varScope, numberManager);
 		try
 		{
 			SimpleNode fp =
 					new FormulaParser(new StringReader("myvar+yourvar"))
 						.query();
-			FormulaSemantics valid = manager.isValid(fp, varScope, nsDef);
+			FormulaSemantics valid = manager.isValid(fp, varScope, numberManager);
 			assertFalse("Should reject missing var",
 				valid.getInfo(KeyUtilities.SEM_VALID).isValid());
 		}
@@ -201,13 +200,13 @@ public class FormulaManagerTest extends TestCase
 		{
 			fail(e.getMessage());
 		}
-		varLibrary.assertLegalVariableID(varScope, nsDef, "yourvar");
+		varLibrary.assertLegalVariableID("yourvar", varScope, numberManager);
 		try
 		{
 			SimpleNode fp =
 					new FormulaParser(new StringReader("myvar+yourvar"))
 						.query();
-			FormulaSemantics valid = manager.isValid(fp, varScope, nsDef);
+			FormulaSemantics valid = manager.isValid(fp, varScope, numberManager);
 			assertTrue(valid.getInfo(KeyUtilities.SEM_VALID).isValid());
 		}
 		catch (ParseException e)

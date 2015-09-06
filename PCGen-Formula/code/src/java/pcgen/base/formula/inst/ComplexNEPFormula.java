@@ -19,6 +19,7 @@ package pcgen.base.formula.inst;
 
 import java.io.StringReader;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.manager.FormulaManager;
@@ -27,7 +28,6 @@ import pcgen.base.formula.parse.FormulaParser;
 import pcgen.base.formula.parse.ParseException;
 import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.semantics.FormulaSemantics;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 
 /**
@@ -116,7 +116,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 *             if the given ScopeInformation is null.
 	 */
 	@Override
-	public T resolve(ScopeInformation<T> scopeInfo)
+	public T resolve(ScopeInformation scopeInfo)
 	{
 		if (scopeInfo == null)
 		{
@@ -149,7 +149,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 *             if the given ScopeInformation is null
 	 */
 	@Override
-	public void getDependencies(ScopeInformation<T> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager depManager)
 	{
 		if (scopeInfo == null)
@@ -169,19 +169,18 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	 * Returns the FormulaSemantics for this NEPFormula.
 	 * 
 	 * @see pcgen.base.formula.inst.NEPFormula#isValid(pcgen.base.formula.manager.FormulaManager,
-	 *      pcgen.base.formula.base.LegalScope,
-	 *      pcgen.base.formula.variable.NamespaceDefinition)
+	 *      pcgen.base.formula.base.LegalScope, pcgen.base.format.FormatManager)
 	 */
 	@Override
 	public FormulaSemantics isValid(FormulaManager fm, LegalScope legalScope,
-		NamespaceDefinition<T> namespaceDef)
+		FormatManager<T> formatManager)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot resolve formula with null FormulaManager");
 		}
-		return fm.isValid(root, legalScope, namespaceDef);
+		return fm.isValid(root, legalScope, formatManager);
 	}
 
 	/**

@@ -105,6 +105,9 @@ public class SolverFactory
 	 * values previously provided to the addSolverType() method of the
 	 * SolverFactory.
 	 * 
+	 * @param formatManager
+	 *            The FormatManager used to manage items in this generated
+	 *            Solver
 	 * @param scopeInfo
 	 *            The ScopeInformation to be used by the Solver to be
 	 *            constructed
@@ -115,23 +118,22 @@ public class SolverFactory
 	 *             given format has been provided with the addSolverType method
 	 *             on SolverFactory
 	 */
-	public <T> Solver<T> getSolver(ScopeInformation<T> scopeInfo)
+	public <T> Solver<T> getSolver(FormatManager<T> formatManager,
+		ScopeInformation scopeInfo)
 	{
 		if (scopeInfo == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot create Solver: Scope Information cannot be null");
 		}
-		FormatManager<T> varFormat =
-				scopeInfo.getNamespaceDefinition().getFormatManager();
 		@SuppressWarnings("unchecked")
 		Modifier<T> defaultModifier =
-				(Modifier<T>) defaultModifierMap.get(varFormat
+				(Modifier<T>) defaultModifierMap.get(formatManager
 					.getManagedClass());
 		if (defaultModifier == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot create Solver of format " + varFormat
+				"Cannot create Solver of format " + formatManager
 					+ " because no default was provided for that format");
 		}
 		return new Solver<T>(defaultModifier, scopeInfo);

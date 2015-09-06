@@ -26,13 +26,9 @@ import org.junit.Test;
 
 import pcgen.base.calculation.ArrayComponentModifier;
 import pcgen.base.calculation.Modifier;
-import pcgen.base.format.ArrayFormatManager;
-import pcgen.base.format.FormatManager;
-import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.ScopeInformation;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleScopeInstance;
 import pcgen.base.solver.testsupport.AbstractModifier;
@@ -40,8 +36,7 @@ import pcgen.base.solver.testsupport.SolverUtilities;
 
 public class SolverTest extends TestCase
 {
-	private ScopeInformation<Number> si;
-	private ScopeInformation<Number[]> asi;
+	private ScopeInformation si;
 
 	@Override
 	protected void setUp() throws Exception
@@ -51,17 +46,7 @@ public class SolverTest extends TestCase
 		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		SimpleScopeInstance scopeInst =
 				new SimpleScopeInstance(null, globalScope);
-
-		FormatManager<Number> numberManager = new NumberManager();
-		NamespaceDefinition<Number> varDef =
-				new NamespaceDefinition<Number>(numberManager, "VAR");
-		si = new ScopeInformation<>(fm, scopeInst, varDef);
-
-		FormatManager<Number[]> arrayManager =
-				new ArrayFormatManager<>(numberManager, ',');
-		NamespaceDefinition<Number[]> aDef =
-				new NamespaceDefinition<Number[]>(arrayManager, "NUMARRAY");
-		asi = new ScopeInformation<>(fm, scopeInst, aDef);
+		si = new ScopeInformation(fm, scopeInst);
 	}
 
 	@Test
@@ -162,25 +147,6 @@ public class SolverTest extends TestCase
 		{
 			//ok
 		}
-		//CONSIDER is this worth enforcing?
-		//		plugin.modifier.gridpoint.SetModifier bad =
-		//				new plugin.modifier.gridpoint.SetModifier();
-		//		NamespaceDefinition<GridPoint> vtd =
-		//				new NamespaceDefinition<GridPoint>(GridPoint.class, "AREA");
-		//		ScopedNamespaceDefinition<GridPoint> stDef =
-		//				sl.defineGlobalScopeDefinition(vtd);
-		//		bad.getModifier(0, "6,6", null, stDef);
-		//		try
-		//		{
-		//			//have to be bad about generics to even get this to be set up to fail
-		//			Modifier m = bad;
-		//			solver.removeModifier(m, new Object());
-		//			fail("wrong type must be rejected");
-		//		}
-		//		catch (IllegalArgumentException e)
-		//		{
-		//			//ok
-		//		}
 	}
 
 	@Test
@@ -321,7 +287,7 @@ public class SolverTest extends TestCase
 	public void testArrayMod()
 	{
 		Solver<Number[]> solver =
-				new Solver<Number[]>(AbstractModifier.setEmptyArray(0), asi);
+				new Solver<Number[]>(AbstractModifier.setEmptyArray(0), si);
 		assertTrue(Arrays.equals(new Number[]{}, solver.process()));
 		Modifier<Number[]> add1 = AbstractModifier.addToArray(1, 10);
 		solver.addModifier(add1, this);

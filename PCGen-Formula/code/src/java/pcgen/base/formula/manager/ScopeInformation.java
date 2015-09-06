@@ -20,15 +20,14 @@ package pcgen.base.formula.manager;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.StaticVisitor;
 
 /**
  * ScopeInformation exists to simplify those things that require context of a
- * formula to be resolved (legal functions, variables (which pulls in namespace
- * and scope)). This provides a convenient, single location for consolidation of
+ * formula to be resolved (legal functions, variables (which pulls in format and
+ * scope)). This provides a convenient, single location for consolidation of
  * these capabilities (and thus keeps the number of parameters that have to be
  * passed around to a reasonable level).
  * 
@@ -37,11 +36,8 @@ import pcgen.base.formula.visitor.StaticVisitor;
  * instantiated but then effectively cached as long as that ScopeInformation is
  * reused - especially valuable for things like the global context which in the
  * future we can create once for the PC and never have to recreate...).
- * 
- * @param <T>
- *            The Format (class) of object processed by this ScopeInformation
  */
-public class ScopeInformation<T>
+public class ScopeInformation
 {
 
 	/**
@@ -70,49 +66,32 @@ public class ScopeInformation<T>
 	private final FormulaManager fm;
 
 	/**
-	 * The scope namespace definition in which the formula resides, in order to
-	 * validate if variables used in the formula are legal.
-	 */
-	private final NamespaceDefinition<T> namespaceDef;
-
-	/**
 	 * The Scope in which the formula resides.
 	 */
 	private final ScopeInstance varScope;
 
 	/**
-	 * Constructs a new from the provided FormulaManager, NamespaceDefinition,
-	 * and ScopeInstance.
+	 * Constructs a new from the provided FormulaManager and ScopeInstance.
 	 * 
 	 * @param fm
 	 *            The FormulaManager for this ScopeInformation
 	 * @param scopeInst
 	 *            The ScopeInstance for parsed trees processed through this
 	 *            ScopeInformation
-	 * @param namespaceDef
-	 *            The NamespaceDefinition for parsed trees processed through
-	 *            this ScopeInformation
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
-	public ScopeInformation(FormulaManager fm, ScopeInstance scopeInst,
-		NamespaceDefinition<T> namespaceDef)
+	public ScopeInformation(FormulaManager fm, ScopeInstance scopeInst)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException("FormulaManager cannot be null");
-		}
-		if (namespaceDef == null)
-		{
-			throw new IllegalArgumentException(
-				"NamespaceDefinition cannot be null");
 		}
 		if (scopeInst == null)
 		{
 			throw new IllegalArgumentException("ScopeInstance cannot be null");
 		}
 		this.fm = fm;
-		this.namespaceDef = namespaceDef;
 		this.varScope = scopeInst;
 	}
 
@@ -164,7 +143,7 @@ public class ScopeInformation<T>
 		}
 		if (evaluateVisitor == null)
 		{
-			evaluateVisitor = new EvaluateVisitor(fm, varScope, namespaceDef);
+			evaluateVisitor = new EvaluateVisitor(fm, varScope);
 		}
 		return evaluateVisitor.visit(root, null);
 	}
@@ -200,7 +179,7 @@ public class ScopeInformation<T>
 		}
 		if (variableVisitor == null)
 		{
-			variableVisitor = new DependencyVisitor(fm, varScope, namespaceDef);
+			variableVisitor = new DependencyVisitor(fm, varScope);
 		}
 		variableVisitor.visit(root, fdm);
 	}
@@ -218,16 +197,6 @@ public class ScopeInformation<T>
 	}
 
 	/**
-	 * Returns the NamespaceDefinition underlying this ScopeInformation.
-	 * 
-	 * @return The NamespaceDefinition underlying this ScopeInformation
-	 */
-	public NamespaceDefinition<T> getNamespaceDefinition()
-	{
-		return namespaceDef;
-	}
-
-	/**
 	 * Returns the FormulaManager used to store valid functions and other info
 	 * for this ScopeInformation.
 	 * 
@@ -238,11 +207,4 @@ public class ScopeInformation<T>
 	{
 		return fm;
 	}
-	
-	public ScopeInformation<?> getComponentScope()
-	{
-		NamespaceDefinition<?> component = namespaceDef.getComponentNamespace();
-		return new ScopeInformation<>(fm, varScope, component);
-	}
-
 }

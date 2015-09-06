@@ -20,6 +20,8 @@ package pcgen.base.formula.testsupport;
 import java.util.List;
 
 import junit.framework.TestCase;
+import pcgen.base.format.BooleanManager;
+import pcgen.base.format.FormatManager;
 import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.base.ScopeInstance;
@@ -38,7 +40,6 @@ import pcgen.base.formula.semantics.FormulaSemantics;
 import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
 import pcgen.base.formula.semantics.FormulaValidity;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleVariableStore;
 import pcgen.base.formula.variable.VariableID;
@@ -51,7 +52,7 @@ public abstract class AbstractFormulaTestCase extends TestCase
 {
 
 	private ScopeInstanceFactory instanceFactory;
-	private SemanticsVisitor valid;
+	protected SemanticsVisitor valid;
 	protected FunctionLibrary ftnLibrary;
 	protected OperatorLibrary opLibrary;
 	private StaticVisitor staticVisitor;
@@ -62,8 +63,8 @@ public abstract class AbstractFormulaTestCase extends TestCase
 	protected ScopeInstance globalScopeInst;
 	private LegalScopeLibrary scopeLibrary;
 	protected VariableLibrary varLibrary;
-	NamespaceDefinition<Number> varNSdef = new NamespaceDefinition<Number>(
-		new NumberManager(), "VAR");
+	private FormatManager<Number> numberManager = new NumberManager();
+	private FormatManager<Boolean> booleanManager = new BooleanManager();
 
 	@Override
 	protected void setUp() throws Exception
@@ -80,9 +81,9 @@ public abstract class AbstractFormulaTestCase extends TestCase
 		store = new SimpleVariableStore();
 		FormulaManager fm =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary, store);
-		valid = new SemanticsVisitor(fm, globalScope, varNSdef);
-		eval = new EvaluateVisitor(fm, globalScopeInst, varNSdef);
-		varCapture = new DependencyVisitor(fm, globalScopeInst, varNSdef);
+		valid = new SemanticsVisitor(fm, globalScope);
+		eval = new EvaluateVisitor(fm, globalScopeInst);
+		varCapture = new DependencyVisitor(fm, globalScopeInst);
 	}
 
 	public void isValid(String formula, SimpleNode node)
@@ -160,8 +161,14 @@ public abstract class AbstractFormulaTestCase extends TestCase
 
 	protected VariableID<Number> getVariable(String formula)
 	{
-		varLibrary.assertLegalVariableID(globalScope, varNSdef, formula);
-		return varLibrary.getVariableID(globalScopeInst, varNSdef, formula);
+		varLibrary.assertLegalVariableID(formula, globalScope, numberManager);
+		return (VariableID<Number>) varLibrary.getVariableID(globalScopeInst, formula);
+	}
+
+	protected VariableID<Boolean> getBooleanVariable(String formula)
+	{
+		varLibrary.assertLegalVariableID(formula, globalScope, booleanManager);
+		return (VariableID<Boolean>) varLibrary.getVariableID(globalScopeInst, formula);
 	}
 
 }

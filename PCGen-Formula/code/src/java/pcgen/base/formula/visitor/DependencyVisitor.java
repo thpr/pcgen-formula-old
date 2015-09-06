@@ -41,7 +41,6 @@ import pcgen.base.formula.parse.FormulaParserVisitor;
 import pcgen.base.formula.parse.Node;
 import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.VariableID;
 
 /**
@@ -61,12 +60,6 @@ public class DependencyVisitor implements FormulaParserVisitor
 	private final FormulaManager fm;
 
 	/**
-	 * The scope namespace definition in which the formula resides, in order to
-	 * validate if variables used in the formula are legal.
-	 */
-	private final NamespaceDefinition<?> namespaceDef;
-
-	/**
 	 * The Scope in which the formula resides.
 	 */
 	private final ScopeInstance scopeInst;
@@ -81,30 +74,20 @@ public class DependencyVisitor implements FormulaParserVisitor
 	 * @param scopeInst
 	 *            The ScopeInstance used to check for dependencies within the
 	 *            formula
-	 * @param namespaceDef
-	 *            The NamespaceDefinition used to check for dependencies within
-	 *            the formula
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null
 	 */
-	public DependencyVisitor(FormulaManager fm, ScopeInstance scopeInst,
-		NamespaceDefinition<?> namespaceDef)
+	public DependencyVisitor(FormulaManager fm, ScopeInstance scopeInst)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException("FormulaManager cannot be null");
-		}
-		if (namespaceDef == null)
-		{
-			throw new IllegalArgumentException(
-				"NamespaceDefinition cannot be null");
 		}
 		if (scopeInst == null)
 		{
 			throw new IllegalArgumentException("ScopeInstance cannot be null");
 		}
 		this.fm = fm;
-		this.namespaceDef = namespaceDef;
 		this.scopeInst = scopeInst;
 	}
 
@@ -252,8 +235,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 		if (varManager != null)
 		{
 			VariableID<?> id =
-					fm.getFactory().getVariableID(scopeInst, namespaceDef,
-						node.getText());
+					fm.getFactory().getVariableID(scopeInst, node.getText());
 			if (id != null)
 			{
 				varManager.addVariable(id);
@@ -340,18 +322,6 @@ public class DependencyVisitor implements FormulaParserVisitor
 	public ScopeInstance getScopeInstance()
 	{
 		return scopeInst;
-	}
-
-	/**
-	 * Returns the NamespaceDefinition in which this DependencyVisitor is
-	 * operating.
-	 * 
-	 * @return the NamespaceDefinition in which this DependencyVisitor is
-	 *         operating
-	 */
-	public NamespaceDefinition<?> getNamespaceDefinition()
-	{
-		return namespaceDef;
 	}
 
 	/**

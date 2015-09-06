@@ -73,15 +73,14 @@ public final class FormulaCalculation<T> extends AbstractNEPCalculation<T>
 	 *      pcgen.base.formula.manager.ScopeInformation)
 	 */
 	@Override
-	public T process(final T input, ScopeInformation<T> scopeInfo)
+	public T process(final T input, ScopeInformation scopeInfo)
 	{
 		FormulaManager fManager = scopeInfo.getFormulaManager();
 		FunctionLibrary valueLibrary =
 				new ValueWrappingLibrary(fManager.getLibrary(), input);
 		FormulaManager withValue = fManager.swapFunctionLibrary(valueLibrary);
-		ScopeInformation<T> stepInfo =
-				new ScopeInformation<T>(withValue, scopeInfo.getScope(),
-					scopeInfo.getNamespaceDefinition());
+		ScopeInformation stepInfo =
+				new ScopeInformation(withValue, scopeInfo.getScope());
 		T resolved = formula.resolve(stepInfo);
 		return getBasicCalculation().process(input, resolved);
 	}
@@ -91,7 +90,7 @@ public final class FormulaCalculation<T> extends AbstractNEPCalculation<T>
 	 *      pcgen.base.formula.dependency.DependencyManager)
 	 */
 	@Override
-	public void getDependencies(ScopeInformation<T> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager fdm)
 	{
 		formula.getDependencies(scopeInfo, fdm);

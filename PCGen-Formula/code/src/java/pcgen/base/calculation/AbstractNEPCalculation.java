@@ -74,7 +74,7 @@ public abstract class AbstractNEPCalculation<T> implements NEPCalculation<T>
 	 *      pcgen.base.formula.dependency.DependencyManager)
 	 */
 	@Override
-	public void getDependencies(ScopeInformation<T> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager fdm)
 	{
 	}

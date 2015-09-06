@@ -17,11 +17,12 @@
  */
 package pcgen.base.solver;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.ScopeInformation;
-import pcgen.base.formula.variable.NamespaceDefinition;
-import pcgen.base.util.DoubleKeyMap;
 
 /**
  * ScopeDatabase is a utility class providing a database that maps VariableScope
@@ -31,17 +32,16 @@ public final class ScopeDatabase
 {
 
 	/**
-	 * The map that associates VariableScope & NamespaceDefintion objects to
-	 * ScopeInformation objects
+	 * The map that associates VariableScope objects to ScopeInformation objects
 	 */
-	private DoubleKeyMap<ScopeInstance, NamespaceDefinition<?>, ScopeInformation<?>> map =
-			new DoubleKeyMap<ScopeInstance, NamespaceDefinition<?>, ScopeInformation<?>>();
+	private Map<ScopeInstance, ScopeInformation> map =
+			new HashMap<ScopeInstance, ScopeInformation>();
 
 	/**
 	 * Returns the ScopeInformation Object for the given VariableScope.
 	 * 
 	 * If a ScopeInformation has not yet been created, a new ScopeInformation is
-	 * build and initialized with the given VariableScope and FormulaManager.
+	 * build and initialized with the given VariableScope.
 	 * 
 	 * @param fm
 	 *            The FormulaManager to be used to initialize a new
@@ -49,21 +49,16 @@ public final class ScopeDatabase
 	 * @param scope
 	 *            The VariableScope for which the ScopeInformation should be
 	 *            returned
-	 * @param nsDef
-	 *            The NamespaceDefinition for which the ScopeInformation should
-	 *            be returned
 	 * @return The ScopeInformation for the given VariableScope
 	 */
-	public <T> ScopeInformation<T> getScopeInformation(FormulaManager fm,
-		ScopeInstance scope, NamespaceDefinition<T> nsDef)
+	public ScopeInformation getScopeInformation(FormulaManager fm,
+		ScopeInstance scope)
 	{
-		@SuppressWarnings("unchecked")
-		ScopeInformation<T> scopeInfo =
-				(ScopeInformation<T>) map.get(scope, nsDef);
+		ScopeInformation scopeInfo = map.get(scope);
 		if (scopeInfo == null)
 		{
-			scopeInfo = new ScopeInformation<>(fm, scope, nsDef);
-			map.put(scope, nsDef, scopeInfo);
+			scopeInfo = new ScopeInformation(fm, scope);
+			map.put(scope, scopeInfo);
 		}
 		return scopeInfo;
 	}

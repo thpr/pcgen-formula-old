@@ -54,7 +54,7 @@ public interface NEPCalculation<T> extends CalculationInfo<T>
 	 *            Formula that is contained by this NEPCalculation
 	 * @return The resulting value of the NEPCalculation
 	 */
-	public T process(T input, ScopeInformation<T> scopeInfo);
+	public T process(T input, ScopeInformation scopeInfo);
 
 	/**
 	 * Loads the dependencies for the NEPCalculation into the given
@@ -70,6 +70,6 @@ public interface NEPCalculation<T> extends CalculationInfo<T>
 	 *            The DependencyManager to be notified of dependencies for this
 	 *            NEPCalculation
 	 */
-	public void getDependencies(ScopeInformation<T> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager fdm);
 }

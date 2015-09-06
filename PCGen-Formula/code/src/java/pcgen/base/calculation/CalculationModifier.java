@@ -82,7 +82,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	 *      pcgen.base.formula.manager.ScopeInformation)
 	 */
 	@Override
-	public T process(T input, ScopeInformation<T> scopeInfo)
+	public T process(T input, ScopeInformation scopeInfo)
 	{
 		return toDo.process(input, scopeInfo);
 	}
@@ -101,7 +101,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	 *      pcgen.base.formula.dependency.DependencyManager)
 	 */
 	@Override
-	public void getDependencies(ScopeInformation<T> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager fdm)
 	{
 		toDo.getDependencies(scopeInfo, fdm);

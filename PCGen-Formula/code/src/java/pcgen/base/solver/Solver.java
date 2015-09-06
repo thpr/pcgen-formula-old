@@ -52,7 +52,7 @@ public class Solver<T>
 	 * The underlying ScopeInformation for this Solver, used when a Modifier
 	 * uses a Formula to determine the output value.
 	 */
-	private final ScopeInformation<T> scopeInfo;
+	private final ScopeInformation scopeInfo;
 
 	/**
 	 * The "starting" or "default" modifier for this Solver. This is the value
@@ -93,7 +93,7 @@ public class Solver<T>
 	 *            The underlying ScopeInformation for this Solver, used when a
 	 *            Modifier uses a Formula to determine the output value
 	 */
-	public Solver(Modifier<T> defaultModifier, ScopeInformation<T> scopeInfo)
+	public Solver(Modifier<T> defaultModifier, ScopeInformation scopeInfo)
 	{
 		if (defaultModifier == null)
 		{

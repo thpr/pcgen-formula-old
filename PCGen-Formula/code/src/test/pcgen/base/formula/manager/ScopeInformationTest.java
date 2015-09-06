@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.format.NumberManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.base.ScopeInstance;
@@ -34,7 +35,6 @@ import pcgen.base.formula.parse.ParseException;
 import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.util.FormulaUtilities;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleVariableStore;
 import pcgen.base.formula.variable.VariableID;
@@ -72,13 +72,12 @@ public class ScopeInformationTest extends TestCase
 		FormulaManager fManager =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
-		NamespaceDefinition<Number> varDef =
-				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
+		FormatManager<Number> numberManager = new NumberManager();
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		try
 		{
-			new ScopeInformation(null, null, null);
+			new ScopeInformation(null, null);
 			fail("nulls must be rejected");
 		}
 		catch (NullPointerException e)
@@ -91,20 +90,7 @@ public class ScopeInformationTest extends TestCase
 		}
 		try
 		{
-			new ScopeInformation(fManager, globalInst, null);
-			fail("null namespace must be rejected");
-		}
-		catch (NullPointerException e)
-		{
-			//ok
-		}
-		catch (IllegalArgumentException e)
-		{
-			//ok, too			
-		}
-		try
-		{
-			new ScopeInformation(fManager, null, varDef);
+			new ScopeInformation(fManager, null);
 			fail("null scope must be rejected");
 		}
 		catch (NullPointerException e)
@@ -117,7 +103,7 @@ public class ScopeInformationTest extends TestCase
 		}
 		try
 		{
-			new ScopeInformation(null, globalInst, varDef);
+			new ScopeInformation(null, globalInst);
 			fail("null manager must be rejected");
 		}
 		catch (NullPointerException e)
@@ -131,7 +117,7 @@ public class ScopeInformationTest extends TestCase
 		try
 		{
 			ScopeInformation scopeInfo =
-					new ScopeInformation(fManager, globalInst, varDef);
+					new ScopeInformation(fManager, globalInst);
 			assertEquals(fManager, scopeInfo.getFormulaManager());
 			assertEquals(globalInst, scopeInfo.getScope());
 		}
@@ -151,12 +137,10 @@ public class ScopeInformationTest extends TestCase
 		FormulaManager fManager =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
-		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
+		FormatManager<Number> numberManager = new NumberManager();
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
-		ScopeInformation scopeInfo =
-				new ScopeInformation(fManager, globalInst, nsDef);
+		ScopeInformation scopeInfo = new ScopeInformation(fManager, globalInst);
 		try
 		{
 			scopeInfo.getDependencies(null, depManager);
@@ -183,8 +167,8 @@ public class ScopeInformationTest extends TestCase
 			fail(e.getMessage());
 		}
 		FormulaUtilities.loadBuiltInOperators(opLibrary);
-		varLibrary.assertLegalVariableID(varScope, nsDef, "myvar");
-		varLibrary.assertLegalVariableID(varScope, nsDef, "yourvar");
+		varLibrary.assertLegalVariableID("myvar", varScope, numberManager);
+		varLibrary.assertLegalVariableID("yourvar", varScope, numberManager);
 		try
 		{
 			SimpleNode fp =
@@ -203,7 +187,8 @@ public class ScopeInformationTest extends TestCase
 			assertEquals(globalInst, v2.getScope());
 			fp = new FormulaParser(new StringReader("3+4")).query();
 			DependencyManager depManager2 = new DependencyManager();
-			VariableDependencyManager varManager2 = new VariableDependencyManager();
+			VariableDependencyManager varManager2 =
+					new VariableDependencyManager();
 			depManager2.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
 			scopeInfo.getDependencies(fp, depManager2);
 			assertEquals(0, varManager2.getVariables().size());
@@ -220,12 +205,10 @@ public class ScopeInformationTest extends TestCase
 		FormulaManager fManager =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
-		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
+		FormatManager<Number> numberManager = new NumberManager();
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
-		ScopeInformation scopeInfo =
-				new ScopeInformation(fManager, globalInst, nsDef);
+		ScopeInformation scopeInfo = new ScopeInformation(fManager, globalInst);
 		try
 		{
 			scopeInfo.isStatic(null);
@@ -236,8 +219,8 @@ public class ScopeInformationTest extends TestCase
 			//yep
 		}
 		FormulaUtilities.loadBuiltInOperators(opLibrary);
-		varLibrary.assertLegalVariableID(varScope, nsDef, "myvar");
-		varLibrary.assertLegalVariableID(varScope, nsDef, "yourvar");
+		varLibrary.assertLegalVariableID("myvar", varScope, numberManager);
+		varLibrary.assertLegalVariableID("yourvar", varScope, numberManager);
 		try
 		{
 			SimpleNode fp =
@@ -259,12 +242,10 @@ public class ScopeInformationTest extends TestCase
 		FormulaManager fManager =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
-		NamespaceDefinition<Number> nsDef =
-				new NamespaceDefinition<Number>(new NumberManager(), "VAR");
+		FormatManager<Number> numberManager = new NumberManager();
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
-		ScopeInformation scopeInfo =
-				new ScopeInformation(fManager, globalInst, nsDef);
+		ScopeInformation scopeInfo = new ScopeInformation(fManager, globalInst);
 		try
 		{
 			scopeInfo.evaluate(null);
@@ -275,8 +256,8 @@ public class ScopeInformationTest extends TestCase
 			//yep
 		}
 		FormulaUtilities.loadBuiltInOperators(opLibrary);
-		varLibrary.assertLegalVariableID(varScope, nsDef, "myvar");
-		varLibrary.assertLegalVariableID(varScope, nsDef, "yourvar");
+		varLibrary.assertLegalVariableID("myvar", varScope, numberManager);
+		varLibrary.assertLegalVariableID("yourvar", varScope, numberManager);
 		try
 		{
 			SimpleNode fp;

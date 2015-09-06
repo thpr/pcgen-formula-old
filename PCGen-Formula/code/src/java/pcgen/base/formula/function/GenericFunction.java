@@ -31,7 +31,6 @@ import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.semantics.FormulaSemantics;
 import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.SemanticsVisitor;
@@ -119,9 +118,8 @@ public class GenericFunction implements Function
 	{
 		FormulaManager withArgs = getManager(args, visitor.getFormulaManager());
 		LegalScope legalScope = visitor.getLegalScope();
-		NamespaceDefinition<?> namespaceDef = visitor.getNamespaceDefinition();
 		SemanticsVisitor subVisitor =
-				new SemanticsVisitor(withArgs, legalScope, namespaceDef);
+				new SemanticsVisitor(withArgs, legalScope);
 		//Need to save original to handle "embedded" GenericFunction objects properly
 		@SuppressWarnings("PMD.PrematureDeclaration")
 		ArgumentDependencyManager original =
@@ -168,9 +166,7 @@ public class GenericFunction implements Function
 	{
 		FormulaManager withArgs = getManager(args, visitor.getFormulaManager());
 		ScopeInstance scopeInstance = visitor.getScopeInstance();
-		NamespaceDefinition<?> namespaceDef = visitor.getNamespaceDefinition();
-		EvaluateVisitor ev =
-				new EvaluateVisitor(withArgs, scopeInstance, namespaceDef);
+		EvaluateVisitor ev = new EvaluateVisitor(withArgs, scopeInstance);
 		return ev.visit(root, null);
 	}
 
@@ -217,9 +213,7 @@ public class GenericFunction implements Function
 	{
 		FormulaManager withArgs = getManager(args, visitor.getFormulaManager());
 		ScopeInstance scopeInstance = visitor.getScopeInstance();
-		NamespaceDefinition<?> namespaceDef = visitor.getNamespaceDefinition();
-		DependencyVisitor dcv =
-				new DependencyVisitor(withArgs, scopeInstance, namespaceDef);
+		DependencyVisitor dcv = new DependencyVisitor(withArgs, scopeInstance);
 		dcv.visit(root, fdm);
 	}
 

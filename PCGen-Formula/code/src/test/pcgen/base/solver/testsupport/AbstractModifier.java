@@ -27,7 +27,8 @@ import pcgen.base.lang.NumberUtilities;
 public abstract class AbstractModifier<T> implements Modifier<T>
 {
 	private static final Class<Number> NUMBER_CLASS = Number.class;
-	private static final Class<Number[]> NUMBER_ARR_CLASS = (Class<Number[]>) new Number[]{}.getClass();
+	private static final Class<Number[]> NUMBER_ARR_CLASS =
+			(Class<Number[]>) new Number[]{}.getClass();
 
 	private final Class<T> format;
 	private final int priority;
@@ -46,7 +47,7 @@ public abstract class AbstractModifier<T> implements Modifier<T>
 	}
 
 	@Override
-	public void getDependencies(ScopeInformation<T> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager fdm)
 	{
 	}
@@ -81,15 +82,17 @@ public abstract class AbstractModifier<T> implements Modifier<T>
 		return "Ignored";
 	}
 
-	public static AbstractModifier<Number[]> addToArray(final int value, int priority)
+	public static AbstractModifier<Number[]> addToArray(final int value,
+		int priority)
 	{
 		return new AbstractModifier<Number[]>(0, NUMBER_ARR_CLASS, priority)
 		{
 			@Override
-			public Number[] process(Number[] input,
-				ScopeInformation<Number[]> scopeInfo)
+			public Number[] process(Number[] input, ScopeInformation scopeInfo)
 			{
-				Number[] newArray = (Number[]) Array.newInstance(NUMBER_CLASS, input.length + 1);
+				Number[] newArray =
+						(Number[]) Array.newInstance(NUMBER_CLASS,
+							input.length + 1);
 				System.arraycopy(input, 0, newArray, 0, input.length);
 				newArray[newArray.length - 1] = value;
 				return newArray;
@@ -102,21 +105,20 @@ public abstract class AbstractModifier<T> implements Modifier<T>
 		return new AbstractModifier<Number[]>(0, NUMBER_ARR_CLASS, priority)
 		{
 			@Override
-			public Number[] process(Number[] input,
-				ScopeInformation<Number[]> scopeInfo)
+			public Number[] process(Number[] input, ScopeInformation scopeInfo)
 			{
 				return new Number[]{};
 			}
 		};
 	}
 
-	public static AbstractModifier<Number> setNumber(final int value, int priority)
+	public static AbstractModifier<Number> setNumber(final int value,
+		int priority)
 	{
 		return new AbstractModifier<Number>(0, NUMBER_CLASS, priority)
 		{
 			@Override
-			public Number process(Number input,
-				ScopeInformation<Number> scopeInfo)
+			public Number process(Number input, ScopeInformation scopeInfo)
 			{
 				return value;
 			}
@@ -128,21 +130,20 @@ public abstract class AbstractModifier<T> implements Modifier<T>
 		return new AbstractModifier<String>(0, String.class)
 		{
 			@Override
-			public String process(String input,
-				ScopeInformation<String> scopeInfo)
+			public String process(String input, ScopeInformation scopeInfo)
 			{
 				return "Something";
 			}
 		};
 	}
 
-	public static AbstractModifier<Number> multiply(final int value, int priority)
+	public static AbstractModifier<Number> multiply(final int value,
+		int priority)
 	{
 		return new AbstractModifier<Number>(1, NUMBER_CLASS, priority)
 		{
 			@Override
-			public Number process(Number input,
-				ScopeInformation<Number> scopeInfo)
+			public Number process(Number input, ScopeInformation scopeInfo)
 			{
 				return NumberUtilities.multiply(input, value);
 			}
@@ -154,8 +155,7 @@ public abstract class AbstractModifier<T> implements Modifier<T>
 		return new AbstractModifier<Number>(2, NUMBER_CLASS, priority)
 		{
 			@Override
-			public Number process(Number input,
-				ScopeInformation<Number> scopeInfo)
+			public Number process(Number input, ScopeInformation scopeInfo)
 			{
 				return NumberUtilities.add(input, value);
 			}

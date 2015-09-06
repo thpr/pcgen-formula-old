@@ -23,6 +23,8 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import pcgen.base.format.BooleanManager;
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.dependency.VariableDependencyManager;
 import pcgen.base.formula.operator.number.NumberEquals;
@@ -269,27 +271,27 @@ public class IfFunctionTest extends AbstractFormulaTestCase
 		}
 	}
 
-	//This needs a way to grab from another namespace :/
-//	@Test
-//	public void testVariable1()
-//	{
-//		NamespaceDefinition<Boolean>flagNSdef = new NamespaceDefinition<Boolean>(
-//				Boolean.class, "FLAG");
-//		varLibrary.assertLegalVariableID(globalScope, flagNSdef, "a");
-//		VariableID<Boolean> variable =
-//				varLibrary.getVariableID(globalScopeInst, flagNSdef, "a");
-//		store.put(variable, true);
-//		String formula = "if(a, 4, 5)";
-//		SimpleNode node = TestUtilities.doParse(formula);
-//		isValid(formula, node);
-//		isStatic(formula, node, false);
-//		SimpleVariableDependencyManager fdm = new SimpleVariableDependencyManager();
-//		varCapture.visit(node, fdm);
-//		List<VariableID<?>> vars = fdm.getVariables();
-//		assertEquals(1, vars.size());
-//		VariableID<?> var = vars.get(0);
-//		assertEquals("a", var.getName());
-//	}
+	@Test
+	public void testVariable1()
+	{
+		FormatManager<Boolean> booleanManager = new BooleanManager();
+		varLibrary.assertLegalVariableID("a", globalScope, booleanManager);
+		VariableID<Boolean> variable =
+				(VariableID<Boolean>) varLibrary.getVariableID(globalScopeInst, "a");
+		store.put(variable, true);
+		String formula = "if(a, 4, 5)";
+		SimpleNode node = TestUtilities.doParse(formula);
+		isValid(formula, node);
+		isStatic(formula, node, false);
+		DependencyManager depManager = new DependencyManager();
+		VariableDependencyManager varManager = new VariableDependencyManager();
+		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
+		varCapture.visit(node, depManager);
+		List<VariableID<?>> vars = varManager.getVariables();
+		assertEquals(1, vars.size());
+		VariableID<?> var = vars.get(0);
+		assertEquals("a", var.getName());
+	}
 
 	@Test
 	public void testVariable2()

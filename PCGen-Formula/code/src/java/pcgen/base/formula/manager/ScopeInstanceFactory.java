@@ -52,8 +52,7 @@ public class ScopeInstanceFactory
 			new HashMap<VarScoped, ScopeInstance>();
 
 	/**
-	 * Contains a map from the given namespaces to the global ScopeInstance for
-	 * that namespace.
+	 * Contains a map from a format to the global ScopeInstance for that format.
 	 */
 	private Map<String, ScopeInstance> globals =
 			new HashMap<String, ScopeInstance>();

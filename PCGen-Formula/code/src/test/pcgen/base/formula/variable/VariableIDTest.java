@@ -29,6 +29,7 @@ import pcgen.base.formula.manager.ScopeInstanceFactory;
 public class VariableIDTest extends TestCase
 {
 
+	NumberManager numberManager = new NumberManager();
 	private ScopeInstanceFactory instanceFactory = new ScopeInstanceFactory(null);
 
 	@Test
@@ -47,12 +48,11 @@ public class VariableIDTest extends TestCase
 		{
 			//ok, too			
 		}
-		NamespaceDefinition vtd = new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		try
 		{
-			new VariableID(globalInst, vtd, null);
+			new VariableID(globalInst, numberManager, null);
 			fail("null name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -66,7 +66,7 @@ public class VariableIDTest extends TestCase
 		try
 		{
 			new VariableID(globalInst, null, "VAR");
-			fail("null namespace must be rejected");
+			fail("null FormatManager must be rejected");
 		}
 		catch (NullPointerException e)
 		{
@@ -78,7 +78,7 @@ public class VariableIDTest extends TestCase
 		}
 		try
 		{
-			new VariableID(null, vtd, "VAR");
+			new VariableID(null, numberManager, "VAR");
 			fail("null scope must be rejected");
 		}
 		catch (NullPointerException e)
@@ -91,7 +91,7 @@ public class VariableIDTest extends TestCase
 		}
 		try
 		{
-			new VariableID(globalInst, vtd, "");
+			new VariableID(globalInst, numberManager, "");
 			fail("empty name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -104,7 +104,7 @@ public class VariableIDTest extends TestCase
 		}
 		try
 		{
-			new VariableID(globalInst, vtd, " test");
+			new VariableID(globalInst, numberManager, " test");
 			fail("padded name must be rejected");
 		}
 		catch (NullPointerException e)
@@ -119,11 +119,9 @@ public class VariableIDTest extends TestCase
 
 	public void testGlobal()
 	{
-		NamespaceDefinition varDef =
-				new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
-		VariableID vid = new VariableID(globalInst, varDef, "test");
+		VariableID vid = new VariableID(globalInst, numberManager, "test");
 		assertEquals("test", vid.getName());
 		assertEquals(globalInst, vid.getScope());
 		assertEquals(Number.class, vid.getVariableFormat());
@@ -131,15 +129,13 @@ public class VariableIDTest extends TestCase
 
 	public void testEquals()
 	{
-		NamespaceDefinition varDef =
-				new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);
-		VariableID vid1 = new VariableID(globalInst, varDef, "test");
-		VariableID vid2 = new VariableID(globalInst, varDef, "test");
-		VariableID vid3 = new VariableID(globalInst, varDef, "test2");
-		VariableID vid4 = new VariableID(globalInst2, varDef, "test");
+		VariableID vid1 = new VariableID(globalInst, numberManager, "test");
+		VariableID vid2 = new VariableID(globalInst, numberManager, "test");
+		VariableID vid3 = new VariableID(globalInst, numberManager, "test2");
+		VariableID vid4 = new VariableID(globalInst2, numberManager, "test");
 		assertFalse(vid1.equals(null));
 		assertFalse(vid1.equals(new Object()));
 		assertTrue(vid1.equals(vid1));
@@ -151,15 +147,13 @@ public class VariableIDTest extends TestCase
 
 	public void testHashCode()
 	{
-		NamespaceDefinition varDef =
-				new NamespaceDefinition(new NumberManager(), "VAR");
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);
-		VariableID vid1 = new VariableID(globalInst, varDef, "test");
-		VariableID vid2 = new VariableID(globalInst, varDef, "test");
-		VariableID vid3 = new VariableID(globalInst, varDef, "bummer");
-		VariableID vid4 = new VariableID(globalInst2, varDef, "test");
+		VariableID vid1 = new VariableID(globalInst, numberManager, "test");
+		VariableID vid2 = new VariableID(globalInst, numberManager, "test");
+		VariableID vid3 = new VariableID(globalInst, numberManager, "bummer");
+		VariableID vid4 = new VariableID(globalInst2, numberManager, "test");
 		int hc1 = vid1.hashCode();
 		int hc2 = vid2.hashCode();
 		int hc3 = vid3.hashCode();

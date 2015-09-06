@@ -17,12 +17,12 @@
  */
 package pcgen.base.formula.inst;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.ScopeInformation;
 import pcgen.base.formula.semantics.FormulaSemantics;
-import pcgen.base.formula.variable.NamespaceDefinition;
 
 /**
  * A NEPFormula is a formula that is part of the "Native Equation Parser" for
@@ -60,7 +60,7 @@ public interface NEPFormula<T>
 	 * @throws IllegalArgumentException
 	 *             if the given ScopeInformation is null.
 	 */
-	public T resolve(ScopeInformation<T> scopeInfo);
+	public T resolve(ScopeInformation scopeInfo);
 
 	/**
 	 * Returns the FormulaSemantics for the NEPFormula.
@@ -68,7 +68,7 @@ public interface NEPFormula<T>
 	 * The given FormulaManager must contain information about variable values,
 	 * available functions, and other characteristics required for the formula
 	 * to establish the list of variables contained within the NEPFormula. These
-	 * must be valid within the context of the given NamespaceDefinition and
+	 * must be valid within the context of the given FormatManager and
 	 * LegalScope.
 	 * 
 	 * @param fm
@@ -77,13 +77,13 @@ public interface NEPFormula<T>
 	 * @param legalScope
 	 *            The LegalScope in which the NEPFormula should be checked to
 	 *            ensure it is valid
-	 * @param namespaceDef
-	 *            The NamespaceDefinition in which the NEPFormula should be
-	 *            checked to ensure it is valid
+	 * @param formatManager
+	 *            The FormatManager in which the NEPFormula should be checked to
+	 *            ensure it is valid
 	 * @return The FormulaSemantics for the NEPFormula
 	 */
 	public FormulaSemantics isValid(FormulaManager fm, LegalScope legalScope,
-		NamespaceDefinition<T> namespaceDef);
+		FormatManager<T> formatManager);
 
 	/**
 	 * Determines the dependencies for this formula, including the VariableID
@@ -105,6 +105,6 @@ public interface NEPFormula<T>
 	 * @throws IllegalArgumentException
 	 *             if the given ScopeInformation is null
 	 */
-	public void getDependencies(ScopeInformation<T> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager depManager);
 }

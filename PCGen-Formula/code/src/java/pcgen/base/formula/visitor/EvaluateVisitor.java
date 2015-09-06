@@ -17,6 +17,7 @@
  */
 package pcgen.base.formula.visitor;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.function.Function;
 import pcgen.base.formula.manager.FormulaManager;
@@ -40,7 +41,6 @@ import pcgen.base.formula.parse.FormulaParserVisitor;
 import pcgen.base.formula.parse.Node;
 import pcgen.base.formula.parse.Operator;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.variable.VariableStore;
 
@@ -68,12 +68,6 @@ public class EvaluateVisitor implements FormulaParserVisitor
 {
 
 	/**
-	 * The scope namespace definition in which the formula resides, in order to
-	 * validate if variables used in the formula are legal.
-	 */
-	private final NamespaceDefinition<?> namespaceDef;
-
-	/**
 	 * The ScopeInstance in which the formula resides.
 	 */
 	private final ScopeInstance scopeInst;
@@ -93,29 +87,20 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	 *            other key parameters of a Formula
 	 * @param scopeInst
 	 *            The ScopeInstance used to evaluate the formula
-	 * @param namespaceDef
-	 *            The NamespaceDefinition used to evaluate the formula
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null
 	 */
-	public EvaluateVisitor(FormulaManager fm, ScopeInstance scopeInst,
-		NamespaceDefinition<?> namespaceDef)
+	public EvaluateVisitor(FormulaManager fm, ScopeInstance scopeInst)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException("FormulaManager cannot be null");
-		}
-		if (namespaceDef == null)
-		{
-			throw new IllegalArgumentException(
-				"NamespaceDefinition cannot be null");
 		}
 		if (scopeInst == null)
 		{
 			throw new IllegalArgumentException("ScopeInstance cannot be null");
 		}
 		this.fm = fm;
-		this.namespaceDef = namespaceDef;
 		this.scopeInst = scopeInst;
 	}
 
@@ -287,11 +272,11 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	{
 		String varName = node.getText();
 		VariableLibrary varLibrary = fm.getFactory();
-		if (varLibrary.isLegalVariableID(scopeInst.getLegalScope(),
-			namespaceDef, varName))
+		FormatManager<?> formatManager =
+				fm.getFactory().getVariableFormat(scopeInst.getLegalScope(), varName);
+		if (formatManager != null)
 		{
-			VariableID<?> id =
-					varLibrary.getVariableID(scopeInst, namespaceDef, varName);
+			VariableID<?> id = varLibrary.getVariableID(scopeInst, varName);
 			VariableStore resolver = fm.getResolver();
 			if (resolver.containsKey(id))
 			{
@@ -407,18 +392,6 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	public ScopeInstance getScopeInstance()
 	{
 		return scopeInst;
-	}
-
-	/**
-	 * Returns the NamespaceDefinition in which this EvaluateVisitor is
-	 * operating.
-	 * 
-	 * @return the NamespaceDefinition in which this EvaluateVisitor is
-	 *         operating
-	 */
-	public NamespaceDefinition<?> getNamespaceDefinition()
-	{
-		return namespaceDef;
 	}
 
 	/**

@@ -19,10 +19,12 @@ package pcgen.base.formula.visitor;
 
 import java.util.Arrays;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.function.Function;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.FunctionLibrary;
+import pcgen.base.formula.manager.OperatorLibrary;
 import pcgen.base.formula.parse.ASTArithmetic;
 import pcgen.base.formula.parse.ASTEquality;
 import pcgen.base.formula.parse.ASTExpon;
@@ -46,7 +48,6 @@ import pcgen.base.formula.semantics.FormulaFormat;
 import pcgen.base.formula.semantics.FormulaSemantics;
 import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 
 /**
  * SemanticsVisitor visits a formula in tree form to determine if the formula is
@@ -96,19 +97,13 @@ public class SemanticsVisitor implements FormulaParserVisitor
 	private final FormulaManager fm;
 
 	/**
-	 * The scope namespace definition in which the formula resides, in order to
-	 * validate if variables used in the formula are legal.
-	 */
-	private final NamespaceDefinition<?> namespaceDef;
-
-	/**
 	 * The LegalScope in which the formula resides.
 	 */
 	private final LegalScope legalScope;
 
 	/**
 	 * Constructs a new SemanticsVisitor with the given FormulaManager and
-	 * ScopedNamespaceDefinition.
+	 * LegalScope.
 	 * 
 	 * @param fm
 	 *            The FormulaManager used to get information about functions and
@@ -116,30 +111,20 @@ public class SemanticsVisitor implements FormulaParserVisitor
 	 * @param legalScope
 	 *            The LegalScope used to validate if variables used in the
 	 *            formula are valid
-	 * @param namespaceDef
-	 *            The NamespaceDefinition used to validate if variables used in
-	 *            the formula are valid
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters are null
 	 */
-	public SemanticsVisitor(FormulaManager fm, LegalScope legalScope,
-		NamespaceDefinition<?> namespaceDef)
+	public SemanticsVisitor(FormulaManager fm, LegalScope legalScope)
 	{
 		if (fm == null)
 		{
 			throw new IllegalArgumentException("FormulaManager cannot be null");
-		}
-		if (namespaceDef == null)
-		{
-			throw new IllegalArgumentException(
-				"NamespaceDefinition cannot be null");
 		}
 		if (legalScope == null)
 		{
 			throw new IllegalArgumentException("LegalScope cannot be null");
 		}
 		this.fm = fm;
-		this.namespaceDef = namespaceDef;
 		this.legalScope = legalScope;
 	}
 
@@ -239,7 +224,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		 * we need an entire equivalent to OperatorAction for 1-argument
 		 * operations :/
 		 */
-		Class<?> format = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		Class<?> format =
+				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 		if (!format.equals(NUMBER_CLASS))
 		{
 			FormulaSemanticsUtilities.setInvalid(semantics,
@@ -427,11 +413,12 @@ public class SemanticsVisitor implements FormulaParserVisitor
 			return semantics;
 		}
 		String varName = node.getText();
-		if (fm.getFactory()
-			.isLegalVariableID(legalScope, namespaceDef, varName))
+		FormatManager<?> formatManager =
+				fm.getFactory().getVariableFormat(legalScope, varName);
+		if (formatManager != null)
 		{
 			semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(
-				NUMBER_CLASS));
+				formatManager.getManagedClass()));
 		}
 		else
 		{
@@ -488,7 +475,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 	public Object visit(ASTQuotString node, Object data)
 	{
 		FormulaSemantics semantics = (FormulaSemantics) data;
-		semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(STRING_CLASS));
+		semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(
+			STRING_CLASS));
 		return semantics;
 	}
 
@@ -520,6 +508,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 				getInvalidCountReport(node, 2));
 			return semantics;
 		}
+		OperatorLibrary opLib = fm.getOperatorLibrary();
+		//TODO How to know what Format to drop INTO????!?
 		Node child1 = node.jjtGetChild(0);
 		child1.jjtAccept(this, data);
 		//Consistent with the "fail fast" behavior in the implementation note
@@ -529,7 +519,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		}
 		//Need to capture now
 		@SuppressWarnings("PMD.PrematureDeclaration")
-		Class<?> format1 = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		Class<?> format1 =
+				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 
 		Node child2 = node.jjtGetChild(1);
 		child2.jjtAccept(this, semantics);
@@ -538,7 +529,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		{
 			return semantics;
 		}
-		Class<?> format2 = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		Class<?> format2 =
+				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 		Class<?> returnedFormat =
 				fm.getOperatorLibrary().processAbstract(op, format1, format2);
 		//null response means the library couldn't find an appropriate operator
@@ -551,8 +543,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 					+ node.getClass().getName());
 			return semantics;
 		}
-		semantics.setInfo(KeyUtilities.SEM_FORMAT,
-			new FormulaFormat(returnedFormat));
+		semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(
+			returnedFormat));
 		return semantics;
 	}
 
@@ -588,18 +580,6 @@ public class SemanticsVisitor implements FormulaParserVisitor
 	public LegalScope getLegalScope()
 	{
 		return legalScope;
-	}
-
-	/**
-	 * Returns the NamespaceDefinition in which this SemanticsVisitor is
-	 * operating.
-	 * 
-	 * @return the NamespaceDefinition in which this SemanticsVisitor is
-	 *         operating
-	 */
-	public NamespaceDefinition<?> getNamespaceDefinition()
-	{
-		return namespaceDef;
 	}
 
 	/**

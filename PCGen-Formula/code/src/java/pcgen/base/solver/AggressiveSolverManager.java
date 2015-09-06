@@ -24,13 +24,13 @@ import java.util.Map;
 import java.util.Set;
 
 import pcgen.base.calculation.Modifier;
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.dependency.VariableDependencyManager;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.ScopeInformation;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.variable.VariableStore;
 import pcgen.base.formula.variable.WriteableVariableStore;
@@ -149,20 +149,13 @@ public class AggressiveSolverManager
 	 * AggressiveSolverManager. The Variable, identified by the given
 	 * VariableID, will be of the format of the given Class.
 	 * 
-	 * @param varFormat
-	 *            The format of the Solver to be generated for the given
-	 *            VariableID
 	 * @param varID
 	 *            The VariableID used to identify the Solver to be built
 	 * @throws IllegalArgumentException
 	 *             if any of the parameters is null
 	 */
-	public <T> void createChannel(Class<T> varFormat, VariableID<T> varID)
+	public <T> void createChannel(VariableID<T> varID)
 	{
-		if (varFormat == null)
-		{
-			throw new IllegalArgumentException("Variable Format cannot be null");
-		}
 		if (varID == null)
 		{
 			throw new IllegalArgumentException("VariableID cannot be null");
@@ -174,10 +167,10 @@ public class AggressiveSolverManager
 				"Attempt to recreate local channel: " + varID);
 		}
 		ScopeInstance scope = varID.getScope();
-		NamespaceDefinition<T> nsDef = varID.getNamespace();
-		ScopeInformation<T> scopeInfo =
-				scopeCache.getScopeInformation(formulaManager, scope, nsDef);
-		Solver<T> solver = solverFactory.getSolver(scopeInfo);
+		FormatManager<T> formatManager = varID.getFormatManager();
+		ScopeInformation scopeInfo =
+				scopeCache.getScopeInformation(formulaManager, scope);
+		Solver<T> solver = solverFactory.getSolver(formatManager, scopeInfo);
 		scopedChannels.put(varID, solver);
 		graph.addNode(varID);
 		solveFromNode(varID);
@@ -214,16 +207,16 @@ public class AggressiveSolverManager
 			throw new IllegalArgumentException("Source cannot be null");
 		}
 		ScopeInstance scope = varID.getScope();
-		NamespaceDefinition<T> nsDef = varID.getNamespace();
-		ScopeInformation<T> scopeInfo =
-				scopeCache.getScopeInformation(formulaManager, scope, nsDef);
+		FormatManager<T> formatManager = varID.getFormatManager();
+		ScopeInformation scopeInfo =
+				scopeCache.getScopeInformation(formulaManager, scope);
 
 		//Note: This cast is enforced by the solver during addModifier
 		@SuppressWarnings("unchecked")
 		Solver<T> solver = (Solver<T>) scopedChannels.get(varID);
 		if (solver == null)
 		{
-			solver = solverFactory.getSolver(scopeInfo);
+			solver = solverFactory.getSolver(formatManager, scopeInfo);
 			scopedChannels.put(varID, solver);
 			graph.addNode(varID);
 		}
@@ -264,11 +257,11 @@ public class AggressiveSolverManager
 		if (scopedChannels.get(varID) == null)
 		{
 			ScopeInstance scope = varID.getScope();
-			NamespaceDefinition<?> nsDef = varID.getNamespace();
-			ScopeInformation<?> scopeInfo =
-					scopeCache
-						.getScopeInformation(formulaManager, scope, nsDef);
-			Solver<?> solver = solverFactory.getSolver(scopeInfo);
+			FormatManager<?> formatManager = varID.getFormatManager();
+			ScopeInformation scopeInfo =
+					scopeCache.getScopeInformation(formulaManager, scope);
+			Solver<?> solver =
+					solverFactory.getSolver(formatManager, scopeInfo);
 			scopedChannels.put(varID, solver);
 			graph.addNode(varID);
 			solveFromNode(varID);
@@ -323,9 +316,8 @@ public class AggressiveSolverManager
 		VariableDependencyManager vdm = new VariableDependencyManager();
 		fdm.addDependency(KeyUtilities.DEP_VARIABLE, vdm);
 		ScopeInstance scope = varID.getScope();
-		NamespaceDefinition<T> nsDef = varID.getNamespace();
-		ScopeInformation<T> scopeInfo =
-				scopeCache.getScopeInformation(formulaManager, scope, nsDef);
+		ScopeInformation scopeInfo =
+				scopeCache.getScopeInformation(formulaManager, scope);
 		modifier.getDependencies(scopeInfo, fdm);
 		processDependencies(varID, vdm);
 		//Cast above effectively enforced here

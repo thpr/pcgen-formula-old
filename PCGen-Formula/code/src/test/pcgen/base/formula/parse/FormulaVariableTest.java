@@ -19,6 +19,8 @@ package pcgen.base.formula.parse;
 
 import java.util.List;
 
+import junit.framework.TestCase;
+
 import org.junit.Test;
 
 import pcgen.base.formula.operator.number.NumberAdd;
@@ -26,8 +28,11 @@ import pcgen.base.formula.operator.number.NumberDivide;
 import pcgen.base.formula.operator.number.NumberEquals;
 import pcgen.base.formula.operator.number.NumberMultiply;
 import pcgen.base.formula.operator.number.NumberSubtract;
+import pcgen.base.formula.semantics.FormulaSemantics;
+import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
 import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
 import pcgen.base.formula.testsupport.TestUtilities;
+import pcgen.base.formula.util.KeyUtilities;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 
@@ -206,6 +211,23 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
 		assertTrue(rv.toString().equals(formula));
+	}
+
+	@Test
+	public void testEqualVariableDifferentType()
+	{
+		String formula = "a==b";
+		store.put(getVariable("a"), 3.2);
+		store.put(getBooleanVariable("b"), false);
+		SimpleNode node = TestUtilities.doParse(formula);
+		FormulaSemantics semantics =
+				FormulaSemanticsUtilities.getInitializedSemantics();
+		node.jjtAccept(valid, semantics);
+		if (semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		{
+			TestCase.fail("Expected Invalid Formula: " + formula
+				+ " due to mismatched variables");
+		}
 	}
 
 	@Test

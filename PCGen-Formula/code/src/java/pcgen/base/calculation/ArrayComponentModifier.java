@@ -86,7 +86,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	 *      pcgen.base.formula.manager.ScopeInformation)
 	 */
 	@Override
-	public T[] process(T[] input, ScopeInformation<T[]> scopeInfo)
+	public T[] process(T[] input, ScopeInformation scopeInfo)
 	{
 		if (location > input.length - 1)
 		{
@@ -97,10 +97,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 				(T[]) Array.newInstance(modifier.getVariableFormat(),
 					input.length);
 		System.arraycopy(input, 0, newArray, 0, input.length);
-		@SuppressWarnings("unchecked")
-		ScopeInformation<T> componentScope =
-				(ScopeInformation<T>) scopeInfo.getComponentScope();
-		newArray[location] = modifier.process(input[location], componentScope);
+		newArray[location] = modifier.process(input[location], scopeInfo);
 		return newArray;
 	}
 
@@ -109,13 +106,10 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	 *      pcgen.base.formula.dependency.DependencyManager)
 	 */
 	@Override
-	public void getDependencies(ScopeInformation<T[]> scopeInfo,
+	public void getDependencies(ScopeInformation scopeInfo,
 		DependencyManager fdm)
 	{
-		@SuppressWarnings("unchecked")
-		ScopeInformation<T> componentScope =
-				(ScopeInformation<T>) scopeInfo.getComponentScope();
-		modifier.getDependencies(componentScope, fdm);
+		modifier.getDependencies(scopeInfo, fdm);
 	}
 
 	/**

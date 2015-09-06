@@ -17,6 +17,7 @@
  */
 package pcgen.base.formula.variable;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.lang.CaseInsensitiveString;
 
@@ -42,9 +43,9 @@ public class VariableID<T>
 {
 
 	/**
-	 * The Namespace for this VariableID.
+	 * The FormatManager for this VariableID.
 	 */
-	private final NamespaceDefinition<T> namespace;
+	private final FormatManager<T> formatManager;
 
 	/**
 	 * The ScopeInstance for this VariableID.
@@ -67,7 +68,7 @@ public class VariableID<T>
 
 	/**
 	 * Constructs a new VariableID with the given ScopeInstance,
-	 * NamespaceDefinition and name.
+	 * FormatManager and name.
 	 * 
 	 * Note: While this is public, it is highly advised to use a
 	 * VariableIDFactory to construct new instances of VariableID.
@@ -75,8 +76,8 @@ public class VariableID<T>
 	 * @param scopeInst
 	 *            The ScopeInstance of the variable represented by this
 	 *            VariableID
-	 * @param namespace
-	 *            The NamespaceDefinition of the variable represented by this
+	 * @param formatManager
+	 *            The FormatManager of the variable represented by this
 	 *            VariableID
 	 * @param varName
 	 *            The name of the variable represented by this VariableID
@@ -85,12 +86,12 @@ public class VariableID<T>
 	 *             starts/ends with whitespace
 	 */
 	public VariableID(ScopeInstance scopeInst,
-		NamespaceDefinition<T> namespace, String varName)
+		FormatManager<T> formatManager, String varName)
 	{
-		if (namespace == null)
+		if (formatManager == null)
 		{
 			throw new IllegalArgumentException(
-				"NamespaceDefinition cannot be null");
+				"FormatManager cannot be null");
 		}
 		if (scopeInst == null)
 		{
@@ -110,7 +111,7 @@ public class VariableID<T>
 		{
 			throw new IllegalArgumentException("Variable Name cannot be empty");
 		}
-		this.namespace = namespace;
+		this.formatManager = formatManager;
 		this.scope = scopeInst;
 		this.varName = new CaseInsensitiveString(varName);
 	}
@@ -138,24 +139,24 @@ public class VariableID<T>
 	}
 
 	/**
-	 * Returns the NamespaceDefinition of this VariableID.
+	 * Returns the FormatManager of this VariableID.
 	 * 
-	 * @return The NamespaceDefinition of this VariableID
+	 * @return The FormatManager of this VariableID
 	 */
-	public NamespaceDefinition<T> getNamespace()
+	public FormatManager<T> getFormatManager()
 	{
-		return namespace;
+		return formatManager;
 	}
 
 	/**
 	 * Returns the format (e.g. Number.class) of this VariableID (as controlled
-	 * by the NamespaceDefinition).
+	 * by the FormatManager).
 	 * 
 	 * @return The format (e.g. Number.class) of this VariableID
 	 */
 	public Class<T> getVariableFormat()
 	{
-		return namespace.getFormatManager().getManagedClass();
+		return formatManager.getManagedClass();
 	}
 
 	/**
@@ -192,7 +193,7 @@ public class VariableID<T>
 		}
 		VariableID<?> other = (VariableID<?>) obj;
 		return varName.equals(other.varName)
-			&& namespace.equals(other.namespace) && scope.equals(other.scope);
+			&& formatManager.equals(other.formatManager) && scope.equals(other.scope);
 	}
 
 }

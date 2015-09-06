@@ -17,12 +17,12 @@
  */
 package pcgen.base.formula.manager;
 
+import pcgen.base.format.FormatManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.parse.SimpleNode;
 import pcgen.base.formula.semantics.FormulaSemantics;
 import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
 import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.VariableStore;
 import pcgen.base.formula.visitor.SemanticsVisitor;
 
@@ -175,31 +175,30 @@ public class FormulaManager
 	 * @param legalScope
 	 *            The LegalScope used to check for validity of variables used
 	 *            within the formula
-	 * @param namespaceDef
-	 *            The NamespaceDefinition used to check for validity of
-	 *            variables used within the formula
+	 * @param formatManager
+	 *            The FormatManager used to check for validity of variables used
+	 *            within the formula
 	 * @return The FormulaSemantics for the formula starting with with the given
 	 *         SimpleNode as the root of the parsed tree of the formula
 	 * @throws IllegalArgumentException
 	 *             if any parameter is null
 	 */
 	public FormulaSemantics isValid(SimpleNode root, LegalScope legalScope,
-		NamespaceDefinition<?> namespaceDef)
+		FormatManager<?> formatManager)
 	{
 		if (root == null)
 		{
 			throw new IllegalArgumentException(
 				"Cannot determine validity with null root");
 		}
-		if (namespaceDef == null)
+		if (formatManager == null)
 		{
 			throw new IllegalArgumentException(
-				"Cannot determine validity with null ScopedNamespaceDefinition");
+				"Cannot determine validity with null FormatManager");
 		}
 		if (semanticsVisitor == null)
 		{
-			semanticsVisitor =
-					new SemanticsVisitor(this, legalScope, namespaceDef);
+			semanticsVisitor = new SemanticsVisitor(this, legalScope);
 		}
 		FormulaSemantics semantics =
 				FormulaSemanticsUtilities.getInitializedSemantics();
@@ -208,7 +207,7 @@ public class FormulaManager
 		{
 			return semantics;
 		}
-		Class<?> nsFormat = namespaceDef.getFormatManager().getManagedClass();
+		Class<?> nsFormat = formatManager.getManagedClass();
 		Class<?> formulaFormat =
 				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
 		if (!formulaFormat.equals(nsFormat))
