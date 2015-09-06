@@ -163,6 +163,7 @@ public class FullDumpVisitor implements FormulaParserVisitor
 	 *            recursive call adds another space and this shows the tree
 	 *            structure through indentation.
 	 */
+	@SuppressWarnings("PMD.SystemPrintln")
 	private Object dump(SimpleNode node, Object data)
 	{
 		System.err.print(data);

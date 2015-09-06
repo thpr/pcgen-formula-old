@@ -153,6 +153,7 @@ public class SimpleDumpVisitor implements FormulaParserVisitor
 	 *            The prefix printed before each line (indentation level)
 	 * @return null
 	 */
+	@SuppressWarnings("PMD.SystemPrintln")
 	private Object dump(SimpleNode node, Object data)
 	{
 		System.err.print(data);
