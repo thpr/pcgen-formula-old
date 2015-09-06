@@ -17,56 +17,51 @@
  */
 package pcgen.base.solver;
 
+import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.junit.Test;
 
+import pcgen.base.calculation.ArrayComponentModifier;
 import pcgen.base.calculation.Modifier;
+import pcgen.base.format.ArrayFormatManager;
 import pcgen.base.format.FormatManager;
 import pcgen.base.format.NumberManager;
-import pcgen.base.format.OrderedPairManager;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.FunctionLibrary;
-import pcgen.base.formula.manager.LegalScopeLibrary;
-import pcgen.base.formula.manager.OperatorLibrary;
 import pcgen.base.formula.manager.ScopeInformation;
-import pcgen.base.formula.manager.SimpleFunctionLibrary;
-import pcgen.base.formula.manager.SimpleOperatorLibrary;
-import pcgen.base.formula.manager.VariableLibrary;
 import pcgen.base.formula.variable.NamespaceDefinition;
 import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleScopeInstance;
-import pcgen.base.formula.variable.SimpleVariableStore;
-import pcgen.base.formula.variable.VariableStore;
-import pcgen.base.math.OrderedPair;
 import pcgen.base.solver.testsupport.AbstractModifier;
+import pcgen.base.solver.testsupport.SolverUtilities;
 
 public class SolverTest extends TestCase
 {
-	private final FunctionLibrary fl = new SimpleFunctionLibrary();
-	private final OperatorLibrary ol = new SimpleOperatorLibrary();
-	private LegalScopeLibrary vsLib = new LegalScopeLibrary();
-	private final VariableLibrary sl = new VariableLibrary(vsLib);
-	private final VariableStore vs = new SimpleVariableStore();
-	private NamespaceDefinition<Number> vtd;
-	private LegalScope globalScope = new SimpleLegalScope(null, "Global");
-	private FormulaManager fm;
 	private ScopeInformation<Number> si;
-	private FormatManager<Number> numberManager = new NumberManager();
-	private FormatManager<OrderedPair> opManager = new OrderedPairManager();
+	private ScopeInformation<Number[]> asi;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		vtd = new NamespaceDefinition<Number>(numberManager, "VAR");
-		fm = new FormulaManager(fl, ol, sl, vs);
+		FormulaManager fm = SolverUtilities.getEmptyFormulaManager();
+		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		SimpleScopeInstance scopeInst =
 				new SimpleScopeInstance(null, globalScope);
-		si = new ScopeInformation<>(fm, scopeInst, vtd);
+
+		FormatManager<Number> numberManager = new NumberManager();
+		NamespaceDefinition<Number> varDef =
+				new NamespaceDefinition<Number>(numberManager, "VAR");
+		si = new ScopeInformation<>(fm, scopeInst, varDef);
+
+		FormatManager<Number[]> arrayManager =
+				new ArrayFormatManager<>(numberManager, ',');
+		NamespaceDefinition<Number[]> aDef =
+				new NamespaceDefinition<Number[]>(arrayManager, "NUMARRAY");
+		asi = new ScopeInformation<>(fm, scopeInst, aDef);
 	}
 
 	@Test
@@ -320,5 +315,36 @@ public class SolverTest extends TestCase
 		assertEquals(9, step.getResult());
 		assertEquals(addm, step.getModifier());
 
+	}
+
+	@Test
+	public void testArrayMod()
+	{
+		Solver<Number[]> solver =
+				new Solver<Number[]>(AbstractModifier.setEmptyArray(0), asi);
+		assertTrue(Arrays.equals(new Number[]{}, solver.process()));
+		Modifier<Number[]> add1 = AbstractModifier.addToArray(1, 10);
+		solver.addModifier(add1, this);
+		assertTrue(Arrays.equals(new Number[]{1}, solver.process()));
+		Modifier<Number[]> add2 = AbstractModifier.addToArray(2, 11);
+		solver.addModifier(add2, this);
+		assertTrue(Arrays.equals(new Number[]{1, 2}, solver.process()));
+		Modifier<Number[]> add3 = AbstractModifier.addToArray(3, 12);
+		solver.addModifier(add3, this);
+		assertTrue(Arrays.equals(new Number[]{1, 2, 3}, solver.process()));
+		Modifier<Number> addm = AbstractModifier.add(1, 100);
+		Modifier<Number[]> addTo1 = new ArrayComponentModifier<>(0, addm);
+		solver.addModifier(addTo1, this);
+		assertTrue(Arrays.equals(new Number[]{2, 2, 3}, solver.process()));
+		Modifier<Number> multm = AbstractModifier.multiply(2, 100);
+		Modifier<Number[]> multTo2 = new ArrayComponentModifier<>(1, multm);
+		solver.addModifier(multTo2, this);
+		assertTrue(Arrays.equals(new Number[]{2, 4, 3}, solver.process()));
+		Modifier<Number> setm = AbstractModifier.setNumber(7, 100);
+		Modifier<Number[]> setTo3 = new ArrayComponentModifier<>(2, setm);
+		solver.addModifier(setTo3, this);
+		assertTrue(Arrays.equals(new Number[]{2, 4, 7}, solver.process()));
+		solver.removeModifier(add1, this);
+		assertTrue(Arrays.equals(new Number[]{3, 6}, solver.process()));
 	}
 }

@@ -238,5 +238,11 @@ public class ScopeInformation<T>
 	{
 		return fm;
 	}
+	
+	public ScopeInformation<?> getComponentScope()
+	{
+		NamespaceDefinition<?> component = namespaceDef.getComponentNamespace();
+		return new ScopeInformation<>(fm, varScope, component);
+	}
 
 }

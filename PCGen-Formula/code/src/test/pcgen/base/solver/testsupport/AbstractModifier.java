@@ -17,6 +17,8 @@
  */
 package pcgen.base.solver.testsupport;
 
+import java.lang.reflect.Array;
+
 import pcgen.base.calculation.Modifier;
 import pcgen.base.formula.dependency.DependencyManager;
 import pcgen.base.formula.manager.ScopeInformation;
@@ -25,6 +27,7 @@ import pcgen.base.lang.NumberUtilities;
 public abstract class AbstractModifier<T> implements Modifier<T>
 {
 	private static final Class<Number> NUMBER_CLASS = Number.class;
+	private static final Class<Number[]> NUMBER_ARR_CLASS = (Class<Number[]>) new Number[]{}.getClass();
 
 	private final Class<T> format;
 	private final int priority;
@@ -76,6 +79,35 @@ public abstract class AbstractModifier<T> implements Modifier<T>
 	public String getInstructions()
 	{
 		return "Ignored";
+	}
+
+	public static AbstractModifier<Number[]> addToArray(final int value, int priority)
+	{
+		return new AbstractModifier<Number[]>(0, NUMBER_ARR_CLASS, priority)
+		{
+			@Override
+			public Number[] process(Number[] input,
+				ScopeInformation<Number[]> scopeInfo)
+			{
+				Number[] newArray = (Number[]) Array.newInstance(NUMBER_CLASS, input.length + 1);
+				System.arraycopy(input, 0, newArray, 0, input.length);
+				newArray[newArray.length - 1] = value;
+				return newArray;
+			}
+		};
+	}
+
+	public static AbstractModifier<Number[]> setEmptyArray(int priority)
+	{
+		return new AbstractModifier<Number[]>(0, NUMBER_ARR_CLASS, priority)
+		{
+			@Override
+			public Number[] process(Number[] input,
+				ScopeInformation<Number[]> scopeInfo)
+			{
+				return new Number[]{};
+			}
+		};
 	}
 
 	public static AbstractModifier<Number> setNumber(final int value, int priority)

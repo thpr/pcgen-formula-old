@@ -125,4 +125,10 @@ public class NamespaceDefinition<T>
 		return namespaceName + " ["
 			+ formatManager.getManagedClass().getSimpleName() + "]";
 	}
+	
+	public NamespaceDefinition<?> getComponentNamespace()
+	{
+		FormatManager<?> componentManager = formatManager.getComponentManager();
+		return new NamespaceDefinition<>(componentManager, "*" + namespaceName);
+	}
 }
