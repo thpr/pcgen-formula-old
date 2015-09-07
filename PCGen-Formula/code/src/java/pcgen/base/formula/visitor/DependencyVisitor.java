@@ -108,7 +108,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTRoot node, Object data)
@@ -117,7 +117,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTLogical node, Object data)
@@ -126,7 +126,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTEquality node, Object data)
@@ -135,7 +135,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTRelational node, Object data)
@@ -144,7 +144,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTArithmetic node, Object data)
@@ -153,7 +153,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTGeometric node, Object data)
@@ -162,7 +162,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTUnary node, Object data)
@@ -171,7 +171,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTExpon node, Object data)
@@ -180,7 +180,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Only requires a recursive check, has no dependencies itself
+	 * Only requires a recursive check, has no dependencies itself.
 	 */
 	@Override
 	public Object visit(ASTParen node, Object data)
@@ -189,7 +189,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Has no dependencies
+	 * Has no dependencies.
 	 */
 	@Override
 	public Object visit(ASTNum node, Object data)

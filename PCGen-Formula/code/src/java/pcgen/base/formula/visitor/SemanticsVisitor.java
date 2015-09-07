@@ -86,7 +86,14 @@ public class SemanticsVisitor implements FormulaParserVisitor
 	 * immediately return that "invalid" FormulaSemantics.
 	 */
 
+	/**
+	 * A cache of the Number class.
+	 */
 	private static final Class<Number> NUMBER_CLASS = Number.class;
+
+	/**
+	 * A cache of the String class.
+	 */
 	private static final Class<String> STRING_CLASS = String.class;
 
 	/**
@@ -552,6 +559,9 @@ public class SemanticsVisitor implements FormulaParserVisitor
 	 * @param node
 	 *            The node to be validated to ensure it has a single, valid
 	 *            child.
+	 * @param data
+	 *            The incoming FormulaSemantics object (as Object to assist
+	 *            other methods in this class)
 	 * @return A FormulaSemantics object, which will indicate isValid() true if
 	 *         this operator has a single, valid child; Otherwise, the
 	 *         FormulaSemantics will indicate isValid() false
@@ -591,7 +601,7 @@ public class SemanticsVisitor implements FormulaParserVisitor
 
 	/**
 	 * Generates an invalid argument count report based on the given node and
-	 * expected argument count
+	 * expected argument count.
 	 */
 	private String getInvalidCountReport(Node node, int expectedCount)
 	{

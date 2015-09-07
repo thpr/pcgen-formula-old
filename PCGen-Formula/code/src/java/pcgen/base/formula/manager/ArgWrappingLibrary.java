@@ -29,12 +29,12 @@ import pcgen.base.formula.parse.Node;
 public class ArgWrappingLibrary implements FunctionLibrary
 {
 	/**
-	 * The underlying FunctionLibrary of this ValueWrappingLibrary
+	 * The underlying FunctionLibrary of this ArgWrappingLibrary.
 	 */
 	private final FunctionLibrary functionLibrary;
 
 	/**
-	 * The arguments available to the arg function
+	 * The arguments available to the arg(n) function.
 	 */
 	private final Node[] args;
 
@@ -44,7 +44,9 @@ public class ArgWrappingLibrary implements FunctionLibrary
 	 * called.
 	 * 
 	 * @param functionLibrary
-	 * @param valueResult
+	 *            The underlying FunctionLibrary of this ArgWrappingLibrary
+	 * @param args
+	 *            The arguments available to the arg(n) function
 	 */
 	public ArgWrappingLibrary(FunctionLibrary functionLibrary, Node[] args)
 	{

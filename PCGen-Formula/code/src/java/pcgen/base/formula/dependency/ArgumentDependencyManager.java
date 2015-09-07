@@ -24,7 +24,11 @@ package pcgen.base.formula.dependency;
  */
 public class ArgumentDependencyManager
 {
-	
+	/**
+	 * The maximum argument number encountered by this
+	 * ArgumentDependencyManager. -1 indicates no arguments have been
+	 * encountered.
+	 */
 	private int maxArgument = -1;
 
 	/**

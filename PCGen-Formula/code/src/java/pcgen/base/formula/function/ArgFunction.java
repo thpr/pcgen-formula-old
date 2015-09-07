@@ -41,6 +41,9 @@ import pcgen.base.formula.visitor.StaticVisitor;
  */
 public class ArgFunction implements Function
 {
+	/**
+	 * The function name for this Function
+	 */
 	private static final String FUNCTION_NAME = "ARG";
 
 	/**
@@ -61,7 +64,7 @@ public class ArgFunction implements Function
 	}
 
 	/**
-	 * The function name "arg"
+	 * The function name "arg".
 	 * 
 	 * @see pcgen.base.formula.function.Function#getFunctionName()
 	 */

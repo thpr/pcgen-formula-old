@@ -33,7 +33,7 @@ import pcgen.base.formula.manager.ScopeInformation;
 public abstract class AbstractNEPCalculation<T> implements NEPCalculation<T>
 {
 	/**
-	 * The BasicCalculation underlying this AbstractNEPCalculation
+	 * The BasicCalculation underlying this AbstractNEPCalculation.
 	 */
 	private final BasicCalculation<T> basicCalc;
 

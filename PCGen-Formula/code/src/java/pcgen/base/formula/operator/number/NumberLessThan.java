@@ -26,6 +26,9 @@ import pcgen.base.formula.parse.Operator;
 public class NumberLessThan implements OperatorAction
 {
 
+	/**
+	 * Cache of the Number class.
+	 */
 	private static final Class<Number> NUMBER_CLASS = Number.class;
 
 	/**
@@ -41,7 +44,7 @@ public class NumberLessThan implements OperatorAction
 
 	/**
 	 * Performs Abstract Evaluation, checking that the two arguments are
-	 * Number.class and returns Boolean.class
+	 * Number.class and returns Boolean.class.
 	 * 
 	 * @see pcgen.base.formula.base.OperatorAction#abstractEvaluate(java.lang.Class,
 	 *      java.lang.Class)
@@ -58,9 +61,10 @@ public class NumberLessThan implements OperatorAction
 	}
 
 	/**
-	 * Performs a less than comparison on the given arguments
+	 * Performs a less than comparison on the given arguments.
 	 * 
-	 * @see pcgen.base.formula.base.OperatorAction#evaluate(java.lang.Object, java.lang.Object)
+	 * @see pcgen.base.formula.base.OperatorAction#evaluate(java.lang.Object,
+	 *      java.lang.Object)
 	 */
 	@Override
 	public Object evaluate(Object l, Object r)

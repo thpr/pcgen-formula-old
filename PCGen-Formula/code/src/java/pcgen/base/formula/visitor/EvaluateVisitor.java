@@ -122,7 +122,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 
 	/**
 	 * Processes the (single) child of this node, as a root is simply a
-	 * structural placeholder
+	 * structural placeholder.
 	 */
 	@Override
 	public Object visit(ASTRoot node, Object data)
@@ -131,7 +131,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Evaluates the node, based on the Operator in the node
+	 * Evaluates the node, based on the Operator in the node.
 	 */
 	@Override
 	public Object visit(ASTLogical node, Object data)
@@ -140,7 +140,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Evaluates the node, based on the Operator in the node
+	 * Evaluates the node, based on the Operator in the node.
 	 */
 	@Override
 	public Object visit(ASTEquality node, Object data)
@@ -149,7 +149,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Evaluates the node, based on the Operator in the node
+	 * Evaluates the node, based on the Operator in the node.
 	 */
 	@Override
 	public Object visit(ASTRelational node, Object data)
@@ -158,7 +158,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Evaluates the node, based on the Operator in the node
+	 * Evaluates the node, based on the Operator in the node.
 	 */
 	@Override
 	public Object visit(ASTArithmetic node, Object data)
@@ -167,7 +167,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Evaluates the node, based on the Operator in the node
+	 * Evaluates the node, based on the Operator in the node.
 	 */
 	@Override
 	public Object visit(ASTGeometric node, Object data)
@@ -176,7 +176,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Evaluates the node, which is a unary negation
+	 * Evaluates the node, which is a unary negation.
 	 */
 	@Override
 	public Object visit(ASTUnary node, Object data)
@@ -219,7 +219,7 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	/**
 	 * Processes the (single) child of this node, as grouping parenthesis are
 	 * logically present only to define order of operations (now implicit in the
-	 * tree structure)
+	 * tree structure).
 	 */
 	@Override
 	public Object visit(ASTParen node, Object data)

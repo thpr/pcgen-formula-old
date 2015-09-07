@@ -176,17 +176,17 @@ public class VariableLibrary
 	}
 
 	/**
-	 * Returns true if the given LegalScope and variable name
-	 * are a legal combination, knowing previous assertions of a FormatManager for the given LegalScope
-	 * and variable name.
+	 * Returns true if the given LegalScope and variable name are a legal
+	 * combination, knowing previous assertions of a FormatManager for the given
+	 * LegalScope and variable name.
 	 * 
-	 * If no previous FormatManager was stored via assertLegalScope for the given
-	 * LegalScope and variable name, then this will unconditionally return
+	 * If no previous FormatManager was stored via assertLegalScope for the
+	 * given LegalScope and variable name, then this will unconditionally return
 	 * false.
 	 * 
-	 * If a FormatManager was stored via assertLegalScope for a 
-	 * LegalScope and variable name, then this will return true if the given
-	 * LegalScope is compatible with the stored LegalScope.
+	 * If a FormatManager was stored via assertLegalScope for a LegalScope and
+	 * variable name, then this will return true if the given LegalScope is
+	 * compatible with the stored LegalScope.
 	 * 
 	 * @param legalScope
 	 *            The LegalScope to be used to determine if the given
@@ -195,8 +195,8 @@ public class VariableLibrary
 	 *            The variable name to be used to determine if the given
 	 *            combination is legal
 	 * 
-	 * @return true if the given LegalScope and variable name are
-	 *         a legal combination; false otherwise
+	 * @return true if the given LegalScope and variable name are a legal
+	 *         combination; false otherwise
 	 * @throws IllegalArgumentException
 	 *             if the given LegalScope is null
 	 */

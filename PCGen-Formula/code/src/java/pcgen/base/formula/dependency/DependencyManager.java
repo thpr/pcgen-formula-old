@@ -39,6 +39,8 @@ public class DependencyManager
 	 * Adds a new dependency to this DependencyManager, represented by the given
 	 * DependencyKey and managed by the given object.
 	 * 
+	 * @param <T>
+	 *            The Class of Object identified by the given DependencyKey
 	 * @param key
 	 *            The DependencyKey used to identify the manager of the
 	 *            dependency
@@ -57,6 +59,8 @@ public class DependencyManager
 	 * Returns the object managing the dependency represented by the given
 	 * DependencyKey.
 	 * 
+	 * @param <T>
+	 *            The Class of Object identified by the given DependencyKey
 	 * @param key
 	 *            The DependencyKey used to identify the manager of the
 	 *            dependency

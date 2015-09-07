@@ -31,7 +31,7 @@ public class SimpleLegalScope implements LegalScope
 	private final LegalScope parent;
 
 	/**
-	 * The name of this LegalScope
+	 * The name of this LegalScope.
 	 */
 	private final String name;
 

@@ -22,6 +22,9 @@ package pcgen.base.formula.semantics;
  */
 public class FormulaValidity
 {
+	/**
+	 * Indicates if the formula reported on by this FormulaValidity was valid.
+	 */
 	private final boolean isValid;
 
 	/**

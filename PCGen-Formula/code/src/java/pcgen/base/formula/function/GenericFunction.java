@@ -51,7 +51,7 @@ public class GenericFunction implements Function
 {
 
 	/**
-	 * The name for this function (how the user refers to this function)
+	 * The name for this function (how the user refers to this function).
 	 */
 	private final String functionName;
 

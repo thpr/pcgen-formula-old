@@ -158,10 +158,13 @@ public class FullDumpVisitor implements FormulaParserVisitor
 	 * subtree of nodes beneath it. For leaf nodes, they just print out their
 	 * type and their text.
 	 * 
+	 * @param node
+	 *            The starting node for the dump
 	 * @param data
-	 *            the string that will be printed at the start of the line. Each
+	 *            The string that will be printed at the start of the line. Each
 	 *            recursive call adds another space and this shows the tree
 	 *            structure through indentation.
+	 * @return null (assists other methods in this class)
 	 */
 	@SuppressWarnings("PMD.SystemPrintln")
 	private Object dump(SimpleNode node, Object data)

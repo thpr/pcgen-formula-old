@@ -58,7 +58,8 @@ public class SimpleScopeInstance implements ScopeInstance
 			{
 				throw new IllegalArgumentException(
 					"Incompatible ScopeInstance and LegalScope: "
-						+ "Parent may only be null when LegalScope has no parent");
+						+ "Parent may only be null "
+						+ "when LegalScope has no parent");
 			}
 		}
 		else

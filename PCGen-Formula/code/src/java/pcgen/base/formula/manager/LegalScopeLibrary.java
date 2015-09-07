@@ -39,7 +39,7 @@ public class LegalScopeLibrary
 	//Enforce only one scope has no parent (a root exists?)
 
 	/**
-	 * The Map of LegalScope objects to their list of child LegalScope objects
+	 * The Map of LegalScope objects to their list of child LegalScope objects.
 	 */
 	private HashMapToList<LegalScope, LegalScope> scopeChildren =
 			new HashMapToList<LegalScope, LegalScope>();
@@ -56,7 +56,9 @@ public class LegalScopeLibrary
 	 * Registers a LegalScope with this LegalScopeLibrary.
 	 * 
 	 * @param scope
-	 *            The LegalScope to be registered with this LegalScopeLibrary.
+	 *            The LegalScope to be registered with this LegalScopeLibrary
+	 * @return The previous LegalScope registered with the same name as the
+	 *         given LegalScope
 	 */
 	public LegalScope registerScope(LegalScope scope)
 	{

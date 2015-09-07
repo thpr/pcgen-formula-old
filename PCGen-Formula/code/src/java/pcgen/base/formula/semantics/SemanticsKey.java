@@ -30,7 +30,7 @@ package pcgen.base.formula.semantics;
 public final class SemanticsKey<T>
 {
 	/**
-	 * Cast the given object to the type contained by this SemanticsKey
+	 * Cast the given object to the type contained by this SemanticsKey.
 	 * 
 	 * @param object
 	 *            The object to be cast to the type managed by this SemanticsKey

@@ -26,10 +26,13 @@ import pcgen.base.formula.parse.Operator;
 public class BooleanOr implements OperatorAction
 {
 
+	/**
+	 * Cache of the Boolean class.
+	 */
 	private static final Class<Boolean> BOOLEAN_CLASS = Boolean.class;
 
 	/**
-	 * Indicates that BooleanOr Performs a logical OR
+	 * Indicates that BooleanOr Performs a logical OR.
 	 * 
 	 * @see pcgen.base.formula.base.OperatorAction#getOperator()
 	 */
@@ -41,7 +44,7 @@ public class BooleanOr implements OperatorAction
 
 	/**
 	 * Performs Abstract Evaluation, checking that the two arguments are
-	 * Boolean.class and returns Boolean.class
+	 * Boolean.class and returns Boolean.class.
 	 * 
 	 * @see pcgen.base.formula.base.OperatorAction#abstractEvaluate(java.lang.Class,
 	 *      java.lang.Class)
@@ -58,7 +61,7 @@ public class BooleanOr implements OperatorAction
 	}
 
 	/**
-	 * Performs a logical OR on the given arguments
+	 * Performs a logical OR on the given arguments.
 	 * 
 	 * @see pcgen.base.formula.base.OperatorAction#evaluate(java.lang.Object, java.lang.Object)
 	 */

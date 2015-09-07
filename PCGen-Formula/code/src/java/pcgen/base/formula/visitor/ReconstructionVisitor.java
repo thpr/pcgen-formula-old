@@ -109,7 +109,7 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Processes the logical node (which is an operator node)
+	 * Processes the logical node (which is an operator node).
 	 */
 	@Override
 	public Object visit(ASTLogical node, Object data)
@@ -118,7 +118,7 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Processes the equality node (which is an operator node)
+	 * Processes the equality node (which is an operator node).
 	 */
 	@Override
 	public Object visit(ASTEquality node, Object data)
@@ -127,7 +127,7 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Processes the relational node (which is an operator node)
+	 * Processes the relational node (which is an operator node).
 	 */
 	@Override
 	public Object visit(ASTRelational node, Object data)
@@ -136,7 +136,7 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Processes the arithmetic node (which is an operator node)
+	 * Processes the arithmetic node (which is an operator node).
 	 */
 	@Override
 	public Object visit(ASTArithmetic node, Object data)
@@ -145,7 +145,7 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Processes the geometric node (which is an operator node)
+	 * Processes the geometric node (which is an operator node).
 	 */
 	@Override
 	public Object visit(ASTGeometric node, Object data)
@@ -167,7 +167,7 @@ public class ReconstructionVisitor implements FormulaParserVisitor
 	}
 
 	/**
-	 * Processes the exponential node (which is an operator node)
+	 * Processes the exponential node (which is an operator node).
 	 */
 	@Override
 	public Object visit(ASTExpon node, Object data)

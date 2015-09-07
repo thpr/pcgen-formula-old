@@ -43,7 +43,9 @@ public class ValueWrappingLibrary implements FunctionLibrary
 	 * called.
 	 * 
 	 * @param functionLibrary
+	 *            The underlying FunctionLibrary of this ValueWrappingLibrary
 	 * @param valueResult
+	 *            The value to be returned when the value() function is called
 	 */
 	public ValueWrappingLibrary(FunctionLibrary functionLibrary,
 		Object valueResult)

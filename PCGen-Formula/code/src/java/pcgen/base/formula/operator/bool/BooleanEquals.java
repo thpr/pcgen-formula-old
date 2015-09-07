@@ -26,10 +26,13 @@ import pcgen.base.formula.parse.Operator;
 public class BooleanEquals implements OperatorAction
 {
 
+	/**
+	 * Cache of the Boolean class.
+	 */
 	private static final Class<Boolean> BOOLEAN_CLASS = Boolean.class;
 
 	/**
-	 * Indicates that BooleanEquals Performs a comparison for logical equality
+	 * Indicates that BooleanEquals Performs a comparison for logical equality.
 	 * 
 	 * @see pcgen.base.formula.base.OperatorAction#getOperator()
 	 */
@@ -41,7 +44,7 @@ public class BooleanEquals implements OperatorAction
 
 	/**
 	 * Performs Abstract Evaluation, checking that the two arguments are
-	 * Boolean.class and returns Boolean.class
+	 * Boolean.class and returns Boolean.class.
 	 * 
 	 * @see pcgen.base.formula.base.OperatorAction#abstractEvaluate(java.lang.Class,
 	 *      java.lang.Class)
@@ -58,7 +61,7 @@ public class BooleanEquals implements OperatorAction
 	}
 
 	/**
-	 * Performs a logical equality comparison on the given arguments
+	 * Performs a logical equality comparison on the given arguments.
 	 * 
 	 * @see pcgen.base.formula.base.OperatorAction#evaluate(java.lang.Object, java.lang.Object)
 	 */

@@ -18,7 +18,7 @@
 package pcgen.base.formula.semantics;
 
 /**
- * Indicates the Format for the result returned by a Formula
+ * Indicates the Format for the result returned by a Formula.
  */
 public class FormulaFormat
 {

@@ -42,7 +42,7 @@ public class ValueFunction implements Function
 	private static final String FUNCTION_NAME = "VALUE";
 
 	/**
-	 * The "previous value" represented by this ValueFunction
+	 * The "previous value" represented by this ValueFunction.
 	 */
 	private final Object input;
 
@@ -58,7 +58,7 @@ public class ValueFunction implements Function
 	}
 
 	/**
-	 * The function name "value"
+	 * The function name "value".
 	 * 
 	 * @see pcgen.base.formula.function.Function#getFunctionName()
 	 */

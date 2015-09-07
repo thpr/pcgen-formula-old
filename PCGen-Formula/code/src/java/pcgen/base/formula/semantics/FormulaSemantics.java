@@ -43,6 +43,9 @@ import java.util.Map;
 public class FormulaSemantics
 {
 
+	/**
+	 * The map of Semantics information.
+	 */
 	private Map<SemanticsKey<?>, Object> map = new HashMap<>();
 
 	/**
@@ -50,6 +53,8 @@ public class FormulaSemantics
 	 * SemanticsKey. The given object manages a set of semantic information for
 	 * a Formula.
 	 * 
+	 * @param <T>
+	 *            The class of the manager identified by the given SemanticsKey
 	 * @param key
 	 *            The SemanticsKey used to identify the manager of the semantic
 	 *            information
@@ -68,6 +73,8 @@ public class FormulaSemantics
 	 * Returns the object managing the semantics represented by the given
 	 * SemanticsKey.
 	 * 
+	 * @param <T>
+	 *            The class of the manager identified by the given SemanticsKey
 	 * @param key
 	 *            The SemanticsKey used to identify the manager of the semantics
 	 * @return The object managing the semantics represented by the given
@@ -83,6 +90,8 @@ public class FormulaSemantics
 	 * object to the caller. No further connection to the returned object is
 	 * maintained by this FormulaSemantics for the given SemanticsKey.
 	 * 
+	 * @param <T>
+	 *            The class of the manager identified by the given SemanticsKey
 	 * @param key
 	 *            The SemanticsKey used to identify the manager of the semantics
 	 * @return The object managing the semantics represented by the given

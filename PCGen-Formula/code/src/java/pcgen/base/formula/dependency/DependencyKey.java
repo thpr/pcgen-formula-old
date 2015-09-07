@@ -30,7 +30,7 @@ package pcgen.base.formula.dependency;
 public final class DependencyKey<T>
 {
 	/**
-	 * Cast the given object to the type contained by this DependencyKey
+	 * Cast the given object to the type contained by this DependencyKey.
 	 * 
 	 * @param object
 	 *            The object to be cast to the type managed by this
