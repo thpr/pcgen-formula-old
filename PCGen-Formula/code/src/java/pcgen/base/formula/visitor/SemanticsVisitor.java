@@ -24,7 +24,6 @@ import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.function.Function;
 import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.FunctionLibrary;
-import pcgen.base.formula.manager.OperatorLibrary;
 import pcgen.base.formula.parse.ASTArithmetic;
 import pcgen.base.formula.parse.ASTEquality;
 import pcgen.base.formula.parse.ASTExpon;
@@ -508,8 +507,6 @@ public class SemanticsVisitor implements FormulaParserVisitor
 				getInvalidCountReport(node, 2));
 			return semantics;
 		}
-		OperatorLibrary opLib = fm.getOperatorLibrary();
-		//TODO How to know what Format to drop INTO????!?
 		Node child1 = node.jjtGetChild(0);
 		child1.jjtAccept(this, data);
 		//Consistent with the "fail fast" behavior in the implementation note
