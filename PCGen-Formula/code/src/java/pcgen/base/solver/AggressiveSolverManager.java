@@ -17,11 +17,11 @@
  */
 package pcgen.base.solver;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 import pcgen.base.calculation.Modifier;
 import pcgen.base.format.FormatManager;
@@ -76,10 +76,10 @@ public class AggressiveSolverManager
 	 * of this AggressiveSolverManager.
 	 */
 	private final DirectionalSetMapGraph<VariableID<?>, DefaultDirectionalGraphEdge<VariableID<?>>> graph =
-			new DirectionalSetMapGraph<VariableID<?>, DefaultDirectionalGraphEdge<VariableID<?>>>();
+			new DirectionalSetMapGraph<>();
 
 	/**
-	 * Cache for ScopeInformation objects
+	 * Cache for ScopeInformation objects.
 	 */
 	private final ScopeDatabase scopeCache = new ScopeDatabase();
 
@@ -149,6 +149,8 @@ public class AggressiveSolverManager
 	 * AggressiveSolverManager. The Variable, identified by the given
 	 * VariableID, will be of the format of the given Class.
 	 * 
+	 * @param <T>
+	 *            The format (class) of object contained by the given VariableID
 	 * @param varID
 	 *            The VariableID used to identify the Solver to be built
 	 * @throws IllegalArgumentException
@@ -180,6 +182,8 @@ public class AggressiveSolverManager
 	 * Adds a Modifier (with the given source object) to the Solver identified
 	 * by the given VariableID.
 	 * 
+	 * @param <T>
+	 *            The format (class) of object contained by the given VariableID
 	 * @param varID
 	 *            The VariableID for which a Modifier should be added to the
 	 *            responsible Solver
@@ -206,6 +210,17 @@ public class AggressiveSolverManager
 		{
 			throw new IllegalArgumentException("Source cannot be null");
 		}
+		if (!formulaManager.getFactory().isLegalVariableID(
+			varID.getScope().getLegalScope(), varID.getName()))
+		{
+			/*
+			 * The above check allows the implicit create below for only items
+			 * within the VariableLibrary
+			 */
+			throw new IllegalArgumentException(
+				"Request to add Modifier to Solver for " + varID
+					+ " but that channel was never defined");
+		}
 		ScopeInstance scope = varID.getScope();
 		FormatManager<T> formatManager = varID.getFormatManager();
 		ScopeInformation scopeInfo =
@@ -216,6 +231,7 @@ public class AggressiveSolverManager
 		Solver<T> solver = (Solver<T>) scopedChannels.get(varID);
 		if (solver == null)
 		{
+			//CONSIDER This is create implicit - what we want to do?
 			solver = solverFactory.getSolver(formatManager, scopeInfo);
 			scopedChannels.put(varID, solver);
 			graph.addNode(varID);
@@ -276,6 +292,8 @@ public class AggressiveSolverManager
 	 * be the same (as defined by .equals() equality) as a combination provided
 	 * to the addModifier method for the given VariableID.
 	 * 
+	 * @param <T>
+	 *            The format (class) of object contained by the given VariableID
 	 * @param varID
 	 *            The VariableID for which a Modifier should be removed from the
 	 *            responsible Solver
@@ -328,6 +346,14 @@ public class AggressiveSolverManager
 	/**
 	 * Process Dependencies for the given VariableID stored in the given
 	 * DependencyManager.
+	 * 
+	 * @param <T>
+	 *            The format (class) of object contained by the given VariableID
+	 * @param varID
+	 *            The VariableID for which dependencies will be captured
+	 * @param vdm
+	 *            The VariableDependencyManager to be loaded with the
+	 *            dependencies of the given VariableID
 	 */
 	private <T> void processDependencies(VariableID<T> varID,
 		VariableDependencyManager vdm)
@@ -368,31 +394,49 @@ public class AggressiveSolverManager
 	 *            The VariableID as a starting point for triggering Solvers to
 	 *            be processed
 	 */
-	public void solveFromNode(VariableID<?> varID)
+	private void solveFromNode(VariableID<?> varID)
 	{
-		if (processSolver(varID))
+		boolean warning = varStack.contains(varID);
+		try
 		{
-			/*
-			 * Only necessary if the answer changes. The problem is that this is
-			 * not doing them in order of a topological sort - it is completely
-			 * random... so things may be processed twice :/
-			 */
-			for (DefaultDirectionalGraphEdge<VariableID<?>> edge : graph
-				.getAdjacentEdges(varID))
+			varStack.push(varID);
+			if (processSolver(varID))
 			{
-				if (edge.getNodeAt(0).equals(varID))
+				if (warning)
 				{
-					solveFromNode(edge.getNodeAt(1));
+					throw new IllegalStateException(
+						"Infinite Loop in Variable Processing: " + varStack);
+				}
+				/*
+				 * Only necessary if the answer changes. The problem is that
+				 * this is not doing them in order of a topological sort - it is
+				 * completely random... so things may be processed twice :/
+				 */
+				for (DefaultDirectionalGraphEdge<VariableID<?>> edge : graph
+					.getAdjacentEdges(varID))
+				{
+					if (edge.getNodeAt(0).equals(varID))
+					{
+						solveFromNode(edge.getNodeAt(1));
+					}
 				}
 			}
 		}
+		finally
+		{
+			varStack.pop();
+		}
 	}
+
+	private Stack<VariableID<?>> varStack = new Stack<>();
 
 	/**
 	 * Processes a single Solver represented by the given VariableID. Returns
 	 * true if the value of the Variable calculated by the Solver has changed
 	 * due to this processing.
 	 * 
+	 * @param <T>
+	 *            The format (class) of object contained by the given VariableID
 	 * @param varID
 	 *            The VariableID for which the given Solver should be processed.
 	 * 
@@ -403,14 +447,10 @@ public class AggressiveSolverManager
 	{
 		@SuppressWarnings("unchecked")
 		Solver<T> solver = (Solver<T>) scopedChannels.get(varID);
-		if (solver == null)
-		{
-			System.err.println("No solver for " + varID);
-			/*
-			 * TODO Some form of error here - dependent but that variable was
-			 * never created :/
-			 */
-		}
+		/*
+		 * Solver should "never" be null here, so we accept risk of NPE, since
+		 * it's always a code bug
+		 */
 		T newValue = solver.process();
 		Object oldValue = resultsCache.put(varID, newValue);
 		return !newValue.equals(oldValue);
@@ -423,6 +463,8 @@ public class AggressiveSolverManager
 	 * The ProcessStep objects are provided in the order of operations, with the
 	 * first object in the list being the first step in the derivation.
 	 * 
+	 * @param <T>
+	 *            The format (class) of object contained by the given VariableID
 	 * @param varID
 	 *            The VariableID for which the List of ProcessStep objects
 	 *            should be returned.
@@ -434,13 +476,11 @@ public class AggressiveSolverManager
 	{
 		@SuppressWarnings("unchecked")
 		Solver<T> solver = (Solver<T>) scopedChannels.get(varID);
-		/*
-		 * TODO Need to figure out what to do here or whether this should ever
-		 * be able to even get here if solver is null
-		 */
 		if (solver == null)
 		{
-			return Collections.emptyList();
+			throw new IllegalArgumentException(
+				"Request to diagnoze VariableID " + varID
+					+ " but that channel was never defined");
 		}
 		return solver.diagnose();
 	}

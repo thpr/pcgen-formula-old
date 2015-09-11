@@ -69,7 +69,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.Modifier#getUserPriority()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int getUserPriority()
@@ -78,8 +78,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.Modifier#process(java.lang.Object,
-	 *      pcgen.base.formula.manager.ScopeInformation)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public T process(T input, ScopeInformation scopeInfo)
@@ -88,7 +87,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.Modifier#getInherentPriority()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int getInherentPriority()
@@ -97,8 +96,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.Modifier#getDependencies(pcgen.base.formula.manager.ScopeInformation,
-	 *      pcgen.base.formula.dependency.DependencyManager)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void getDependencies(ScopeInformation scopeInfo,
@@ -108,7 +106,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.Modifier#getInstructions()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getInstructions()
@@ -117,7 +115,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.Modifier#getVariableFormat()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Class<T> getVariableFormat()
@@ -126,7 +124,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.Modifier#getIdentification()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getIdentification()
@@ -135,7 +133,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode()
@@ -144,7 +142,7 @@ public final class CalculationModifier<T> implements Modifier<T>
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object o)

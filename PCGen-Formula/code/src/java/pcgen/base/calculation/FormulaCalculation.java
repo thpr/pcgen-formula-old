@@ -61,6 +61,10 @@ public final class FormulaCalculation<T> extends AbstractNEPCalculation<T>
 	public FormulaCalculation(NEPFormula<T> formula, BasicCalculation<T> calc)
 	{
 		super(calc);
+		if (formula == null)
+		{
+			throw new IllegalArgumentException("NEPFormula cannot be null");
+		}
 		this.formula = formula;
 	}
 
@@ -86,8 +90,7 @@ public final class FormulaCalculation<T> extends AbstractNEPCalculation<T>
 	}
 
 	/**
-	 * @see pcgen.base.modifier.SimpleCalculation#getDependencies(pcgen.base.formula.manager.ScopeInformation,
-	 *      pcgen.base.formula.dependency.DependencyManager)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void getDependencies(ScopeInformation scopeInfo,

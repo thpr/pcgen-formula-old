@@ -49,9 +49,11 @@ import pcgen.base.formula.operator.number.NumberSubtract;
 public final class FormulaUtilities
 {
 
+	/**
+	 * Private Constructor for Utility Class.
+	 */
 	private FormulaUtilities()
 	{
-		//Do not instantiate utility class
 	}
 
 	/**

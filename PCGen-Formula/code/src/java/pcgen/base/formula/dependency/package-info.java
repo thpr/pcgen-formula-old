@@ -15,9 +15,8 @@
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package pcgen.base.formula.inst;
-
 /**
- * pcgen.base.formula.inst is a package that contains specific instances
- * designed to use the other objects contained within the formula packages.
+ * pcgen.base.formula.dependency is a package that contains information for
+ * tracking dependencies in a formula.
  */
+package pcgen.base.formula.dependency;

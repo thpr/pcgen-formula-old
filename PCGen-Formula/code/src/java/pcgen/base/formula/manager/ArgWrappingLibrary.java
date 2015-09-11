@@ -64,7 +64,7 @@ public class ArgWrappingLibrary implements FunctionLibrary
 	}
 
 	/**
-	 * Delegate anything except arg(n) to the underlying FunctionLibrary.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Function getFunction(String functionName)
@@ -86,7 +86,7 @@ public class ArgWrappingLibrary implements FunctionLibrary
 	}
 
 	/**
-	 * Delegate to the underlying FunctionLibrary.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Function getBracketFunction(String functionName)

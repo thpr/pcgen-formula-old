@@ -15,8 +15,6 @@
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package pcgen.base.formula.function;
-
 /**
  * pcgen.base.formula.function is a package that contains the "built-in"
  * functions for the formula system. These are general mathematical
@@ -26,3 +24,4 @@ package pcgen.base.formula.function;
  * the purpose of this package. Domain specific functions should not be present
  * here.
  */
+package pcgen.base.formula.function;

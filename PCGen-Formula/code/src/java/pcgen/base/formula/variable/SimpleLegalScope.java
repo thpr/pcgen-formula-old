@@ -82,7 +82,7 @@ public class SimpleLegalScope implements LegalScope
 	}
 
 	/**
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString()

@@ -48,11 +48,15 @@ public abstract class AbstractNEPCalculation<T> implements NEPCalculation<T>
 	 */
 	public AbstractNEPCalculation(BasicCalculation<T> calc)
 	{
+		if (calc == null)
+		{
+			throw new IllegalArgumentException("BasicCalculation cannot be null");
+		}
 		basicCalc = calc;
 	}
 
 	/**
-	 * @see pcgen.base.calculation.CalculationInfo#getVariableFormat()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Class<T> getVariableFormat()
@@ -61,7 +65,7 @@ public abstract class AbstractNEPCalculation<T> implements NEPCalculation<T>
 	}
 
 	/**
-	 * @see pcgen.base.calculation.CalculationInfo#getIdentification()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getIdentification()
@@ -70,8 +74,7 @@ public abstract class AbstractNEPCalculation<T> implements NEPCalculation<T>
 	}
 
 	/**
-	 * @see pcgen.base.calculation.NEPCalculation#getDependencies(pcgen.base.formula.manager.ScopeInformation,
-	 *      pcgen.base.formula.dependency.DependencyManager)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void getDependencies(ScopeInformation scopeInfo,
@@ -80,7 +83,7 @@ public abstract class AbstractNEPCalculation<T> implements NEPCalculation<T>
 	}
 
 	/**
-	 * @see pcgen.base.calculation.CalculationInfo#getInherentPriority()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int getInherentPriority()

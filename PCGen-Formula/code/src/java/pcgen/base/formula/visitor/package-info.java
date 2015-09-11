@@ -15,8 +15,6 @@
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package pcgen.base.formula.visitor;
-
 /**
  * pcgen.base.formula.visitor is a package of visitors that traverse the tree of
  * objects that make up a formula.
@@ -45,3 +43,4 @@ package pcgen.base.formula.visitor;
  * delay). So this takes on some slightly annoying code to rapidly catch new
  * features needed as a result of a (hopefully rare) parser change.
  */
+package pcgen.base.formula.visitor;

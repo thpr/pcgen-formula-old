@@ -32,9 +32,11 @@ import pcgen.base.formula.parse.Node;
 public final class VisitorUtilities
 {
 
+	/**
+	 * Private Constructor for Utility Class.
+	 */
 	private VisitorUtilities()
 	{
-		//Do not instantiate Utility class
 	}
 
 	/**

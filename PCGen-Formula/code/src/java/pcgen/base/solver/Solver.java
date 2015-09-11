@@ -304,6 +304,9 @@ public class Solver<T>
 	 * A Convenience method used to "reverse" the sourceList map. This is
 	 * intended to be private, and since it is used in a "diagnosis"
 	 * infrastructure is not particularly performance sensitive.
+	 * 
+	 * @return A version of the sourceList map showing the source of each
+	 *         Modifier in this Solver
 	 */
 	private Map<Modifier<T>, Object> getReversedSources()
 	{

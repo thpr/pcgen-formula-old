@@ -61,10 +61,11 @@ public abstract class AbstractFormulaTestCase extends TestCase
 	protected SimpleVariableStore store;
 	protected LegalScope globalScope;
 	protected ScopeInstance globalScopeInst;
-	private LegalScopeLibrary scopeLibrary;
+	protected LegalScopeLibrary scopeLibrary;
 	protected VariableLibrary varLibrary;
-	private FormatManager<Number> numberManager = new NumberManager();
-	private FormatManager<Boolean> booleanManager = new BooleanManager();
+	protected FormatManager<Number> numberManager = new NumberManager();
+	protected FormatManager<Boolean> booleanManager = new BooleanManager();
+	protected FormulaManager fm;
 
 	@Override
 	protected void setUp() throws Exception
@@ -79,7 +80,7 @@ public abstract class AbstractFormulaTestCase extends TestCase
 		ftnLibrary = new SimpleFunctionLibrary();
 		staticVisitor = new StaticVisitor(ftnLibrary);
 		store = new SimpleVariableStore();
-		FormulaManager fm =
+		fm =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary, store);
 		valid = new SemanticsVisitor(fm, globalScope);
 		eval = new EvaluateVisitor(fm, globalScopeInst);

@@ -65,7 +65,7 @@ public class VariableLibrary
 
 	/**
 	 * Holds a map from variable names and LegalScope objects to the format for
-	 * that variable
+	 * that variable.
 	 */
 	private DoubleKeyMap<String, LegalScope, FormatManager<?>> variableDefs =
 			new DoubleKeyMap<>(CaseInsensitiveMap.class, HashMap.class);
@@ -331,7 +331,7 @@ public class VariableLibrary
 	}
 
 	/**
-	 * Ensure a name is not null, zero length, or whitespace padded
+	 * Ensure a name is not null, zero length, or whitespace padded.
 	 */
 	private void checkLegalVarName(String varName)
 	{

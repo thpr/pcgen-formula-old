@@ -25,9 +25,11 @@ import pcgen.base.formula.util.KeyUtilities;
 public final class FormulaSemanticsUtilities
 {
 
+	/**
+	 * Private Constructor for Utility Class.
+	 */
 	private FormulaSemanticsUtilities()
 	{
-		//Cannot instantiate utility class
 	}
 
 	/**

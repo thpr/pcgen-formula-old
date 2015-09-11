@@ -32,7 +32,7 @@ public final class ScopeDatabase
 {
 
 	/**
-	 * The map that associates VariableScope objects to ScopeInformation objects
+	 * The map that associates VariableScope objects to ScopeInformation objects.
 	 */
 	private Map<ScopeInstance, ScopeInformation> map =
 			new HashMap<ScopeInstance, ScopeInformation>();

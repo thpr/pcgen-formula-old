@@ -31,12 +31,15 @@ import pcgen.base.formula.semantics.SemanticsKey;
  * 
  * External storage helps avoid dependency loops.
  */
+@SuppressWarnings("checkstyle:JavadocVariableCheck")
 public final class KeyUtilities
 {
 
+	/**
+	 * Private Constructor for Utility Class.
+	 */
 	private KeyUtilities()
 	{
-		//Do not instantiate utility class
 	}
 
 	public static final DependencyKey<ArgumentDependencyManager> DEP_ARGUMENT =

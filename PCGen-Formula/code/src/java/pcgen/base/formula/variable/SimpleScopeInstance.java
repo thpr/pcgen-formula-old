@@ -75,7 +75,7 @@ public class SimpleScopeInstance implements ScopeInstance
 	}
 
 	/**
-	 * @see pcgen.base.formula.base.ScopeInstance#getLegalScope()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public LegalScope getLegalScope()
@@ -84,7 +84,7 @@ public class SimpleScopeInstance implements ScopeInstance
 	}
 
 	/**
-	 * @see pcgen.base.formula.base.ScopeInstance#getParentScope()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ScopeInstance getParentScope()

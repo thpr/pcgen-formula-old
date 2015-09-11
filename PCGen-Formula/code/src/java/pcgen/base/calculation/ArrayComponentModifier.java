@@ -102,8 +102,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	}
 
 	/**
-	 * @see pcgen.base.calculation.NEPCalculation#getDependencies(pcgen.base.formula.manager.ScopeInformation,
-	 *      pcgen.base.formula.dependency.DependencyManager)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void getDependencies(ScopeInformation scopeInfo,
@@ -113,7 +112,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	}
 
 	/**
-	 * @see pcgen.base.calculation.CalculationInfo#getIdentification()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getIdentification()
@@ -122,7 +121,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	}
 
 	/**
-	 * @see pcgen.base.calculation.CalculationInfo#getVariableFormat()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Class<T[]> getVariableFormat()
@@ -131,9 +130,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	}
 
 	/**
-	 * Returns the inherent priority of the underlying modifier.
-	 * 
-	 * @see pcgen.base.calculation.CalculationInfo#getInherentPriority()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int getInherentPriority()
@@ -142,9 +139,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	}
 
 	/**
-	 * Returns the user priority of the underlying modifier.
-	 * 
-	 * @see pcgen.base.calculation.Modifier#getUserPriority()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int getUserPriority()
@@ -153,7 +148,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	}
 
 	/**
-	 * @see pcgen.base.calculation.Modifier#getInstructions()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getInstructions()

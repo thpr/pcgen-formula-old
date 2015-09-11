@@ -54,6 +54,8 @@ public class SolverFactory
 	 * format of Solver, this method MUST NOT be called a second time for that
 	 * format of Solver.
 	 * 
+	 * @param <T>
+	 *            The format (class) of object changed by the given Modifier
 	 * @param varFormat
 	 *            The format of Solver for which the given Modifier should be
 	 *            the default value
@@ -105,6 +107,9 @@ public class SolverFactory
 	 * values previously provided to the addSolverType() method of the
 	 * SolverFactory.
 	 * 
+	 * @param <T>
+	 *            The format (class) of object managed by the given
+	 *            FormatManager
 	 * @param formatManager
 	 *            The FormatManager used to manage items in this generated
 	 *            Solver
@@ -142,6 +147,9 @@ public class SolverFactory
 	/**
 	 * Returns the default value for a given Format (provided as a Class).
 	 * 
+	 * @param <T>
+	 *            The format (class) of object for which the default value
+	 *            should be returned
 	 * @param varFormat
 	 *            The Class (data format) for which the default value should be
 	 *            returned

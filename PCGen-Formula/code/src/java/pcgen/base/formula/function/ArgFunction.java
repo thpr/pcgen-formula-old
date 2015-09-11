@@ -42,7 +42,7 @@ import pcgen.base.formula.visitor.StaticVisitor;
 public class ArgFunction implements Function
 {
 	/**
-	 * The function name for this Function
+	 * The function name for this Function.
 	 */
 	private static final String FUNCTION_NAME = "ARG";
 
@@ -64,9 +64,7 @@ public class ArgFunction implements Function
 	}
 
 	/**
-	 * The function name "arg".
-	 * 
-	 * @see pcgen.base.formula.function.Function#getFunctionName()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String getFunctionName()
@@ -75,8 +73,7 @@ public class ArgFunction implements Function
 	}
 
 	/**
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor,
-	 *      pcgen.base.formula.parse.Node[])
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)
@@ -156,8 +153,7 @@ public class ArgFunction implements Function
 	}
 
 	/**
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor,
-	 *      pcgen.base.formula.parse.Node[])
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Object evaluate(EvaluateVisitor visitor, Node[] args)

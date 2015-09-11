@@ -160,9 +160,7 @@ public class VariableID<T>
 	}
 
 	/**
-	 * Consistent-with-equals hash code.
-	 * 
-	 * @see java.lang.Object#hashCode()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode()
@@ -174,7 +172,7 @@ public class VariableID<T>
 	}
 
 	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object obj)
@@ -196,4 +194,13 @@ public class VariableID<T>
 			&& formatManager.equals(other.formatManager) && scope.equals(other.scope);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString()
+	{
+		return scope.getLegalScope().getName() + " Variable: " + varName + " ("
+			+ formatManager.getIdentifierType() + ")";
+	}
 }

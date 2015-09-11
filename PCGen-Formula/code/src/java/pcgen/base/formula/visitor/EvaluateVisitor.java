@@ -331,9 +331,8 @@ public class EvaluateVisitor implements FormulaParserVisitor
 	@Override
 	public Object visit(ASTQuotString node, Object data)
 	{
-		//Should be stripped by the function
-		throw new IllegalStateException(
-			"Evaluation called on invalid Formula (reached Quoted String)");
+		//The quotes are stripped by the parser
+		return node.getText();
 	}
 
 	/**

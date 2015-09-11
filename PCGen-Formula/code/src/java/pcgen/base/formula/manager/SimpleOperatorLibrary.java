@@ -38,9 +38,7 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 			new HashMapToList<Operator, OperatorAction>();
 
 	/**
-	 * Add a new OperatorAction to this SimpleOperatorLibrary.
-	 * 
-	 * @see pcgen.base.formula.manager.OperatorLibrary#addAction(pcgen.base.formula.base.OperatorAction)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void addAction(OperatorAction action)
@@ -49,8 +47,7 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 	}
 
 	/**
-	 * @see pcgen.base.formula.manager.OperatorLibrary#evaluate(pcgen.base.formula.parse.Operator,
-	 *      java.lang.Object, java.lang.Object)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Object evaluate(Operator operator, Object o1, Object o2)
@@ -78,8 +75,7 @@ public class SimpleOperatorLibrary implements OperatorLibrary
 	}
 
 	/**
-	 * @see pcgen.base.formula.manager.OperatorLibrary#processAbstract(pcgen.base.formula.parse.Operator,
-	 *      java.lang.Class, java.lang.Class)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Class<?> processAbstract(Operator operator, Class<?> format1,

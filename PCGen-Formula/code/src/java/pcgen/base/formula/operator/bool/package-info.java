@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 (C) Tom Parker <thpr@users.sourceforge.net>
+ * Copyright 2015 (C) Tom Parker <thpr@users.sourceforge.net>
  * 
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -15,19 +15,9 @@
  * along with this library; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
-package pcgen.base.formula.base;
-
 /**
- * pcgen.base.formula.base is a package that represents widely-shared items
- * across pcgen.base.formula.
- * 
- * In general, items here should have very few external dependencies, and with
- * few exceptions, dependencies should be exclusive to items within the JDK or
- * outside of pcgen.base.formula.
- * 
- * It is intended that this is a "foundation" upon which many other things in
- * pcgen.base.formula.* are built upon. Therefore, it is expected that items in
- * this package will have few dependencies, but will have MANY things dependent
- * upon them. (Yes, this implies that many of the items in this package are or
- * should be interfaces).
+ * pcgen.base.formula.operator.bool is a package that contains Operator
+ * objects that work with the Boolean data format.
  */
+package pcgen.base.formula.operator.bool;
+

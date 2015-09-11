@@ -166,10 +166,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	}
 
 	/**
-	 * Returns the FormulaSemantics for this NEPFormula.
-	 * 
-	 * @see pcgen.base.formula.inst.NEPFormula#isValid(pcgen.base.formula.manager.FormulaManager,
-	 *      pcgen.base.formula.base.LegalScope, pcgen.base.format.FormatManager)
+	 * {@inheritDoc}
 	 */
 	@Override
 	public FormulaSemantics isValid(FormulaManager fm, LegalScope legalScope,
@@ -184,9 +181,7 @@ public class ComplexNEPFormula<T> implements NEPFormula<T>
 	}
 
 	/**
-	 * Returns a String representation of this NEPFormula.
-	 * 
-	 * @see java.lang.Object#toString()
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString()

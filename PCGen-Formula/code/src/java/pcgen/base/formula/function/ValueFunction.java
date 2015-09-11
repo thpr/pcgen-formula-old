@@ -39,6 +39,9 @@ import pcgen.base.formula.visitor.StaticVisitor;
  */
 public class ValueFunction implements Function
 {
+	/**
+	 * The function name for the ValueFunction.
+	 */
 	private static final String FUNCTION_NAME = "VALUE";
 
 	/**
@@ -69,8 +72,7 @@ public class ValueFunction implements Function
 	}
 
 	/**
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor,
-	 *      pcgen.base.formula.parse.Node[])
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Boolean isStatic(StaticVisitor visitor, Node[] args)
