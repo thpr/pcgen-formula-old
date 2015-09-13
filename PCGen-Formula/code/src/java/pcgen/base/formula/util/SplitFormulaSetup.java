@@ -83,6 +83,10 @@ public class SplitFormulaSetup
 	 * the LegalScopeLibrary of this SplitFormulaSetup or this method will throw
 	 * an Exception.
 	 * 
+	 * Note: The LegalScope returned by the LegalScopeLibrary of this
+	 * SplitFormulaSetup must also be a "Global" scope in that it must return
+	 * null as the parent LegalScope or this method will throw an Exception.
+	 * 
 	 * @param globalName
 	 *            The name of the global scope for the IndividualSetup to be
 	 *            returned
@@ -160,19 +164,22 @@ public class SplitFormulaSetup
 	{
 
 		/**
-		 * The VariableLibrary for this IndividualSetup.
-		 */
-		public final FormulaManager formulaManager;
-
-		/**
-		 * The ScopeInformation for this IndividualSetup.
-		 */
-		public final ScopeInformation scopeInfo;
-
-		/**
 		 * The ScopeInstanceFactory for this IndividualSetup.
 		 */
-		public final ScopeInstanceFactory instanceFactory;
+		public final ScopeInstanceFactory instanceFactory =
+				new ScopeInstanceFactory(legalScopeLib);
+
+		/**
+		 * The WriteableVariableStore for this IndividualSetup.
+		 */
+		public final WriteableVariableStore variableStore =
+				new SimpleVariableStore();
+
+		/**
+		 * The VariableLibrary for this IndividualSetup.
+		 */
+		public final FormulaManager formulaManager = new FormulaManager(
+			functionLib, operatorLib, variableLib, variableStore);
 
 		/**
 		 * The LegalScope for this IndividualSetup.
@@ -185,9 +192,9 @@ public class SplitFormulaSetup
 		public final ScopeInstance globalScopeInst;
 
 		/**
-		 * The WriteableVariableStore for this IndividualSetup.
+		 * The ScopeInformation for this IndividualSetup.
 		 */
-		public final WriteableVariableStore variableStore;
+		public final ScopeInformation scopeInfo;
 
 		/**
 		 * Constructs a new IndividualSetup with the "global" LegalScope of the
@@ -199,13 +206,8 @@ public class SplitFormulaSetup
 		 */
 		public IndividualSetup(String globalName)
 		{
-			instanceFactory = new ScopeInstanceFactory(legalScopeLib);
 			globalScope = legalScopeLib.getScope(globalName);
 			globalScopeInst = instanceFactory.getInstance(null, globalScope);
-			variableStore = new SimpleVariableStore();
-			formulaManager =
-					new FormulaManager(functionLib, operatorLib, variableLib,
-						variableStore);
 			scopeInfo = new ScopeInformation(formulaManager, globalScopeInst);
 		}
 	}
