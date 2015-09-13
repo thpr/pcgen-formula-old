@@ -21,14 +21,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.dependency.VariableDependencyManager;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
-import pcgen.base.formula.testsupport.TestUtilities;
-import pcgen.base.formula.util.KeyUtilities;
 import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
+import pcgen.base.testsupport.AbstractFormulaTestCase;
+import pcgen.base.testsupport.TestUtilities;
 
 public class AbsFunctionTest extends AbstractFormulaTestCase
 {
@@ -37,7 +34,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		ftnLibrary.addFunction(new AbsFunction());
+		getFunctionLibrary().addFunction(new AbsFunction());
 	}
 
 	@Test
@@ -45,7 +42,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(2, 3)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isNotValid(formula, node);
+		isNotValid(formula, node, numberManager);
 	}
 
 	@Test
@@ -53,7 +50,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(ab)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isNotValid(formula, node);
+		isNotValid(formula, node, numberManager);
 	}
 
 	@Test
@@ -61,7 +58,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(\"ab\")";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isNotValid(formula, node);
+		isNotValid(formula, node, numberManager);
 	}
 
 	@Test
@@ -69,7 +66,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(1)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Integer.valueOf(1));
 	}
@@ -79,7 +76,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(-2)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Integer.valueOf(2));
 	}
@@ -89,7 +86,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(6.3)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Double.valueOf(6.3));
 		Object rv =
@@ -102,7 +99,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(-5.3)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Double.valueOf(5.3));
 		Object rv =
@@ -115,7 +112,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs( -5.3)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Double.valueOf(5.3));
 	}
@@ -125,7 +122,7 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs(-5.3 )";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Double.valueOf(5.3));
 	}
@@ -135,30 +132,22 @@ public class AbsFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "abs (-5.3)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Double.valueOf(5.3));
-		DependencyManager depManager = new DependencyManager();
-		VariableDependencyManager varManager = new VariableDependencyManager();
-		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
-		varCapture.visit(node, depManager);
-		List<VariableID<?>> vars = varManager.getVariables();
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(0, vars.size());
 	}
 
 	@Test
 	public void testVariable()
 	{
-		store.put(getVariable("a"), 5);
+		getVariableStore().put(getVariable("a"), 5);
 		String formula = "abs(a)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
-		DependencyManager depManager = new DependencyManager();
-		VariableDependencyManager varManager = new VariableDependencyManager();
-		depManager.addDependency(KeyUtilities.DEP_VARIABLE, varManager);
-		varCapture.visit(node, depManager);
-		List<VariableID<?>> vars = varManager.getVariables();
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(1, vars.size());
 		VariableID<?> var = vars.get(0);
 		assertEquals("a", var.getName());

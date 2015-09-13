@@ -26,13 +26,10 @@ import org.junit.Test;
 
 import pcgen.base.calculation.ArrayComponentModifier;
 import pcgen.base.calculation.Modifier;
-import pcgen.base.formula.base.LegalScope;
-import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.util.SplitFormulaSetup;
 import pcgen.base.formula.variable.SimpleLegalScope;
-import pcgen.base.formula.variable.SimpleScopeInstance;
 import pcgen.base.solver.testsupport.AbstractModifier;
-import pcgen.base.solver.testsupport.SolverUtilities;
 
 public class SolverTest extends TestCase
 {
@@ -42,11 +39,10 @@ public class SolverTest extends TestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		FormulaManager fm = SolverUtilities.getEmptyFormulaManager();
-		LegalScope globalScope = new SimpleLegalScope(null, "Global");
-		SimpleScopeInstance scopeInst =
-				new SimpleScopeInstance(null, globalScope);
-		si = new ScopeInformation(fm, scopeInst);
+		SplitFormulaSetup sfs = new SplitFormulaSetup();
+		sfs.getLegalScopeLibrary().registerScope(
+			new SimpleLegalScope(null, "Global"));
+		si = sfs.getIndividualSetup("Global").scopeInfo;
 	}
 
 	@Test

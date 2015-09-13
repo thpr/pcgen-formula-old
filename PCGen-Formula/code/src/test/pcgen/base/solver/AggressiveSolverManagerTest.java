@@ -24,31 +24,40 @@ import pcgen.base.calculation.CalculationModifier;
 import pcgen.base.calculation.FormulaCalculation;
 import pcgen.base.calculation.NEPCalculation;
 import pcgen.base.calculation.testsupport.BasicCalc;
+import pcgen.base.formula.base.LegalScope;
+import pcgen.base.formula.base.ScopeInstance;
 import pcgen.base.formula.inst.ComplexNEPFormula;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.manager.FormulaManager;
 import pcgen.base.formula.manager.VariableLibrary;
 import pcgen.base.formula.operator.number.NumberAdd;
-import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
 import pcgen.base.formula.util.FormulaUtilities;
 import pcgen.base.formula.variable.VariableID;
+import pcgen.base.formula.variable.WriteableVariableStore;
 import pcgen.base.solver.testsupport.AbstractModifier;
+import pcgen.base.testsupport.AbstractFormulaTestCase;
 
 public class AggressiveSolverManagerTest extends AbstractFormulaTestCase
 {
 	private AggressiveSolverManager manager;
 	private SolverFactory solverFactory = new SolverFactory();
-	private ScopeInformation si;
+	private VariableLibrary varLibrary;
+	private WriteableVariableStore store;
+	private LegalScope globalScope;
+	private ScopeInstance globalScopeInst;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		si = new ScopeInformation(fm, globalScopeInst);
+		varLibrary = getVariableLibrary();
+		store = getVariableStore();
+		globalScope = getGlobalScope();
+		globalScopeInst = getGlobalScopeInst();
 		solverFactory.addSolverFormat(Number.class,
 			AbstractModifier.setNumber(0, 0));
-		manager = new AggressiveSolverManager(fm, solverFactory, store);
-		FormulaUtilities.loadBuiltInFunctions(ftnLibrary);
-		FormulaUtilities.loadBuiltInOperators(opLibrary);
+		manager = new AggressiveSolverManager(getFormulaManager(), solverFactory, store);
+		FormulaUtilities.loadBuiltInFunctions(getFunctionLibrary());
+		FormulaUtilities.loadBuiltInOperators(getOperatorLibrary());
 	}
 
 	@Test
@@ -63,9 +72,10 @@ public class AggressiveSolverManagerTest extends AbstractFormulaTestCase
 		{
 			//ok
 		}
+		FormulaManager formulaManager = getFormulaManager();
 		try
 		{
-			new AggressiveSolverManager(fm, null, store);
+			new AggressiveSolverManager(formulaManager, null, store);
 			fail("No nulls in constructor");
 		}
 		catch (IllegalArgumentException e)
@@ -74,7 +84,7 @@ public class AggressiveSolverManagerTest extends AbstractFormulaTestCase
 		}
 		try
 		{
-			new AggressiveSolverManager(fm, solverFactory, null);
+			new AggressiveSolverManager(formulaManager, solverFactory, null);
 			fail("No nulls in constructor");
 		}
 		catch (IllegalArgumentException e)
@@ -170,7 +180,7 @@ public class AggressiveSolverManagerTest extends AbstractFormulaTestCase
 			//ok
 		}
 		//Invalid ID very bad
-		VariableLibrary altLibrary = new VariableLibrary(scopeLibrary);
+		VariableLibrary altLibrary = new VariableLibrary(getScopeLibrary());
 		altLibrary.assertLegalVariableID("brains", globalScope, numberManager);
 		VariableID<Number> brains =
 				(VariableID<Number>) altLibrary.getVariableID(globalScopeInst,
@@ -357,7 +367,7 @@ public class AggressiveSolverManagerTest extends AbstractFormulaTestCase
 		//Not present is Harmless
 		manager.removeModifier(hp, modifier, source);
 		//Invalid ID very bad
-		VariableLibrary altLibrary = new VariableLibrary(scopeLibrary);
+		VariableLibrary altLibrary = new VariableLibrary(getScopeLibrary());
 		altLibrary.assertLegalVariableID("brains", globalScope, numberManager);
 		VariableID<Number> brains =
 				(VariableID<Number>) altLibrary.getVariableID(globalScopeInst,

@@ -20,9 +20,9 @@ package pcgen.base.formula.function;
 import org.junit.Test;
 
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
-import pcgen.base.formula.testsupport.TestUtilities;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
+import pcgen.base.testsupport.AbstractFormulaTestCase;
+import pcgen.base.testsupport.TestUtilities;
 
 public class ValueFunctionTest extends AbstractFormulaTestCase
 {
@@ -31,7 +31,7 @@ public class ValueFunctionTest extends AbstractFormulaTestCase
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		ftnLibrary.addFunction(new ValueFunction(4));
+		getFunctionLibrary().addFunction(new ValueFunction(4));
 	}
 
 	@Test
@@ -39,7 +39,7 @@ public class ValueFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "value(2)";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isNotValid(formula, node);
+		isNotValid(formula, node, numberManager);
 	}
 
 	@Test
@@ -47,7 +47,7 @@ public class ValueFunctionTest extends AbstractFormulaTestCase
 	{
 		String formula = "value()";
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, true);
 		evaluatesTo(formula, node, Integer.valueOf(4));
 		Object rv =

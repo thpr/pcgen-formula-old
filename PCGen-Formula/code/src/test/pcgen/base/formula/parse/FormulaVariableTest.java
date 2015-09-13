@@ -19,35 +19,36 @@ package pcgen.base.formula.parse;
 
 import java.util.List;
 
-import junit.framework.TestCase;
-
 import org.junit.Test;
 
+import pcgen.base.formula.manager.OperatorLibrary;
 import pcgen.base.formula.operator.number.NumberAdd;
 import pcgen.base.formula.operator.number.NumberDivide;
 import pcgen.base.formula.operator.number.NumberEquals;
 import pcgen.base.formula.operator.number.NumberMultiply;
 import pcgen.base.formula.operator.number.NumberSubtract;
-import pcgen.base.formula.semantics.FormulaSemantics;
-import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
-import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
-import pcgen.base.formula.testsupport.TestUtilities;
-import pcgen.base.formula.util.KeyUtilities;
 import pcgen.base.formula.variable.VariableID;
+import pcgen.base.formula.variable.WriteableVariableStore;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
+import pcgen.base.testsupport.AbstractFormulaTestCase;
+import pcgen.base.testsupport.TestUtilities;
 
 public class FormulaVariableTest extends AbstractFormulaTestCase
 {
+
+	private WriteableVariableStore store;
 
 	@Override
 	protected void setUp() throws Exception
 	{
 		super.setUp();
-		opLibrary.addAction(new NumberEquals());
-		opLibrary.addAction(new NumberAdd());
-		opLibrary.addAction(new NumberSubtract());
-		opLibrary.addAction(new NumberDivide());
-		opLibrary.addAction(new NumberMultiply());
+		store = getVariableStore();
+		OperatorLibrary operatorLibrary = getOperatorLibrary();
+		operatorLibrary.addAction(new NumberEquals());
+		operatorLibrary.addAction(new NumberAdd());
+		operatorLibrary.addAction(new NumberSubtract());
+		operatorLibrary.addAction(new NumberDivide());
+		operatorLibrary.addAction(new NumberMultiply());
 	}
 
 	@Test
@@ -56,13 +57,13 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		String formula = "a";
 		store.put(getVariable(formula), 5);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
-		List<VariableID<?>> vars = getVariables(formula, node);
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScopeInst, var0.getScope());
+		assertEquals(getGlobalScopeInst(), var0.getScope());
 		evaluatesTo(formula, node, Integer.valueOf(5));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
@@ -75,13 +76,13 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		String formula = "a";
 		store.put(getVariable(formula), -7);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
-		List<VariableID<?>> vars = getVariables(formula, node);
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScopeInst, var0.getScope());
+		assertEquals(getGlobalScopeInst(), var0.getScope());
 		evaluatesTo(formula, node, Integer.valueOf(-7));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
@@ -94,13 +95,13 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		String formula = "a";
 		store.put(getVariable(formula), -7.3);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
-		List<VariableID<?>> vars = getVariables(formula, node);
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScopeInst, var0.getScope());
+		assertEquals(getGlobalScopeInst(), var0.getScope());
 		evaluatesTo(formula, node, Double.valueOf(-7.3));
 		Object rv =
 				new ReconstructionVisitor().visit(node, new StringBuilder());
@@ -114,7 +115,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("a"), 3);
 		store.put(getVariable("b"), 7);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
 		hasABVars(formula, node);
 		//Note integer math
@@ -131,7 +132,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("a"), 3.2);
 		store.put(getVariable("b"), -7.9);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
 		hasABVars(formula, node);
 		//Note integer math
@@ -149,7 +150,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("b"), -7.9);
 		store.put(getVariable("c"), 2.2);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
 		hasABCVars(formula, node);
 		//Note integer math
@@ -165,13 +166,13 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		String formula = "a-3";
 		store.put(getVariable("a"), 3.2);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
-		List<VariableID<?>> vars = getVariables(formula, node);
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(1, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		assertEquals("a", var0.getName());
-		assertEquals(globalScopeInst, var0.getScope());
+		assertEquals(getGlobalScopeInst(), var0.getScope());
 		//Note integer math
 		evaluatesTo(formula, node, Double.valueOf(.2));
 		Object rv =
@@ -186,7 +187,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("a"), 3.2);
 		store.put(getVariable("b"), 2.1);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
 		hasABVars(formula, node);
 		//Note integer math
@@ -203,7 +204,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("a"), 3.2);
 		store.put(getVariable("b"), 2.1);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, booleanManager);
 		isStatic(formula, node, false);
 		hasABVars(formula, node);
 		//Note integer math
@@ -218,16 +219,10 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 	{
 		String formula = "a==b";
 		store.put(getVariable("a"), 3.2);
-		store.put(getBooleanVariable("b"), false);
+		getVariableStore().put(getBooleanVariable("b"), false);
 		SimpleNode node = TestUtilities.doParse(formula);
-		FormulaSemantics semantics =
-				FormulaSemanticsUtilities.getInitializedSemantics();
-		node.jjtAccept(valid, semantics);
-		if (semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
-		{
-			TestCase.fail("Expected Invalid Formula: " + formula
-				+ " due to mismatched variables");
-		}
+		isNotValid(formula, node, numberManager);
+		isNotValid(formula, node, booleanManager);
 	}
 
 	@Test
@@ -237,7 +232,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("a"), 0.0);
 		store.put(getVariable("b"), 0);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, booleanManager);
 		isStatic(formula, node, false);
 		hasABVars(formula, node);
 		//Note integer math
@@ -254,7 +249,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("a"), -2.1);
 		store.put(getVariable("b"), -2.1);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, booleanManager);
 		isStatic(formula, node, false);
 		hasABVars(formula, node);
 		//Note integer math
@@ -282,7 +277,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("b"), 1.2);
 		store.put(getVariable("c"), -.3);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
 		hasABCVars(formula, node);
 		evaluatesTo(formula, node, Double.valueOf(1.8));
@@ -299,7 +294,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 		store.put(getVariable("b"), 1.2);
 		store.put(getVariable("c"), -.3);
 		SimpleNode node = TestUtilities.doParse(formula);
-		isValid(formula, node);
+		isValid(formula, node, numberManager);
 		isStatic(formula, node, false);
 		hasABCVars(formula, node);
 		evaluatesTo(formula, node, Double.valueOf(2));
@@ -310,7 +305,7 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 
 	private void hasABCVars(String formula, SimpleNode node)
 	{
-		List<VariableID<?>> vars = getVariables(formula, node);
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(3, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		VariableID<?> var1 = vars.get(1);
@@ -358,14 +353,14 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 			}
 		}
 
-		assertEquals(globalScopeInst, var0.getScope());
-		assertEquals(globalScopeInst, var1.getScope());
-		assertEquals(globalScopeInst, var2.getScope());
+		assertEquals(getGlobalScopeInst(), var0.getScope());
+		assertEquals(getGlobalScopeInst(), var1.getScope());
+		assertEquals(getGlobalScopeInst(), var2.getScope());
 	}
 
 	private void hasABVars(String formula, SimpleNode node)
 	{
-		List<VariableID<?>> vars = getVariables(formula, node);
+		List<VariableID<?>> vars = getVariables(node);
 		assertEquals(2, vars.size());
 		VariableID<?> var0 = vars.get(0);
 		VariableID<?> var1 = vars.get(1);
@@ -380,8 +375,8 @@ public class FormulaVariableTest extends AbstractFormulaTestCase
 			assertEquals("b", var0.getName());
 			assertEquals("a", var1.getName());
 		}
-		assertEquals(globalScopeInst, var0.getScope());
-		assertEquals(globalScopeInst, var1.getScope());
+		assertEquals(getGlobalScopeInst(), var0.getScope());
+		assertEquals(getGlobalScopeInst(), var1.getScope());
 	}
 
 }

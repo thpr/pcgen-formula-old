@@ -210,7 +210,7 @@ public class FormulaManager
 		Class<?> nsFormat = formatManager.getManagedClass();
 		Class<?> formulaFormat =
 				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
-		if (!formulaFormat.equals(nsFormat))
+		if (!nsFormat.isAssignableFrom(formulaFormat))
 		{
 			FormulaSemanticsUtilities.setInvalid(semantics,
 				"Parse Error: Invalid Value Format: " + formulaFormat

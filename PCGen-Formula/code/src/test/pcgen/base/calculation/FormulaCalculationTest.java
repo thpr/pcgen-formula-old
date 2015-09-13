@@ -25,10 +25,10 @@ import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.inst.ComplexNEPFormula;
 import pcgen.base.formula.manager.ScopeInformation;
 import pcgen.base.formula.operator.number.NumberAdd;
-import pcgen.base.formula.testsupport.AbstractFormulaTestCase;
 import pcgen.base.formula.util.FormulaUtilities;
 import pcgen.base.formula.variable.SimpleLegalScope;
 import pcgen.base.formula.variable.SimpleScopeInstance;
+import pcgen.base.testsupport.AbstractFormulaTestCase;
 
 public class FormulaCalculationTest extends AbstractFormulaTestCase
 {
@@ -44,9 +44,9 @@ public class FormulaCalculationTest extends AbstractFormulaTestCase
 		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		SimpleScopeInstance scopeInst =
 				new SimpleScopeInstance(null, globalScope);
-		si = new ScopeInformation(fm, scopeInst);
-		FormulaUtilities.loadBuiltInFunctions(ftnLibrary);
-		FormulaUtilities.loadBuiltInOperators(opLibrary);
+		si = new ScopeInformation(getFormulaManager(), scopeInst);
+		FormulaUtilities.loadBuiltInFunctions(getFunctionLibrary());
+		FormulaUtilities.loadBuiltInOperators(getOperatorLibrary());
 	}
 
 	@Test
