@@ -67,7 +67,10 @@ public class SimpleScopeInstance implements ScopeInstance
 			if (!scope.getParentScope().equals(parent.getLegalScope()))
 			{
 				throw new IllegalArgumentException(
-					"Incompatible ScopeInstance and LegalScope");
+					"Incompatible ScopeInstance ("
+						+ parent.getLegalScope().getName()
+						+ ") and LegalScope parent ("
+						+ scope.getParentScope().getName() + ")");
 			}
 		}
 		this.parent = parent;
