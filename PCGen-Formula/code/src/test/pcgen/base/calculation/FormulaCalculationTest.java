@@ -22,11 +22,11 @@ import org.junit.Test;
 import pcgen.base.calculation.testsupport.BasicCalc;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.inst.ComplexNEPFormula;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.inst.FormulaUtilities;
+import pcgen.base.formula.inst.ScopeInformation;
+import pcgen.base.formula.inst.SimpleLegalScope;
+import pcgen.base.formula.inst.SimpleScopeInstance;
 import pcgen.base.formula.operator.number.NumberAdd;
-import pcgen.base.formula.util.FormulaUtilities;
-import pcgen.base.formula.variable.SimpleLegalScope;
-import pcgen.base.formula.variable.SimpleScopeInstance;
 import pcgen.base.testsupport.AbstractFormulaTestCase;
 
 public class FormulaCalculationTest extends AbstractFormulaTestCase

@@ -21,26 +21,27 @@ import java.util.List;
 
 import junit.framework.TestCase;
 import pcgen.base.format.BooleanManager;
-import pcgen.base.format.FormatManager;
 import pcgen.base.format.NumberManager;
+import pcgen.base.formula.analysis.DependencyKeyUtilities;
+import pcgen.base.formula.analysis.FormulaSemanticsUtilities;
+import pcgen.base.formula.analysis.FormulaValidity;
+import pcgen.base.formula.analysis.VariableDependencyManager;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.base.FormulaManager;
+import pcgen.base.formula.base.FormulaSemantics;
+import pcgen.base.formula.base.FunctionLibrary;
 import pcgen.base.formula.base.LegalScope;
+import pcgen.base.formula.base.LegalScopeLibrary;
+import pcgen.base.formula.base.OperatorLibrary;
 import pcgen.base.formula.base.ScopeInstance;
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.dependency.VariableDependencyManager;
-import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.FunctionLibrary;
-import pcgen.base.formula.manager.LegalScopeLibrary;
-import pcgen.base.formula.manager.OperatorLibrary;
-import pcgen.base.formula.manager.VariableLibrary;
+import pcgen.base.formula.base.VariableID;
+import pcgen.base.formula.base.VariableLibrary;
+import pcgen.base.formula.base.WriteableVariableStore;
+import pcgen.base.formula.inst.SimpleLegalScope;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.semantics.FormulaSemantics;
-import pcgen.base.formula.semantics.FormulaValidity;
-import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.util.SplitFormulaSetup;
-import pcgen.base.formula.util.SplitFormulaSetup.IndividualSetup;
-import pcgen.base.formula.variable.SimpleLegalScope;
-import pcgen.base.formula.variable.VariableID;
-import pcgen.base.formula.variable.WriteableVariableStore;
+import pcgen.base.solver.SplitFormulaSetup;
+import pcgen.base.solver.SplitFormulaSetup.IndividualSetup;
+import pcgen.base.util.FormatManager;
 
 public abstract class AbstractFormulaTestCase extends TestCase
 {
@@ -67,11 +68,13 @@ public abstract class AbstractFormulaTestCase extends TestCase
 		FormulaSemantics semantics =
 				localSetup.getFormulaManager().isValid(node, getGlobalScope(),
 					formatManager);
-		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID).isValid())
 		{
-			TestCase.fail("Expected Valid Formula: " + formula
+			TestCase.fail("Expected Valid Formula: "
+				+ formula
 				+ " but was told: "
-				+ semantics.getInfo(KeyUtilities.SEM_REPORT).getReport());
+				+ semantics.getInfo(FormulaSemanticsUtilities.SEM_REPORT)
+					.getReport());
 		}
 	}
 
@@ -118,7 +121,8 @@ public abstract class AbstractFormulaTestCase extends TestCase
 		FormulaSemantics semantics =
 				localSetup.getFormulaManager().isValid(node, getGlobalScope(),
 					formatManager);
-		FormulaValidity isValid = semantics.getInfo(KeyUtilities.SEM_VALID);
+		FormulaValidity isValid =
+				semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID);
 		if (isValid.isValid())
 		{
 			TestCase.fail("Expected Invalid Formula: " + formula
@@ -130,7 +134,7 @@ public abstract class AbstractFormulaTestCase extends TestCase
 	{
 		DependencyManager fdm = new DependencyManager();
 		VariableDependencyManager vdm = new VariableDependencyManager();
-		fdm.addDependency(KeyUtilities.DEP_VARIABLE, vdm);
+		fdm.addDependency(DependencyKeyUtilities.DEP_VARIABLE, vdm);
 		localSetup.getScopeInfo().getDependencies(node, fdm);
 		return vdm.getVariables();
 	}
@@ -138,8 +142,8 @@ public abstract class AbstractFormulaTestCase extends TestCase
 	protected VariableID<Number> getVariable(String formula)
 	{
 		VariableLibrary variableLibrary = getVariableLibrary();
-		variableLibrary.assertLegalVariableID(formula, localSetup.getGlobalScope(),
-			numberManager);
+		variableLibrary.assertLegalVariableID(formula,
+			localSetup.getGlobalScope(), numberManager);
 		return (VariableID<Number>) variableLibrary.getVariableID(
 			localSetup.getGlobalScopeInst(), formula);
 	}
@@ -147,8 +151,8 @@ public abstract class AbstractFormulaTestCase extends TestCase
 	protected VariableID<Boolean> getBooleanVariable(String formula)
 	{
 		VariableLibrary variableLibrary = getVariableLibrary();
-		variableLibrary.assertLegalVariableID(formula, localSetup.getGlobalScope(),
-			booleanManager);
+		variableLibrary.assertLegalVariableID(formula,
+			localSetup.getGlobalScope(), booleanManager);
 		return (VariableID<Boolean>) variableLibrary.getVariableID(
 			localSetup.getGlobalScopeInst(), formula);
 	}
@@ -170,7 +174,8 @@ public abstract class AbstractFormulaTestCase extends TestCase
 
 	protected WriteableVariableStore getVariableStore()
 	{
-		return (WriteableVariableStore) localSetup.getFormulaManager().getResolver();
+		return (WriteableVariableStore) localSetup.getFormulaManager()
+			.getResolver();
 	}
 
 	protected LegalScope getGlobalScope()

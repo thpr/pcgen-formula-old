@@ -17,11 +17,12 @@
  */
 package pcgen.base.formula.visitor;
 
-import pcgen.base.format.FormatManager;
+import pcgen.base.formula.base.FormulaManager;
+import pcgen.base.formula.base.Function;
 import pcgen.base.formula.base.ScopeInstance;
-import pcgen.base.formula.function.Function;
-import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.VariableLibrary;
+import pcgen.base.formula.base.VariableID;
+import pcgen.base.formula.base.VariableLibrary;
+import pcgen.base.formula.base.VariableStore;
 import pcgen.base.formula.parse.ASTArithmetic;
 import pcgen.base.formula.parse.ASTEquality;
 import pcgen.base.formula.parse.ASTExpon;
@@ -41,8 +42,7 @@ import pcgen.base.formula.parse.FormulaParserVisitor;
 import pcgen.base.formula.parse.Node;
 import pcgen.base.formula.parse.Operator;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.VariableID;
-import pcgen.base.formula.variable.VariableStore;
+import pcgen.base.util.FormatManager;
 
 /**
  * EvaluateVisitor visits a formula in tree form in order to solve the formula -
@@ -273,7 +273,8 @@ public class EvaluateVisitor implements FormulaParserVisitor
 		String varName = node.getText();
 		VariableLibrary varLibrary = fm.getFactory();
 		FormatManager<?> formatManager =
-				fm.getFactory().getVariableFormat(scopeInst.getLegalScope(), varName);
+				fm.getFactory().getVariableFormat(scopeInst.getLegalScope(),
+					varName);
 		if (formatManager != null)
 		{
 			VariableID<?> id = varLibrary.getVariableID(scopeInst, varName);

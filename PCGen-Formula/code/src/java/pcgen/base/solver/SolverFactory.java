@@ -21,8 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import pcgen.base.calculation.Modifier;
-import pcgen.base.format.FormatManager;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.inst.ScopeInformation;
+import pcgen.base.util.FormatManager;
 
 /**
  * A SolverFactory is a centralized location to define a shared default value

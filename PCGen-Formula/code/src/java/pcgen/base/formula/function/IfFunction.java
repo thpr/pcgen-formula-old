@@ -19,11 +19,11 @@ package pcgen.base.formula.function;
 
 import java.util.Arrays;
 
-import pcgen.base.formula.dependency.DependencyManager;
+import pcgen.base.formula.analysis.FormulaSemanticsUtilities;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.base.FormulaSemantics;
+import pcgen.base.formula.base.Function;
 import pcgen.base.formula.parse.Node;
-import pcgen.base.formula.semantics.FormulaSemantics;
-import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
-import pcgen.base.formula.util.KeyUtilities;
 import pcgen.base.formula.visitor.DependencyVisitor;
 import pcgen.base.formula.visitor.EvaluateVisitor;
 import pcgen.base.formula.visitor.SemanticsVisitor;
@@ -43,7 +43,7 @@ public class IfFunction implements Function
 	 * Returns the function name for this function. This is how it is called by
 	 * a user in a formula.
 	 * 
-	 * @see pcgen.base.formula.function.Function#getFunctionName()
+	 * @see pcgen.base.formula.base.Function#getFunctionName()
 	 */
 	@Override
 	public String getFunctionName()
@@ -56,9 +56,9 @@ public class IfFunction implements Function
 	 * Three arguments are required, and each must be a valid formula value
 	 * (number, variable, another function, etc.).
 	 * 
-	 * @see pcgen.base.formula.function.Function#allowArgs(pcgen.base.formula.visitor.SemanticsVisitor,
+	 * @see pcgen.base.formula.base.Function#allowArgs(pcgen.base.formula.visitor.SemanticsVisitor,
 	 *      pcgen.base.formula.parse.Node[],
-	 *      pcgen.base.formula.semantics.FormulaSemantics)
+	 *      pcgen.base.formula.base.FormulaSemantics)
 	 */
 	@Override
 	public final void allowArgs(SemanticsVisitor visitor, Node[] args,
@@ -76,11 +76,13 @@ public class IfFunction implements Function
 		//Boolean conditional node
 		Node conditionalNode = args[0];
 		conditionalNode.jjtAccept(visitor, semantics);
-		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID).isValid())
 		{
 			return;
 		}
-		Class<?> format = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		Class<?> format =
+				semantics.getInfo(FormulaSemanticsUtilities.SEM_FORMAT)
+					.getFormat();
 		if (!format.equals(Boolean.class))
 		{
 			FormulaSemanticsUtilities.setInvalid(semantics,
@@ -94,7 +96,7 @@ public class IfFunction implements Function
 		//If True node
 		Node trueNode = args[1];
 		trueNode.jjtAccept(visitor, semantics);
-		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID).isValid())
 		{
 			return;
 		}
@@ -103,18 +105,22 @@ public class IfFunction implements Function
 		 * match, see below
 		 */
 		@SuppressWarnings("PMD.PrematureDeclaration")
-		Class<?> tFormat = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		Class<?> tFormat =
+				semantics.getInfo(FormulaSemanticsUtilities.SEM_FORMAT)
+					.getFormat();
 
 		//If False node
 		Node falseNode = args[2];
 		falseNode.jjtAccept(visitor, semantics);
-		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID).isValid())
 		{
 			return;
 		}
 
 		//Check for Mismatch in formats between True and False results
-		Class<?> fFormat = semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+		Class<?> fFormat =
+				semantics.getInfo(FormulaSemanticsUtilities.SEM_FORMAT)
+					.getFormat();
 		if (!tFormat.equals(fFormat))
 		{
 			FormulaSemanticsUtilities.setInvalid(semantics,
@@ -132,7 +138,7 @@ public class IfFunction implements Function
 	 * valid values. See evaluate on the Function interface for important
 	 * assumptions made when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor,
+	 * @see pcgen.base.formula.base.Function#evaluate(pcgen.base.formula.visitor.EvaluateVisitor,
 	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
@@ -160,7 +166,7 @@ public class IfFunction implements Function
 	 * isStatic on the Function interface for important assumptions made when
 	 * this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor,
+	 * @see pcgen.base.formula.base.Function#isStatic(pcgen.base.formula.visitor.StaticVisitor,
 	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override
@@ -197,8 +203,8 @@ public class IfFunction implements Function
 	 * getVariables on the Function interface for important assumptions made
 	 * when this method is called.
 	 * 
-	 * @see pcgen.base.formula.function.Function#getDependencies(pcgen.base.formula.visitor.DependencyVisitor,
-	 *      pcgen.base.formula.dependency.DependencyManager,
+	 * @see pcgen.base.formula.base.Function#getDependencies(pcgen.base.formula.visitor.DependencyVisitor,
+	 *      pcgen.base.formula.base.DependencyManager,
 	 *      pcgen.base.formula.parse.Node[])
 	 */
 	@Override

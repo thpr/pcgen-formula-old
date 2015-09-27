@@ -19,16 +19,15 @@ package pcgen.base.formula.inst;
 
 import java.io.StringReader;
 
-import pcgen.base.format.FormatManager;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.base.FormulaManager;
+import pcgen.base.formula.base.FormulaSemantics;
 import pcgen.base.formula.base.LegalScope;
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.ScopeInformation;
 import pcgen.base.formula.parse.FormulaParser;
 import pcgen.base.formula.parse.ParseException;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.semantics.FormulaSemantics;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
+import pcgen.base.util.FormatManager;
 
 /**
  * A ComplexNEPFormula is a formula that is part of the "Native Equation Parser"

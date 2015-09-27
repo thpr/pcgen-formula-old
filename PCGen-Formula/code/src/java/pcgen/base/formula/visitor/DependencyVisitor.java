@@ -17,11 +17,13 @@
  */
 package pcgen.base.formula.visitor;
 
+import pcgen.base.formula.analysis.DependencyKeyUtilities;
+import pcgen.base.formula.analysis.VariableDependencyManager;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.base.FormulaManager;
+import pcgen.base.formula.base.Function;
 import pcgen.base.formula.base.ScopeInstance;
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.dependency.VariableDependencyManager;
-import pcgen.base.formula.function.Function;
-import pcgen.base.formula.manager.FormulaManager;
+import pcgen.base.formula.base.VariableID;
 import pcgen.base.formula.parse.ASTArithmetic;
 import pcgen.base.formula.parse.ASTEquality;
 import pcgen.base.formula.parse.ASTExpon;
@@ -40,8 +42,6 @@ import pcgen.base.formula.parse.ASTUnary;
 import pcgen.base.formula.parse.FormulaParserVisitor;
 import pcgen.base.formula.parse.Node;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.VariableID;
 
 /**
  * A DependencyVisitor captures the dependencies that exist in a Formula.
@@ -231,7 +231,7 @@ public class DependencyVisitor implements FormulaParserVisitor
 	{
 		DependencyManager fdm = (DependencyManager) data;
 		VariableDependencyManager varManager =
-				fdm.getDependency(KeyUtilities.DEP_VARIABLE);
+				fdm.getDependency(DependencyKeyUtilities.DEP_VARIABLE);
 		if (varManager != null)
 		{
 			VariableID<?> id =

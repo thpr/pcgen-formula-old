@@ -19,11 +19,13 @@ package pcgen.base.formula.visitor;
 
 import java.util.Arrays;
 
-import pcgen.base.format.FormatManager;
+import pcgen.base.formula.analysis.FormulaFormat;
+import pcgen.base.formula.analysis.FormulaSemanticsUtilities;
+import pcgen.base.formula.base.FormulaManager;
+import pcgen.base.formula.base.FormulaSemantics;
+import pcgen.base.formula.base.Function;
+import pcgen.base.formula.base.FunctionLibrary;
 import pcgen.base.formula.base.LegalScope;
-import pcgen.base.formula.function.Function;
-import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.FunctionLibrary;
 import pcgen.base.formula.parse.ASTArithmetic;
 import pcgen.base.formula.parse.ASTEquality;
 import pcgen.base.formula.parse.ASTExpon;
@@ -43,10 +45,7 @@ import pcgen.base.formula.parse.FormulaParserVisitor;
 import pcgen.base.formula.parse.Node;
 import pcgen.base.formula.parse.Operator;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.semantics.FormulaFormat;
-import pcgen.base.formula.semantics.FormulaSemantics;
-import pcgen.base.formula.semantics.FormulaSemanticsUtilities;
-import pcgen.base.formula.util.KeyUtilities;
+import pcgen.base.util.FormatManager;
 
 /**
  * SemanticsVisitor visits a formula in tree form to determine if the formula is
@@ -220,7 +219,7 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		FormulaSemantics semantics =
 				(FormulaSemantics) singleChildValid(node, data);
 		//Consistent with the "fail fast" behavior in the implementation note
-		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID).isValid())
 		{
 			return semantics;
 		}
@@ -231,7 +230,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		 * operations :/
 		 */
 		Class<?> format =
-				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+				semantics.getInfo(FormulaSemanticsUtilities.SEM_FORMAT)
+					.getFormat();
 		if (!format.equals(NUMBER_CLASS))
 		{
 			FormulaSemanticsUtilities.setInvalid(semantics,
@@ -262,7 +262,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		{
 			node.jjtGetChild(i).jjtAccept(this, semantics);
 			//Consistent with the "fail fast" behavior in the implementation note
-			if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+			if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID)
+				.isValid())
 			{
 				return semantics;
 			}
@@ -273,7 +274,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 			 * EvaluationVisitor)
 			 */
 			Class<?> format =
-					semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+					semantics.getInfo(FormulaSemanticsUtilities.SEM_FORMAT)
+						.getFormat();
 			if (!format.equals(NUMBER_CLASS))
 			{
 				FormulaSemanticsUtilities.setInvalid(semantics,
@@ -314,8 +316,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		try
 		{
 			Double.parseDouble(node.getText());
-			semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(
-				NUMBER_CLASS));
+			semantics.setInfo(FormulaSemanticsUtilities.SEM_FORMAT,
+				new FormulaFormat(NUMBER_CLASS));
 		}
 		catch (NumberFormatException e)
 		{
@@ -423,8 +425,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 				fm.getFactory().getVariableFormat(legalScope, varName);
 		if (formatManager != null)
 		{
-			semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(
-				formatManager.getManagedClass()));
+			semantics.setInfo(FormulaSemanticsUtilities.SEM_FORMAT,
+				new FormulaFormat(formatManager.getManagedClass()));
 		}
 		else
 		{
@@ -481,8 +483,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 	public Object visit(ASTQuotString node, Object data)
 	{
 		FormulaSemantics semantics = (FormulaSemantics) data;
-		semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(
-			STRING_CLASS));
+		semantics.setInfo(FormulaSemanticsUtilities.SEM_FORMAT,
+			new FormulaFormat(STRING_CLASS));
 		return semantics;
 	}
 
@@ -517,24 +519,26 @@ public class SemanticsVisitor implements FormulaParserVisitor
 		Node child1 = node.jjtGetChild(0);
 		child1.jjtAccept(this, data);
 		//Consistent with the "fail fast" behavior in the implementation note
-		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID).isValid())
 		{
 			return semantics;
 		}
 		//Need to capture now
 		@SuppressWarnings("PMD.PrematureDeclaration")
 		Class<?> format1 =
-				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+				semantics.getInfo(FormulaSemanticsUtilities.SEM_FORMAT)
+					.getFormat();
 
 		Node child2 = node.jjtGetChild(1);
 		child2.jjtAccept(this, semantics);
 		//Consistent with the "fail fast" behavior in the implementation note
-		if (!semantics.getInfo(KeyUtilities.SEM_VALID).isValid())
+		if (!semantics.getInfo(FormulaSemanticsUtilities.SEM_VALID).isValid())
 		{
 			return semantics;
 		}
 		Class<?> format2 =
-				semantics.getInfo(KeyUtilities.SEM_FORMAT).getFormat();
+				semantics.getInfo(FormulaSemanticsUtilities.SEM_FORMAT)
+					.getFormat();
 		Class<?> returnedFormat =
 				fm.getOperatorLibrary().processAbstract(op, format1, format2);
 		//null response means the library couldn't find an appropriate operator
@@ -547,8 +551,8 @@ public class SemanticsVisitor implements FormulaParserVisitor
 					+ node.getClass().getName());
 			return semantics;
 		}
-		semantics.setInfo(KeyUtilities.SEM_FORMAT, new FormulaFormat(
-			returnedFormat));
+		semantics.setInfo(FormulaSemanticsUtilities.SEM_FORMAT,
+			new FormulaFormat(returnedFormat));
 		return semantics;
 	}
 

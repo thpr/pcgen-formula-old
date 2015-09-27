@@ -20,8 +20,8 @@ package pcgen.base.solver.testsupport;
 import java.lang.reflect.Array;
 
 import pcgen.base.calculation.Modifier;
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.inst.ScopeInformation;
 import pcgen.base.lang.NumberUtilities;
 
 public abstract class AbstractModifier<T> implements Modifier<T>

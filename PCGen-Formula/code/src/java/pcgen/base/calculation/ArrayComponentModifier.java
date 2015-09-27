@@ -19,8 +19,8 @@ package pcgen.base.calculation;
 
 import java.lang.reflect.Array;
 
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.inst.ScopeInformation;
 
 /**
  * An ArrayComponentModifier applies an underlying Modifier to a specific
@@ -83,7 +83,7 @@ public class ArrayComponentModifier<T> implements Modifier<T[]>
 	 * will be added and the underlying modifier will be ignored.
 	 * 
 	 * @see pcgen.base.calculation.NEPCalculation#process(java.lang.Object,
-	 *      pcgen.base.formula.manager.ScopeInformation)
+	 *      pcgen.base.formula.inst.ScopeInformation)
 	 */
 	@Override
 	public T[] process(T[] input, ScopeInformation scopeInfo)

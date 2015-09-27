@@ -17,8 +17,8 @@
  */
 package pcgen.base.calculation;
 
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.inst.ScopeInformation;
 
 /**
  * A NEPCalculation is designed to be passed into a CalculationModifier. This

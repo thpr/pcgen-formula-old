@@ -17,12 +17,12 @@
  */
 package pcgen.base.calculation;
 
-import pcgen.base.formula.dependency.DependencyManager;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.base.FormulaManager;
+import pcgen.base.formula.base.FunctionLibrary;
 import pcgen.base.formula.inst.NEPFormula;
-import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.FunctionLibrary;
-import pcgen.base.formula.manager.ScopeInformation;
-import pcgen.base.formula.manager.ValueWrappingLibrary;
+import pcgen.base.formula.inst.ScopeInformation;
+import pcgen.base.formula.library.ValueWrappingLibrary;
 
 /**
  * A FormulaCalculation is an AbstractNEPCalculation that uses a NEPFormula for
@@ -74,7 +74,7 @@ public final class FormulaCalculation<T> extends AbstractNEPCalculation<T>
 	 * provided at construction.
 	 * 
 	 * @see pcgen.base.calculation.NEPCalculation#process(java.lang.Object,
-	 *      pcgen.base.formula.manager.ScopeInformation)
+	 *      pcgen.base.formula.inst.ScopeInformation)
 	 */
 	@Override
 	public T process(final T input, ScopeInformation scopeInfo)

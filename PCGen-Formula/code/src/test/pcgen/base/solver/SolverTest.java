@@ -26,9 +26,8 @@ import org.junit.Test;
 
 import pcgen.base.calculation.ArrayComponentModifier;
 import pcgen.base.calculation.Modifier;
-import pcgen.base.formula.manager.ScopeInformation;
-import pcgen.base.formula.util.SplitFormulaSetup;
-import pcgen.base.formula.variable.SimpleLegalScope;
+import pcgen.base.formula.inst.ScopeInformation;
+import pcgen.base.formula.inst.SimpleLegalScope;
 import pcgen.base.solver.testsupport.AbstractModifier;
 
 public class SolverTest extends TestCase

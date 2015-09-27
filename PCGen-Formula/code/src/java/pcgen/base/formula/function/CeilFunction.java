@@ -28,7 +28,7 @@ public class CeilFunction extends AbstractUnaryFunction
 	 * Returns the function name for this function. This is how it is called by
 	 * a user in a formula.
 	 * 
-	 * @see pcgen.base.formula.function.Function#getFunctionName()
+	 * @see pcgen.base.formula.base.Function#getFunctionName()
 	 */
 	@Override
 	public String getFunctionName()

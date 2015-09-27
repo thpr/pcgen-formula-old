@@ -20,9 +20,9 @@ package pcgen.base.solver;
 import java.util.HashMap;
 import java.util.Map;
 
+import pcgen.base.formula.base.FormulaManager;
 import pcgen.base.formula.base.ScopeInstance;
-import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.inst.ScopeInformation;
 
 /**
  * ScopeDatabase is a utility class providing a database that maps VariableScope
@@ -32,7 +32,8 @@ public final class ScopeDatabase
 {
 
 	/**
-	 * The map that associates VariableScope objects to ScopeInformation objects.
+	 * The map that associates VariableScope objects to ScopeInformation
+	 * objects.
 	 */
 	private Map<ScopeInstance, ScopeInformation> map =
 			new HashMap<ScopeInstance, ScopeInformation>();

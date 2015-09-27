@@ -19,7 +19,7 @@ package pcgen.base.calculation.testsupport;
 
 import pcgen.base.calculation.AbstractNEPCalculation;
 import pcgen.base.calculation.BasicCalculation;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.inst.ScopeInformation;
 
 public final class NepCalc extends AbstractNEPCalculation
 {

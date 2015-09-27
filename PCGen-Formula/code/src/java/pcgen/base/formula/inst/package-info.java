@@ -17,6 +17,13 @@
  */
 /**
  * pcgen.base.formula.inst is a package that contains specific instances
- * designed to use the other objects contained within the formula packages.
+ * designed to implement many of the interfaces in the pcgen.base.formula
+ * package and thus use the other objects contained within the formula packages.
+ * 
+ * It is intended that this is a "top-tier" that builds upon much of the rest of
+ * pcgen.base.formula.*. Therefore, it is expected that items in this package
+ * will have few (preferably no) other things in pcgen.base.formula.* dependent
+ * upon classes in this package.
  */
 package pcgen.base.formula.inst;
+

@@ -19,7 +19,7 @@ package pcgen.base.formula.parse;
 
 import org.junit.Test;
 
-import pcgen.base.formula.util.FormulaUtilities;
+import pcgen.base.formula.inst.FormulaUtilities;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 import pcgen.base.testsupport.AbstractFormulaTestCase;
 import pcgen.base.testsupport.TestUtilities;

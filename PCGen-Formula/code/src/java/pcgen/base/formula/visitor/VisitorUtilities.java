@@ -17,8 +17,8 @@
  */
 package pcgen.base.formula.visitor;
 
-import pcgen.base.formula.function.Function;
-import pcgen.base.formula.manager.FunctionLibrary;
+import pcgen.base.formula.base.Function;
+import pcgen.base.formula.base.FunctionLibrary;
 import pcgen.base.formula.parse.ASTFParen;
 import pcgen.base.formula.parse.ASTPCGenBracket;
 import pcgen.base.formula.parse.ASTPCGenLookup;

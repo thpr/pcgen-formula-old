@@ -21,9 +21,9 @@ import java.util.List;
 
 import org.junit.Test;
 
+import pcgen.base.formula.base.VariableID;
 import pcgen.base.formula.operator.number.NumberLessThan;
 import pcgen.base.formula.parse.SimpleNode;
-import pcgen.base.formula.variable.VariableID;
 import pcgen.base.formula.visitor.ReconstructionVisitor;
 import pcgen.base.testsupport.AbstractFormulaTestCase;
 import pcgen.base.testsupport.TestUtilities;

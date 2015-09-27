@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import pcgen.base.calculation.Modifier;
-import pcgen.base.formula.manager.ScopeInformation;
+import pcgen.base.formula.inst.ScopeInformation;
 import pcgen.base.util.HashMapToList;
 import pcgen.base.util.TreeMapToList;
 

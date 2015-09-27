@@ -24,18 +24,18 @@ import java.util.Set;
 import java.util.Stack;
 
 import pcgen.base.calculation.Modifier;
-import pcgen.base.format.FormatManager;
+import pcgen.base.formula.analysis.DependencyKeyUtilities;
+import pcgen.base.formula.analysis.VariableDependencyManager;
+import pcgen.base.formula.base.DependencyManager;
+import pcgen.base.formula.base.FormulaManager;
 import pcgen.base.formula.base.ScopeInstance;
-import pcgen.base.formula.dependency.DependencyManager;
-import pcgen.base.formula.dependency.VariableDependencyManager;
-import pcgen.base.formula.manager.FormulaManager;
-import pcgen.base.formula.manager.ScopeInformation;
-import pcgen.base.formula.util.KeyUtilities;
-import pcgen.base.formula.variable.VariableID;
-import pcgen.base.formula.variable.VariableStore;
-import pcgen.base.formula.variable.WriteableVariableStore;
+import pcgen.base.formula.base.VariableID;
+import pcgen.base.formula.base.VariableStore;
+import pcgen.base.formula.base.WriteableVariableStore;
+import pcgen.base.formula.inst.ScopeInformation;
 import pcgen.base.graph.inst.DefaultDirectionalGraphEdge;
 import pcgen.base.graph.inst.DirectionalSetMapGraph;
+import pcgen.base.util.FormatManager;
 
 /**
  * An AggressiveSolverManager manages a series of Solver objects in order to
@@ -241,7 +241,7 @@ public class AggressiveSolverManager
 		 */
 		DependencyManager fdm = new DependencyManager();
 		VariableDependencyManager vdm = new VariableDependencyManager();
-		fdm.addDependency(KeyUtilities.DEP_VARIABLE, vdm);
+		fdm.addDependency(DependencyKeyUtilities.DEP_VARIABLE, vdm);
 		modifier.getDependencies(scopeInfo, fdm);
 		if (!vdm.isEmpty())
 		{
@@ -332,7 +332,7 @@ public class AggressiveSolverManager
 		}
 		DependencyManager fdm = new DependencyManager();
 		VariableDependencyManager vdm = new VariableDependencyManager();
-		fdm.addDependency(KeyUtilities.DEP_VARIABLE, vdm);
+		fdm.addDependency(DependencyKeyUtilities.DEP_VARIABLE, vdm);
 		ScopeInstance scope = varID.getScope();
 		ScopeInformation scopeInfo =
 				scopeCache.getScopeInformation(formulaManager, scope);

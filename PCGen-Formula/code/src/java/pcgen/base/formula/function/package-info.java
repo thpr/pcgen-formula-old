@@ -16,7 +16,7 @@
  * 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 /**
- * pcgen.base.formula.function is a package that contains the "built-in"
+ * pcgen.base.formula.function is a package that contains the basic "built-in"
  * functions for the formula system. These are general mathematical
  * relationships, often mapping to functions in java.lang.Math.
  * 
@@ -25,3 +25,4 @@
  * here.
  */
 package pcgen.base.formula.function;
+
