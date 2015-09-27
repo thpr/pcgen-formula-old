@@ -111,11 +111,6 @@ public class ProcessStep<T>
 	 */
 	public String getSourceInfo()
 	{
-		if (source instanceof Solver)
-		{
-			return "Default Value for "
-				+ modifier.getVariableFormat().getSimpleName();
-		}
 		return source.getClass().getSimpleName() + " " + source;
 	}
 }

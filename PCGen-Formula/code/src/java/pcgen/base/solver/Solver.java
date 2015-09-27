@@ -280,7 +280,8 @@ public class Solver<T>
 	{
 		List<ProcessStep<T>> steps = new ArrayList<ProcessStep<T>>();
 		T stepResult = defaultModifier.process(null, scopeInfo);
-		steps.add(new ProcessStep<T>(defaultModifier, this, stepResult));
+		steps.add(new ProcessStep<T>(defaultModifier, new DefaultValue(
+			defaultModifier.getVariableFormat().getSimpleName()), stepResult));
 		if (!modifierList.isEmpty())
 		{
 			Map<Modifier<T>, Object> sources = getReversedSources();
@@ -322,4 +323,19 @@ public class Solver<T>
 		return reversedMap;
 	}
 
+	private class DefaultValue
+	{
+		String reportString;
+		
+		public DefaultValue(String formatName)
+		{
+			this.reportString = "for " + formatName;
+		}
+		
+		@Override
+		public String toString()
+		{
+			return reportString;
+		}
+	}
 }
