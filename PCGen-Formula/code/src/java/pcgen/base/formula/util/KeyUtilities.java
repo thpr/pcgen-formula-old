@@ -42,17 +42,39 @@ public final class KeyUtilities
 	{
 	}
 
+	/**
+	 * Key for Argument dependencies
+	 */
 	public static final DependencyKey<ArgumentDependencyManager> DEP_ARGUMENT =
 			new DependencyKey<>();
+
+	/**
+	 * Key for Variable dependencies
+	 */
 	public static final DependencyKey<VariableDependencyManager> DEP_VARIABLE =
 			new DependencyKey<>();
 
+	/**
+	 * Key for Semantics indicating if the formula is valid
+	 */
 	public static final SemanticsKey<FormulaValidity> SEM_VALID =
 			new SemanticsKey<>();
+
+	/**
+	 * Key for Semantics containing a report on why a formula is not valid
+	 */
 	public static final SemanticsKey<FormulaInvalidReport> SEM_REPORT =
 			new SemanticsKey<>();
+
+	/**
+	 * Key for Semantics indicating the format of the formula
+	 */
 	public static final SemanticsKey<FormulaFormat> SEM_FORMAT =
 			new SemanticsKey<>();
+
+	/**
+	 * Key for Semantics indicating argument dependencies
+	 */
 	public static final SemanticsKey<ArgumentDependencyManager> SEM_ARGS =
 			new SemanticsKey<>();
 

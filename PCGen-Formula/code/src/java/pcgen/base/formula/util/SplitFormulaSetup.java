@@ -166,35 +166,35 @@ public class SplitFormulaSetup
 		/**
 		 * The ScopeInstanceFactory for this IndividualSetup.
 		 */
-		public final ScopeInstanceFactory instanceFactory =
+		private final ScopeInstanceFactory instanceFactory =
 				new ScopeInstanceFactory(legalScopeLib);
 
 		/**
 		 * The WriteableVariableStore for this IndividualSetup.
 		 */
-		public final WriteableVariableStore variableStore =
+		private final WriteableVariableStore variableStore =
 				new SimpleVariableStore();
 
 		/**
-		 * The VariableLibrary for this IndividualSetup.
+		 * The FormulaManager for this IndividualSetup.
 		 */
-		public final FormulaManager formulaManager = new FormulaManager(
-			functionLib, operatorLib, variableLib, variableStore);
+		private final FormulaManager formulaManager = new FormulaManager(
+			functionLib, operatorLib, variableLib, getVariableStore());
 
 		/**
-		 * The LegalScope for this IndividualSetup.
+		 * The "Global" LegalScope for this IndividualSetup.
 		 */
-		public final LegalScope globalScope;
+		private final LegalScope globalScope;
 
 		/**
-		 * The ScopeInstance for this IndividualSetup.
+		 * The "Global" ScopeInstance for this IndividualSetup.
 		 */
-		public final ScopeInstance globalScopeInst;
+		private final ScopeInstance globalScopeInst;
 
 		/**
 		 * The ScopeInformation for this IndividualSetup.
 		 */
-		public final ScopeInformation scopeInfo;
+		private final ScopeInformation scopeInfo;
 
 		/**
 		 * Constructs a new IndividualSetup with the "global" LegalScope of the
@@ -207,8 +207,71 @@ public class SplitFormulaSetup
 		public IndividualSetup(String globalName)
 		{
 			globalScope = legalScopeLib.getScope(globalName);
-			globalScopeInst = instanceFactory.getInstance(null, globalScope);
-			scopeInfo = new ScopeInformation(formulaManager, globalScopeInst);
+			globalScopeInst =
+					getInstanceFactory().getInstance(null, getGlobalScope());
+			scopeInfo =
+					new ScopeInformation(getFormulaManager(),
+						getGlobalScopeInst());
+		}
+
+		/**
+		 * Return the ScopeInstanceFactory for this IndividualSetup.
+		 * 
+		 * @return the ScopeInstanceFactory for this IndividualSetup
+		 */
+		public ScopeInstanceFactory getInstanceFactory()
+		{
+			return instanceFactory;
+		}
+
+		/**
+		 * Return the VariableStore for this IndividualSetup.
+		 * 
+		 * @return the VariableStore for this IndividualSetup
+		 */
+		public WriteableVariableStore getVariableStore()
+		{
+			return variableStore;
+		}
+
+		/**
+		 * Return the FormulaManager for this IndividualSetup.
+		 * 
+		 * @return the FormulaManager for this IndividualSetup
+		 */
+		public FormulaManager getFormulaManager()
+		{
+			return formulaManager;
+		}
+
+		/**
+		 * Return the "Global" LegalScope for this IndividualSetup.
+		 * 
+		 * @return the "Global" LegalScope for this IndividualSetup
+		 */
+		public LegalScope getGlobalScope()
+		{
+			return globalScope;
+		}
+
+		/**
+		 * Return the "Global" ScopeInstance for this IndividualSetup.
+		 * 
+		 * @return the "Global" ScopeInstance for this IndividualSetup
+		 */
+		public ScopeInstance getGlobalScopeInst()
+		{
+			return globalScopeInst;
+		}
+
+		/**
+		 * Return the ScopeInformation for this IndividualSetup.
+		 * 
+		 * @return the ScopeInformation for this IndividualSetup
+		 */
+		public ScopeInformation getScopeInfo()
+		{
+			return scopeInfo;
 		}
 	}
 
