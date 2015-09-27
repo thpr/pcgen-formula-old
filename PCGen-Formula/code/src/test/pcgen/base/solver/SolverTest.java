@@ -248,7 +248,7 @@ public class SolverTest extends TestCase
 		assertNotNull(list);
 		assertEquals(1, list.size());
 		ProcessStep<Number> step = list.get(0);
-		assertEquals(solver, step.getSource());
+		assertEquals("DefaultValue for Number", step.getSourceInfo());
 		assertEquals(6, step.getResult());
 		assertEquals(mod, step.getModifier());
 		solver.addModifier(addm, this);
@@ -260,7 +260,7 @@ public class SolverTest extends TestCase
 		list = solver.diagnose();
 		assertEquals(4, list.size());
 		step = list.get(0);
-		assertEquals(solver, step.getSource());
+		assertEquals("DefaultValue for Number", step.getSourceInfo());
 		assertEquals(6, step.getResult());
 		assertEquals(mod, step.getModifier());
 		step = list.get(1);
