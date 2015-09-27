@@ -417,8 +417,6 @@ public class VariableLibraryTest extends TestCase
 		LegalScope globalScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst =
 				instanceFactory.getInstance(null, globalScope);
-		LegalScope spScope = new SimpleLegalScope(globalScope, "Spell");
-		ScopeInstance spInst = instanceFactory.getInstance(globalInst, spScope);
 		LegalScope eqScope = new SimpleLegalScope(globalScope, "Equipment");
 		ScopeInstance eqInst = instanceFactory.getInstance(globalInst, eqScope);
 		LegalScope eqPartScope = new SimpleLegalScope(eqScope, "Part");

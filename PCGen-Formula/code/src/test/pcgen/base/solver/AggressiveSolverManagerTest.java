@@ -97,9 +97,6 @@ public class AggressiveSolverManagerTest extends AbstractFormulaTestCase
 	public void testIllegalCreateChannel()
 	{
 		varLibrary.assertLegalVariableID("HP", globalScope, numberManager);
-		VariableID<Number> hp =
-				(VariableID<Number>) varLibrary.getVariableID(globalScopeInst,
-					"HP");
 		try
 		{
 			manager.createChannel(null);

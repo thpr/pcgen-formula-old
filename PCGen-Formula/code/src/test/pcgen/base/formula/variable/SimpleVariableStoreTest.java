@@ -90,7 +90,6 @@ public class SimpleVariableStoreTest extends TestCase
 		VariableID vid1 = new VariableID(globalInst, numberManager, "test");
 		VariableID vid2 = new VariableID(globalInst, numberManager, "test");
 		VariableID vid3 = new VariableID(globalInst, numberManager, "test2");
-		LegalScope global2 = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst2 = instanceFactory.getInstance(null, varScope);
 		VariableID vid4 = new VariableID(globalInst2, numberManager, "test");
 		assertNull(varStore.put(vid1, Integer.valueOf(9)));

@@ -72,7 +72,6 @@ public class ScopeInformationTest extends TestCase
 		FormulaManager fManager =
 				new FormulaManager(ftnLibrary, opLibrary, varLibrary,
 					resultsStore);
-		FormatManager<Number> numberManager = new NumberManager();
 		LegalScope varScope = new SimpleLegalScope(null, "Global");
 		ScopeInstance globalInst = instanceFactory.getInstance(null, varScope);
 		try

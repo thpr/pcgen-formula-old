@@ -43,11 +43,13 @@ public final class NepCalc extends AbstractNEPCalculation
 		return "+" + n;
 	}
 
+	@Override
 	public boolean equals(Object o)
 	{
 		return (o instanceof NepCalc) && ((NepCalc) o).n.equals(n);
 	}
 
+	@Override
 	public int hashCode()
 	{
 		return n.hashCode();

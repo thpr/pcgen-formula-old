@@ -20,7 +20,6 @@ package pcgen.base.calculation;
 import org.junit.Test;
 
 import pcgen.base.calculation.testsupport.BasicCalc;
-import pcgen.base.calculation.testsupport.NepCalc;
 import pcgen.base.formula.base.LegalScope;
 import pcgen.base.formula.inst.ComplexNEPFormula;
 import pcgen.base.formula.manager.ScopeInformation;
@@ -33,7 +32,6 @@ import pcgen.base.testsupport.AbstractFormulaTestCase;
 public class FormulaCalculationTest extends AbstractFormulaTestCase
 {
 	private BasicCalculation basic = new BasicCalc(new NumberAdd());
-	private NEPCalculation calc = new NepCalc(basic, (Number) 33);
 	private ComplexNEPFormula formula = new ComplexNEPFormula("4+ceil(4.3)");
 	private ScopeInformation si;
 
